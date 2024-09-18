@@ -20,7 +20,7 @@
 | Student Name | Student Email | GitHub Username | Student's role |
 | :----------: | :-----------: | :-------------: | :------------: |
 |   Andrew Dahlstrom   | adahlstrom@sfsu.edu |      shoreOwl125       |  Team Leader   |
-|   Joyce Fu   | @sfsu.edu |      fufu911219        |  Scrum Master   |
+|   Joyce Fu   | jfu@sfsu.edu |      fufu911219        |  Scrum Master   |
 |   Jason Avina   | @sfsu.edu |      JasonAvina       |  Scrum Master   |
 |   Nadir Ali   | @sfsu.edu |      NadirAli17       |  Github Master   |
 |   Kayla Maa   | @sfsu.edu |      kaylamaa       |  Front-end Lead   |
