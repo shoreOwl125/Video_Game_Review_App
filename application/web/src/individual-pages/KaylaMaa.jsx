@@ -23,7 +23,7 @@ const KaylaMaa = () => {
       <div style={{ marginTop: '40px', textAlign: 'left' }}>
         <h3>Project Study Plan</h3>
         <ul>
-          <li><strong>Week 1:</strong> Node.js, Express Basics</li>
+          <li><strong>Week 1:</strong> Node.js, Express Basics, React Basics</li>
           <li><strong>Week 2:</strong> MySQL Database Setup</li>
           <li><strong>Week 3:</strong> Authentication (JWT, Bcrypt)</li>
           <li><strong>Week 4:</strong> API Development and Testing</li>
