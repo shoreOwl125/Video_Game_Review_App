@@ -24,7 +24,7 @@
 |   Jason Avina   | @sfsu.edu |      JasonAvina       |  Scrum Master   |
 |   Nadir Ali   | @sfsu.edu |      NadirAli17       |  Github Master   |
 |   Kayla Maa   | @sfsu.edu |      kaylamaa       |  Front-end Lead   |
-|   Aidan Bayer-Calvert   | @sfsu.edu |      abccodes       |  Back-end Lead   |
+|   Aidan Bayer-Calvert   | abayercalvert@sfsu.edu |      abccodes       |  Back-end Lead   |
 |   Ryan Flannery   | @sfsu.edu |      ryanvflannery       |  Back-end Lead   |
 
 **NO code should be stored in the root of your repository. You may rename the
