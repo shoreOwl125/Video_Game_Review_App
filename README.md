@@ -1,6 +1,6 @@
 # CSC648-01-FA24-team02 Repository
 
-**Application URL: <https://example.com>**
+**Application URL: <https://csc648-01-fa24-team02.vercel.app/>**
 
 ## Before completing Milestone 0
 
