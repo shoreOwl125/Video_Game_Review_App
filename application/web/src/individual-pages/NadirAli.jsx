@@ -13,7 +13,7 @@ const NadirAli = () => {
       <img
         src={nadirAliImg}  // Use the imported image
         alt="Nadir Ali"
-        style={{ width: '200px', height: 'auto' }} // You can adjust size as needed
+        style={{ width: '250px', height: 'auto' }} // You can adjust size as needed
       />
     </div>
   );
