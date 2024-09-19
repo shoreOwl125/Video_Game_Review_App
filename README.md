@@ -25,7 +25,7 @@
 |   Nadir Ali   | @sfsu.edu |      NadirAli17       |  Github Master   |
 |   Kayla Maa   | kmaa@sfsu.edu |      kaylamaa       |  Front-end Lead   |
 |   Aidan Bayer-Calvert   | abayercalvert@sfsu.edu |      abccodes       |  Back-end Lead   |
-|   Ryan Flannery   | @sfsu.edu |      ryanvflannery       |  Back-end Lead   |
+|   Ryan Flannery   | rflannery@sfsu.edu |      ryanvflannery       |  Back-end Lead   |
 
 **NO code should be stored in the root of your repository. You may rename the
 `application/` folder to your team's application name if you'd like, but all the
