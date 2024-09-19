@@ -1,4 +1,4 @@
-# CSC648-S0X-FA24-teamNum Repository
+# CSC648-S01-FA24-teamNum Repository
 
 **Application URL: <https://example.com>**
 
@@ -23,7 +23,7 @@
 |   Joyce Fu   | jfu@sfsu.edu |      fufu911219        |  Scrum Master   |
 |   Jason Avina   | @sfsu.edu |      JasonAvina       |  Scrum Master   |
 |   Nadir Ali   | @sfsu.edu |      NadirAli17       |  Github Master   |
-|   Kayla Maa   | @sfsu.edu |      kaylamaa       |  Front-end Lead   |
+|   Kayla Maa   | kmaa@sfsu.edu |      kaylamaa       |  Front-end Lead   |
 |   Aidan Bayer-Calvert   | abayercalvert@sfsu.edu |      abccodes       |  Back-end Lead   |
 |   Ryan Flannery   | @sfsu.edu |      ryanvflannery       |  Back-end Lead   |
 
