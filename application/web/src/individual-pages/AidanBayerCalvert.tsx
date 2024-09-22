@@ -1,6 +1,6 @@
 import React from "react";
 
-const AidanBayerCalvert = () => {
+const AidanBayerCalvert: React.FC = () => {
   return (
     <div className="team-member">
       <h1>Aidan Bayer-Calvert</h1>
