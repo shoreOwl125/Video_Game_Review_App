@@ -1,17 +1,7 @@
-// src/index.js
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import app from "./app"; // Adjust path based on the location of index.ts
 
-dotenv.config();
-
-console.log(process.env.PORT);
-const app: Express = express();
-const port = process.env.PORT;
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
