@@ -1,6 +1,6 @@
 import express from "express";
 import authRouter from "./routes/authRoutes";
-import connectUserDB from "./connections/userDB";
+import { connectUserDB } from "./connections/userDB";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
@@ -34,6 +34,6 @@ app.use("/users", authenticate, userRouter);
 app.use(errorHandler);
 
 // Database connection
-connectUserDB();
+const pool = connectUserDB();
 
 export default app;

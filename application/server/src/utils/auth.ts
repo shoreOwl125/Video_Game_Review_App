@@ -7,9 +7,11 @@ const generateToken = (res: Response, userId: string) => {
     expiresIn: "1h",
   });
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
+    secure: isProduction,
     sameSite: "strict",
     maxAge: 60 * 60 * 1000,
   });

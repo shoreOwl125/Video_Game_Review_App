@@ -1,17 +1,5 @@
-import dotenv from "dotenv";
-import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
-
-dotenv.config();
-
-// Create a MySQL connection pool
-const pool = mysql.createPool({
-  host: process.env.HOST,
-  user: process.env.USER_STRING,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  port: 5432, // Adjust this if needed
-});
+import { pool } from "../connections/userDB";  // Import the shared pool
 
 // Define the User interface
 interface IUser {
@@ -70,11 +58,10 @@ class User {
   }
 
   static async findById(userId: number) {
-    const [
-      rows,
-    ] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
+    const [rows] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
       userId,
     ]);
+
     const [userRow] = rows as IUserRow[];
 
     return userRow;

@@ -1,33 +1,38 @@
+import { createPool, createConnection, Pool, Connection } from "mysql2/promise";
 import dotenv from "dotenv";
+
 dotenv.config();
-// console.log("Loaded environment variables:", process.env);
-import mysql from "mysql2";
 
-console.log("Host:", process.env.HOST);
-console.log("User:", process.env.USER);
-console.log("Password:", process.env.PASSWORD);
-console.log("Database:", process.env.DATABASE);
+console.log("Environment:", process.env.NODE_ENV);
 
-const connection = mysql.createConnection({
-  host: process.env.HOST,
-  user: process.env.USER_STRING,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-});
+let connection: Pool;
 
-connection.connect((err) => {
-  if (err) {
-    console.error("Database connection error:", err);
-    return;
-  }
-  console.log("Database connected successfully");
-
-  connection.query("SELECT * FROM users", (error, results) => {
-    if (error) {
-      console.error("Query error:", error);
-      return;
-    }
-    console.log("Users:", results);
-    connection.end();
+if (process.env.NODE_ENV === "development") {
+  connection = createPool({
+    host: process.env.DEV_HOST,
+    user: process.env.DEV_USER_STRING,
+    password: process.env.DEV_PASSWORD,
+    database: process.env.DEV_DATABASE,
   });
-});
+} else {
+  connection = createPool({
+    host: process.env.HOST,
+    user: process.env.USER_STRING,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+  });
+}
+
+async function testConnection() {
+  try {
+    const [results] = await connection.query("SELECT * FROM users");
+    console.log("Users:", results);
+  } catch (error) {
+    console.error("Query error:", error);
+  } finally {
+    await connection.end();
+    console.log("Connection pool closed.");
+  }
+}
+
+testConnection();
