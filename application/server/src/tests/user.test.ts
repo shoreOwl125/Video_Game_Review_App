@@ -1,10 +1,11 @@
 import request from "supertest";
-import app from "../src/app"; // Adjust this path based on your app.ts location
-import { pool } from "../src/connections/userDB"; // Import the database connection to close it
+import app from "../app"; // Adjust this path based on your app.ts location
+import { getPool } from "../connections/userDB"; // Use getPool to retrieve the connection pool
 
 describe("User Registration, Login, Logout, and Profile API Tests", () => {
   let uniqueEmail: string = ""; // Store unique email for testing
   let jwtCookie: string = ""; // Store the JWT cookie after login
+  const pool = getPool(); // Retrieve the pool using getPool()
 
   // Close the database pool after the test is completed
   afterAll(async () => {

@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { pool } from "../connections/userDB";  // Import the shared pool
+import { getPool } from "../connections/userDB";  // Use getPool to retrieve the connection pool
 
 // Define the User interface
 interface IUser {
@@ -24,6 +24,9 @@ class User {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Get the pool using getPool()
+    const pool = getPool();
+
     // Create a new user in the database
     await pool.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
@@ -41,6 +44,9 @@ class User {
   }
 
   static async findByEmail(email: string) {
+    // Get the pool using getPool()
+    const pool = getPool();
+
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
@@ -58,6 +64,9 @@ class User {
   }
 
   static async findById(userId: number) {
+    // Get the pool using getPool()
+    const pool = getPool();
+
     const [rows] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
       userId,
     ]);
