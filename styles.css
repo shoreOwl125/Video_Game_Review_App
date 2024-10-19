@@ -1,0 +1,110 @@
+
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Banner Section */
+.banner {
+    height: 16.67vh; /* 1/6 of the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /*picture related code*/
+    position: relative; /* Make this relative for the absolute positioning of .banner-picture */
+    overflow: hidden; /* Prevent overflow if the image goes outside */
+}
+
+.banner-picture {
+    background-image: url('bannerpic.png'); /* Replace with your image path */
+    background-size: cover; /* Ensure the image covers the entire banner */
+    background-position: center; /* Center the image */
+    position: absolute; /* Position it absolutely within the banner */
+    top: 0; /* Aligns to the top */
+    left: 0; /* Aligns to the left */
+    right: 0; /* Stretches to the right */
+    bottom: 0; /* Stretches to the bottom */
+    z-index: 1; /* Places it behind the content */
+    filter: grayscale(100%); /* Apply black and white filter */
+    background-blend-mode: luminosity;
+}
+
+.banner-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+    position: relative; /* Keeps the content above the banner picture */
+    z-index: 2; /* Ensures content appears above the background */
+}
+
+.title {
+    align-self: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+.pill-button {
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin-left: 10px;
+    border: 1px solid black;
+    background: none;
+    cursor: pointer;
+    background-color: #c0aeae;
+}
+
+/* Section below the banner*/
+.content-section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 0;
+    padding-top: 8.3vh;
+    background-color: #f4e6E6;
+    min-height: calc(100vh - 16.67vh); /* Ensure it takes the rest of the viewport height */
+
+}
+
+.search-bar {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    margin-bottom: 3vh;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 50px 0px 0px 50px;
+    border: 1px solid black;
+    outline: none;
+}
+
+.search-button {
+    padding: 10px 20px;
+    border-radius: 0 50px 50px 0;
+    border: 1px solid black;
+    background: none;
+    cursor: pointer;
+    background-color: #c0aeae;
+    margin-left: -1px;
+}
+
+.advanced-search {
+    margin-top: 3vh;
+    background-color: #c0aeae;
+}
+
