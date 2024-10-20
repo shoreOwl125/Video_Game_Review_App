@@ -1,10 +1,11 @@
 import request from "supertest";
-import app from "../src/app"; // Adjust this path based on your app.ts location
-import { pool } from "../src/connections/userDB"; // Import the database connection to close it
+import app from "../app"; // Adjust this path based on your app.ts location
+import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
 
 describe("User Registration, Login, Logout, and Profile API Tests", () => {
   let uniqueEmail: string = ""; // Store unique email for testing
   let jwtCookie: string = ""; // Store the JWT cookie after login
+  const pool = getPool(); // Retrieve the pool using getPool()
 
   // Close the database pool after the test is completed
   afterAll(async () => {
@@ -21,7 +22,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
     uniqueEmail = `testuser_${Date.now()}@example.com`; // Generate a unique email
 
     const res = await request(app)
-      .post("/register")
+      .post("/api/auth/register")
       .send({
         name: "John Doe",
         email: uniqueEmail, // Use unique email
@@ -37,7 +38,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
   it("should log in the user with correct credentials and return a token in cookies", async () => {
     // First, register the user
     await request(app)
-      .post("/register")
+      .post("/api/auth/register")
       .send({
         name: "John Doe",
         email: uniqueEmail, // Use the email registered in the previous test
@@ -46,7 +47,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
 
     // Now, login the user
     const res = await request(app)
-      .post("/login")
+      .post("/api/auth/login")
       .send({
         email: uniqueEmail, // Use the same email used in registration
         password: "password123",
@@ -69,7 +70,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
   it("should log out the user and clear the JWT token from cookies", async () => {
     // Log in the user first to have a valid JWT token
     await request(app)
-      .post("/login")
+      .post("/api/auth/login")
       .send({
         email: uniqueEmail,
         password: "password123",
@@ -77,7 +78,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
 
     // Now, log out the user
     const res = await request(app)
-      .post("/logout")
+      .post("/api/auth/logout")
       .set("Cookie", jwtCookie); // Use the JWT token stored in the cookie
 
     expect(res.statusCode).toEqual(200); // Expect status 200 OK
