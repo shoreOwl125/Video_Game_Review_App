@@ -11,7 +11,7 @@ searchButton.addEventListener('click', async () => {
     if (searchTerm) {
         try {
             // Make a fetch request to the backend
-            const response = await fetch(`YOUR_BACKEND_URL?query=${encodeURIComponent(searchTerm)}`);
+            const response = await fetch(`http://localhost:8000/api/games/search?query=${encodeURIComponent(searchTerm)}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
