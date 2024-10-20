@@ -29,19 +29,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
+app.use(express.static(path.join(__dirname, '../public'))); // Serve static files
 
 // Route setup
-app.use("/api/auth", authRouter);  // Add a base path like /api for better organization
+app.use("/api/auth", authRouter);
 app.use("/api/users", authenticate, userRouter);
 app.use("/api/games", gameRoutes);  // Use /api/games for games routes
 
-// Serve an index.html file at the root
+// Serve index.html at the root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'application', 'web', 'index.html')); // Correctly serve your main HTML file
 });
-
-
 
 // Error handling middleware
 app.use(errorHandler);
