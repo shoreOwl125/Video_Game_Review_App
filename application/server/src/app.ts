@@ -38,7 +38,7 @@ app.use("/api/games", gameRoutes);  // Use /api/games for games routes
 
 // Optional: Serve an index.html file at the root
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'application', 'web', 'src', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'src', 'index.html'));
 });
 
 
