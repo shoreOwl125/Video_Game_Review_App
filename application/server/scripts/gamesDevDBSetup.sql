@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS `ratings_dev_db`.`games` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
 -- Insert fake games data into the `games` table
 INSERT IGNORE INTO `ratings_dev_db`.`games` (title, description, genre, review_rating, release_date, cover_image, created_at, updated_at)
 VALUES
