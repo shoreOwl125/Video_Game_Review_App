@@ -1,8 +1,8 @@
 -- Create the database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS my_database;
+CREATE DATABASE IF NOT EXISTS ratings_dev_db;
 
 -- Use the new database
-USE my_database;
+USE ratings_dev_db;
 
 -- Create the users table
 CREATE TABLE IF NOT EXISTS users (

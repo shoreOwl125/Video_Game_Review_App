@@ -7,9 +7,10 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes";
-import gameRoutes from "./routes/gameRoutes";  // Updated import
+import gameRoutes from "./routes/gameRoutes"; // Updated import
 import { authenticate } from "./middleware/authMiddleware";
 import { errorHandler } from "./middleware/errorMiddleware";
+import searchRouter from "./routes/gameRoutes"; // Assuming your route is in a file named search.ts
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000",  // Make sure this is the correct front-end URL
+    origin: "http://localhost:3000", // Make sure this is the correct front-end URL
     credentials: true,
   })
 );
@@ -28,14 +29,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Route setup
-app.use("/api/auth", authRouter);  // Add a base path like /api for better organization
+app.use("/api/auth", authRouter); // Add a base path like /api for better organization
 app.use("/api/users", authenticate, userRouter);
-app.use("/api/games", gameRoutes);  // Use /api/games for games routes
+app.use("/api/games", searchRouter); // Use /api/search for search routes
 
 // Error handling middleware
 app.use(errorHandler);
 
 // Database connection
-connectUserDB();  // No need to assign pool here, unless you use it in this file
+connectUserDB(); // No need to assign pool here, unless you use it in this file
 
 export default app;

@@ -1,4 +1,4 @@
-USE my_database;
+USE ratings_dev_db;
 
 CREATE TABLE IF NOT EXISTS games (
     game_id INT AUTO_INCREMENT PRIMARY KEY,
