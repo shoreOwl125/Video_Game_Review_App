@@ -108,3 +108,20 @@ body {
     background-color: #c0aeae;
 }
 
+.grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.game-tile {
+    width: 150px;
+    height: 200px;
+    background-color: #e0dada;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
