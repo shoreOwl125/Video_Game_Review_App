@@ -36,10 +36,11 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", authenticate, userRouter);
 app.use("/api/games", gameRoutes);  // Use /api/games for games routes
 
-// Serve index.html at the root
+// Optional: Serve an index.html file at the root
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'application', 'web', 'index.html')); // Correctly serve your main HTML file
+  res.sendFile(path.join(__dirname, '..', 'application', 'web', 'src', 'index.html'));
 });
+
 
 // Error handling middleware
 app.use(errorHandler);
