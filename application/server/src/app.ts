@@ -1,6 +1,6 @@
 import express from "express";
 import authRouter from "./routes/authRoutes";
-import { connectUserDB } from "./connections/userDB";
+import { connectUserDB } from "./connections/database";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
@@ -11,6 +11,7 @@ import gameRoutes from "./routes/gameRoutes"; // Updated import
 import { authenticate } from "./middleware/authMiddleware";
 import { errorHandler } from "./middleware/errorMiddleware";
 import path from "path";
+import searchRouter from "./routes/gameRoutes"; // Assuming your route is in a file named search.ts
 
 // Load environment variables from .env file
 dotenv.config();
@@ -45,10 +46,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'web', 'src', 'index.html'));
 });
 
+
 // Error handling middleware
 app.use(errorHandler);
 
-// Connect to the database
-connectUserDB();
+// Database connection
+connectUserDB(); // No need to assign pool here, unless you use it in this file
 
 export default app;

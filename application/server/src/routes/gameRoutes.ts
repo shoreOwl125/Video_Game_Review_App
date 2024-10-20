@@ -1,34 +1,42 @@
-import { getPool } from '../connections/userDB';
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from "express";
+import { getPool } from "../connections/database";
+import { RowDataPacket } from "mysql2";
 
 const router = Router();
 
-// Search games by title or genre
-router.get('/search', async (req: Request, res: Response) => {
-  const { query, genre } = req.query;
+router.get("/search", async (req: Request, res: Response) => {
+  const { query, genre, review_rating } = req.query;
+
+  let sql = "SELECT * FROM games WHERE 1=1";
+  let values: Array<string | number> = [];
+
+  if (query) {
+    sql += " AND title LIKE ?";
+    values.push(`%${query}%`);
+  }
+  
+  if (genre) {
+    sql += " AND genre = ?";
+    values.push(genre as string);
+  }
+
+  if (review_rating) {
+    sql += " AND review_rating >= ?";
+    values.push(Number(review_rating));
+  }
 
   try {
-    let sql = 'SELECT * FROM games WHERE 1=1';
-    let values: string[] = [];
+    const pool = getPool();
+    const [rows] = await pool.query<RowDataPacket[]>(sql, values);
 
-    // If there's a search query
-    if (query) {
-      sql += ' AND title LIKE ?';
-      values.push(`%${query}%`);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No games found" });
     }
 
-    // If genre filter is provided
-    if (genre) {
-      sql += ' AND genre = ?';
-      values.push(genre as string);
-    }
-
-    const [games] = await getPool().query(sql, values);
-
-    res.json(games);
+    return res.status(200).json(rows);
   } catch (error) {
-    console.error('Error searching games:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error searching for games:", error);
+    return res.status(500).json({ message: "Server error", error });
   }
 });
 

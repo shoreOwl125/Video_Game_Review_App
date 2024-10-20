@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { getPool } from "../connections/userDB";  // Use getPool to retrieve the connection pool
+import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
 
 // Define the User interface
 interface IUser {
@@ -67,7 +67,9 @@ class User {
     // Get the pool using getPool()
     const pool = getPool();
 
-    const [rows] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
+    const [
+      rows,
+    ] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
       userId,
     ]);
 
