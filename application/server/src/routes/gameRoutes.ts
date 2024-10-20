@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { getPool } from "../connections/userDB";
+import { getPool } from "../connections/database";
 import { RowDataPacket } from "mysql2";
 
 const router = Router();

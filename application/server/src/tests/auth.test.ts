@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app"; // Adjust this path based on your app.ts location
-import { getPool } from "../connections/userDB"; // Use getPool to retrieve the connection pool
+import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
 
 describe("User Registration, Login, Logout, and Profile API Tests", () => {
   let uniqueEmail: string = ""; // Store unique email for testing

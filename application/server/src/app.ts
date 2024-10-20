@@ -1,6 +1,6 @@
 import express from "express";
 import authRouter from "./routes/authRoutes";
-import { connectUserDB } from "./connections/userDB";
+import { connectUserDB } from "./connections/database";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
