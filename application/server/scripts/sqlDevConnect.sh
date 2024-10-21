@@ -52,9 +52,9 @@ else
     exit 1
 fi
 
-# Run userDevDBSetup.sql
+# Run userDevDBSetup.sql with the root user, prompting for password
 echo "Running $USER_DB_SQL..."
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < "$USER_DB_SQL"
+mysql -h "$DB_HOST" -u root -p < "$USER_DB_SQL"
 if [ $? -eq 0 ]; then
     echo "User database setup completed successfully."
 else
@@ -62,9 +62,9 @@ else
     exit 1
 fi
 
-# Run gamesDevDBsetup.sql
+# Run gamesDevDBsetup.sql with the root user, prompting for password
 echo "Running $GAMES_DB_SQL..."
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < "$GAMES_DB_SQL"
+mysql -h "$DB_HOST" -u root -p "$DB_NAME" < "$GAMES_DB_SQL"
 if [ $? -eq 0 ]; then
     echo "Games database setup completed successfully."
 else
@@ -74,7 +74,7 @@ fi
 
 # Show all items in the users table
 echo "Showing all items in the users table..."
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" -e "SELECT * FROM users;"
+mysql -h "$DB_HOST" -u root -p -D "$DB_NAME" -e "SELECT * FROM users;"
 if [ $? -eq 0 ]; then
     echo "Successfully retrieved items from users table."
 else
@@ -84,7 +84,7 @@ fi
 
 # Show all items in the games table
 echo "Showing all items in the games table..."
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" -e "SELECT * FROM games;"
+mysql -h "$DB_HOST" -u root -p -D "$DB_NAME" -e "SELECT * FROM games;"
 if [ $? -eq 0 ]; then
     echo "Successfully retrieved items from games table."
 else
