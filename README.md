@@ -32,7 +32,7 @@
 source code should be stored inside that folder.**
 
 Rate My Video Game - Video Game Review & Search Application  
-Overview  
+    
 Rate My Video Game is a web application designed to help users search, rate, and review video games. Users can search for games based on title, filter games by rating, and view reviews provided by other users. The app is powered by a React frontend and a Node.js/Express backend, with a MySQL database hosted on AWS EC2.  
 
 Features  
@@ -40,32 +40,34 @@ Search for video games by title.
 Filter video games by rating.  
 Leave reviews and rate video games.  
 View game details including description, genre, and user reviews.  
+  
 Tech Stack  
 Frontend: React, HTML, CSS  
 Backend: Node.js, Express  
 Database: MySQL (hosted on AWS RDS)  
 Hosting: AWS EC2 for backend and database  
+   
 Prerequisites  
 Before you can run this project, you need to have the following installed on your local machine:  
-
 Node.js (v14+ recommended)  
 MySQL  
 Git  
+   
 You will also need to set up the following:  
-
 An AWS EC2 instance (for hosting the backend)  
 An AWS RDS instance (for the MySQL database)  
+    
 Project Setup  
 1. Clone the Repository  
 To get started, clone the repository to your local machine:   
 git clone https://github.com/your-repo-url.git  
 cd rate-my-video-game    
-2. Setup Environment Variables  
+2. Setup Environment Variables    
 Create a .env file in both the application/server folder and application/web folder to configure your environment variables.   
 For Backend (in application/server/.env):    
 NODE_ENV=production    
     
-# Production DB   
+Production DB   
 HOST=your-production-db-host    
 USER_STRING=your-db-username    
 PASSWORD=your-db-password    
@@ -73,11 +75,12 @@ DATABASE=your-db-name
 PORT=8000    
 JWT_SECRET=your-jwt-secret     
 
-# Development DB
+Development DB
 DEV_HOST=127.0.0.1     
 DEV_USER_STRING=root    
 DEV_PASSWORD=    
-DEV_DATABASE=your-local-dev-db-name    
+DEV_DATABASE=your-local-dev-db-name  
+    
 3. Install Dependencies    
 Navigate to the root of both the backend and frontend directories, and install the necessary packages.
    
@@ -92,9 +95,8 @@ cd application/web
 npm install     
 
 4. Database Setup
-If you're running the app locally, set up your MySQL database using the schema provided in the application/server/scripts folder.
-
-Run the following command to connect to your MySQL database:
+If you're running the app locally, set up your MySQL database using the schema provided in the application/server/scripts folder.     
+Run the following command to connect to your MySQL database:   
 mysql -h your-db-host -u your-db-user -p    
 Once connected, create the necessary tables:     
 source ./scripts/gamesDevDBSetup.sql     
@@ -116,8 +118,7 @@ http://localhost:3000
 If your project is hosted, replace localhost:3000 with your AWS EC2 public IP or domain name.    
      
 7. API Endpoints     
-The backend exposes the following API endpoints for interacting with the database:    
-     
+The backend exposes the following API endpoints for interacting with the database:       
 Method	Endpoint	Purpose    
 POST	/login	Log in the user     
 POST	/signup	Register a new user    
@@ -127,8 +128,7 @@ GET	/reviews/:gameId	Get reviews for a specific game
 GET	/ratings/:gameId	Get average rating for a game     
      
 8. Deploying to AWS EC2     
-To deploy this project to your EC2 instance, follow these steps:     
-     
+To deploy this project to your EC2 instance, follow these steps:       
 SSH into your EC2 instance:      
 ssh -i your-key.pem ec2-user@your-ec2-public-ip     
 Transfer project files to the EC2 instance using scp or git.    
@@ -146,10 +146,11 @@ Host the frontend (React app) using a service like Nginx or a public IP:
 cd /path/to/project/application/web     
 npm install    
 npm build      
-
+    
 9. Troubleshooting    
 CORS Issues: Ensure the backend CORS settings allow requests from your frontend.    
 Database Connection Errors: Verify the MySQL connection settings and make sure your security group on AWS allows inbound MySQL connections on port 3306.     
+   
 Contributing    
 If you would like to contribute, please fork the repository and submit a pull request.     
 
