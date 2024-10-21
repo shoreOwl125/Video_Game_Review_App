@@ -10,12 +10,13 @@ searchButton.addEventListener('click', async () => {
   // Check if the input is not empty
   if (searchTerm) {
     try {
-      // Make a fetch request to the backend
+      // Make a fetch request to the backend on EC2
       const response = await fetch(
-        `http://localhost:8000/api/games/search?query=${encodeURIComponent(
+        `http://54.200.162.255/api/games/search?query=${encodeURIComponent(
           searchTerm,
         )}`,
       )
+
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
