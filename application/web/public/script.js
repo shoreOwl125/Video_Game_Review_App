@@ -12,9 +12,7 @@ searchButton.addEventListener('click', async () => {
     try {
       // Make a fetch request to the backend on EC2
       const response = await fetch(
-        `http://54.200.162.255/api/games/search?query=${encodeURIComponent(
-          searchTerm,
-        )}`,
+        `/api/games?query=${encodeURIComponent(searchTerm)}`,
       )
 
       if (!response.ok) {

@@ -20,7 +20,11 @@ const app = express();
 
 // Middleware setup
 app.use(helmet());
-const allowedOrigins = ["http://localhost:3000", "http://127.0.0.1:5500"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:5500",
+  "https://gameratings-63hlr9lx0-abccodes-projects.vercel.app/",
+];
 
 app.use(
   cors({
