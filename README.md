@@ -1,6 +1,6 @@
 # CSC648-01-FA24-team02 Repository
 
-**Application URL: <(https://gameratings-psi.vercel.app/)>**
+**Application URL: <https://gameratings-psi.vercel.app/>**
 
 ## Before completing Milestone 0
 
