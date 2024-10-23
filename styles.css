@@ -174,3 +174,149 @@ body {
 .pill-dropdown option {
     color: #333; /* Style the dropdown options */
 }
+
+.login-box {
+    background-color: white;
+    width: 380px;
+    margin: 0 auto; /* Center horizontally */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    top: 50px; /* Adjust this value to move the box up/down */
+    margin-bottom: 60px; 
+}
+
+.login-box p {
+    color: #af9f9f;
+    margin-top: 10px;
+    margin-bottom: 20px; 
+    font-size: 12px; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.create-account-link {
+    color: #185cf0; 
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 30px;
+}
+
+
+/* Input Field Styling */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.password-field {
+    margin-bottom: 8px; 
+
+}
+
+/* Button Styling */
+.submit-btn, .google-login-btn {
+    max-width: 150px;
+    width: 100%;
+    padding: 8px;
+    background-color: white;
+    color: #000;
+    border: 1px solid #d1d1d1;
+    border-radius: 25px; 
+    font-size: 14px;
+    font-weight: bold;
+    display: center;
+    align-items: center;
+    justify-content: center; 
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    background-color: #c0aeae;
+
+}
+
+.google-login-container {
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.google-login-btn {
+    max-width: 220px;
+    width: 100%;
+    padding: 8px;
+    background-color: white;
+    color: #000;
+    border: 1px solid #d1d1d1;
+    border-radius: 25px; 
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.google-login-btn img {
+    height: 18px;
+    margin-right: 10px;
+}
+
+.google-login-btn:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Forgot Password Link */
+.forgot-password {
+    font-size: 12px;
+    color: #185cf0;
+    text-decoration: none;
+    display: block;
+    text-align: left; 
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: #f4e6e6; 
+    font-size: 15px;
+    padding: 20px 0; 
+    text-align: center; 
+    position: relative; 
+    bottom: 0;
+    width: 100%; 
+}
+
+.footer-links {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+.footer-links li {
+    display: inline; 
+    margin: 0 15px;
+}
+
+.footer-links a {
+    color: #999595; 
+    text-decoration: none; 
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+
+
+
