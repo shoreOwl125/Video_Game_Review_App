@@ -22,19 +22,19 @@
 
 
         <div class="login-box">
-            <h2>Login</h2>
-            <p>Want to create an account? <a href="signup.html" class="create-account-link">Create an Account</a></p>
+            <h2>Create an Account</h2>
             <div class="google-login-container">
                 <button class="google-login-btn">
                     <img src="google.png" alt="Google Icon"> Continue with Google
                 </button>
             </div>
             
-            <form class="login-form" action="login-handler.php" method="POST">
-                <input type="text" name="email" placeholder="Username or Email" class="input-field">
-                <input type="password" name="password" placeholder="Password" class="input-field password-field">
-                <a href="#" class="forgot-password">Forgot Password?</a>
-                <button type="submit" class="submit-btn">Sign In</button>
+            <form class="login-form" action="signup-handler.php" method="POST">
+                <input type="text" name="username" placeholder="Username" class="input-field">
+                <input type="email" name="email" placeholder="Email" class="input-field">
+                <input type="password" name="password" placeholder="Password" class="input-field">
+                <input type="password" name="confirm_password" placeholder="Confirm Password" class="input-field">
+                <button type="submit" class="submit-btn">Create</button>
             </form>
         </div>
 
