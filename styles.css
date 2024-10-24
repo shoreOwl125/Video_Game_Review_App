@@ -320,5 +320,95 @@ footer {
 }
 
 
+.back-home {
+    margin-top: 20px;
+    text-align: center;
+}
 
 
+.title-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; 
+}
+
+.title-link:hover {
+    color: inherit;
+}
+
+.review-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    margin: 40px auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #FFF; 
+    border: 1px solid #000; 
+    border-radius: 55px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-input {
+    width: 100%;
+    height: 200px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* Adds a softer corner radius for the input field */
+    margin-bottom: 20px;
+    resize: none;
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Sets the same font as the rest */
+    font-size: 16px; 
+    color: #333;
+}
+
+.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+    width: 100%; /* Takes up full width of the container */
+    padding-left: 20px;
+}
+
+.star {
+    font-size: 32px; 
+    color: #ccc; /* Use a lighter color for unselected stars */
+    cursor: pointer;
+}
+
+.star:hover,
+.star.active {
+    color: #f4c542; /* Use a bright yellow for selected/hovered stars */
+}
+
+.select-rating {
+    margin-left: 10px;
+    font-size: 18px; 
+    color: #b39393; 
+}
+
+
+.post-review {
+    padding: 10px 20px;
+    background-color: #c0aeae;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.post-review:hover {
+    background-color: #b39393;
+}
+
+#game-title {
+    color: #452A2A; 
+    font-family: "Inria Sans", sans-serif; 
+    flex-shrink: 0; 
+    text-align: left;
+    width: 100%; 
+    padding-left: 20px;
+}
