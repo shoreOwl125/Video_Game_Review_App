@@ -1,15 +1,9 @@
 import bcrypt from "bcryptjs";
 import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
+import { RowDataPacket } from "mysql2/promise"; // Import the correct type for result rows
 
-// Define the User interface
+// Define the User interface with id as required
 interface IUser {
-  id?: number;
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface IUserRow {
   id: number;
   name: string;
   email: string;
@@ -17,7 +11,8 @@ interface IUserRow {
 }
 
 class User {
-  static async create(user: IUser) {
+  // Accepts IUser without `id` when creating a new user
+  static async create(user: Omit<IUser, "id">): Promise<IUser> {
     const { name, email, password } = user;
 
     // Hash the password before saving
@@ -27,56 +22,50 @@ class User {
     // Get the pool using getPool()
     const pool = getPool();
 
-    // Create a new user in the database
+    // Insert the user into the database
     await pool.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, hashedPassword]
     );
 
     // Retrieve the newly inserted user
-    const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
+    const [rows] = await pool.query<RowDataPacket[]>(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
 
-    const [userRow] = rows as IUserRow[]; // Type assertion
+    const userRow = rows[0] as IUser; // Ensure TypeScript knows this is an IUser
 
     return userRow;
   }
 
-  static async findByEmail(email: string) {
-    // Get the pool using getPool()
+  static async findByEmail(email: string): Promise<IUser | undefined> {
     const pool = getPool();
-
-    const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-
-    const [userRow] = rows as IUserRow[]; // Type assertion
-
-    return userRow;
+    const [rows] = await pool.query<RowDataPacket[]>(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    const userRow = rows[0] as IUser;
+    return userRow || undefined;
   }
 
   static async comparePassword(
     storedPassword: string,
     enteredPassword: string
-  ) {
+  ): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, storedPassword);
   }
 
-  static async findById(userId: number) {
-    // Get the pool using getPool()
+  static async findById(userId: number): Promise<IUser | undefined> {
     const pool = getPool();
-
-    const [
-      rows,
-    ] = await pool.query("SELECT id, name, email FROM users WHERE id = ?", [
-      userId,
-    ]);
-
-    const [userRow] = rows as IUserRow[];
-
-    return userRow;
+    const [rows] = await pool.query<RowDataPacket[]>(
+      "SELECT * FROM users WHERE id = ?",
+      [userId]
+    );
+    const userRow = rows[0] as IUser;
+    return userRow || undefined;
   }
 }
 
 export default User;
+export type { IUser };

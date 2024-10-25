@@ -1,4 +1,8 @@
+// app.ts
+
 import express from "express";
+import passport from "passport"; // <-- Import passport here
+import { Strategy as GoogleStrategy } from "passport-google-oauth20"; // Import GoogleStrategy
 import authRouter from "./routes/authRoutes";
 import { connectUserDB } from "./connections/database";
 import dotenv from "dotenv";
@@ -26,6 +30,7 @@ const allowedOrigins = [
   "https://gameratings-63hlr9lx0-abccodes-projects.vercel.app/",
 ];
 
+// cors setup with allowed origins
 app.use(
   cors({
     origin: function(origin, callback) {
@@ -43,11 +48,37 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Initialize Passport
+app.use(passport.initialize());
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "../public"))); // Serve static files from the public folder
 
 // Serve static files from the 'web/src' directory
 app.use(express.static(path.join(__dirname, "..", "..", "web", "src"))); // Serve static files from web/src
+
+// google oauth setup
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID!, // Ensure you have GOOGLE_CLIENT_ID in your .env
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!, // Ensure you have GOOGLE_CLIENT_SECRET in your .env
+      callbackURL: "/api/auth/google/callback", // This should match the route in your authRouter
+    },
+    (accessToken, refreshToken, profile, done) => {
+      // For now, we'll just pass the profile on
+      return done(null, profile);
+    }
+  )
+);
+
+// Serialize and deserialize user (minimal implementation)
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+passport.deserializeUser((obj: any, done) => {
+  done(null, obj as Express.User);
+});
 
 // Route setup
 app.use("/api/auth", authRouter);
@@ -56,7 +87,9 @@ app.use("/api/games", gameRoutes); // Use /api/games for games routes
 
 // Serve index.html at the root
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "web", "src", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "..", "..", "web", "src", "public", "index.html")
+  );
 });
 
 // Error handling middleware
