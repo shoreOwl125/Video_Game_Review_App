@@ -97,7 +97,6 @@ INSERT INTO games (title, description, genre, release_date, cover_image) VALUES
 ('Game 10', 'An epic adventure game with beautiful graphics.', 'Adventure', '2023-10-20', 'https://example.com/image10.jpg');
 
 -- Populate the reviews table
--- Ensure each user_id and game_id exists in the users and games tables
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
 (1, 1, 5, 'Amazing game, loved every minute!'),
 (2, 2, 4, 'Great game, but could use more levels.'),

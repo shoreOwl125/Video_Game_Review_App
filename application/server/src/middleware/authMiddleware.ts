@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User, { IUser } from "../models/User"; // Ensure IUser is imported
+import User from "../models/User";
+import { User as UserInterface } from "../interfaces/User"; // Import the User interface
+
+// Extend the Request interface to include `user`
 
 const authenticate = async (
   req: Request,
@@ -17,13 +20,14 @@ const authenticate = async (
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       userId: number;
     };
+
     const user = await User.findById(decoded.userId);
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    req.user = user as IUser; // Explicitly type req.user as IUser
+    req.user = user as UserInterface; // Type `req.user` as UserInterface
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized" });

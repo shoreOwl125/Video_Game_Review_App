@@ -6,7 +6,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import app from "../app";
 import { Request, Response, NextFunction } from "express";
-import { IUser } from "../models/User";
+import { User as UserInterface } from "../interfaces/User"; // Import User interface
 
 // Configure the Google OAuth strategy directly in the test file
 passport.use(
@@ -18,11 +18,15 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       // Simulate user retrieval or creation
-      const user: IUser = {
+      const user: UserInterface = {
         id: 1,
         name: profile.displayName || "Test User",
         email: profile.emails?.[0]?.value || "testuser@gmail.com",
         password: "", // No password for OAuth users
+        theme_preference: "light", // Default theme preference
+        user_data_id: null, // Set user_data_id to null or a test value
+        created_at: new Date(), // Mock creation date
+        updated_at: new Date(), // Mock update date
       };
       done(null, user);
     }
@@ -62,11 +66,15 @@ describe("Google OAuth", () => {
         ) => {
           return (req: Request, res: Response, next: NextFunction) => {
             if (callback) {
-              const user: IUser = {
+              const user: UserInterface = {
                 id: 1,
                 name: "Test User",
                 email: "testuser@gmail.com",
                 password: "",
+                theme_preference: "light", // Default theme preference
+                user_data_id: null, // Set user_data_id to null or a test value
+                created_at: new Date(), // Mock creation date
+                updated_at: new Date(), // Mock update date
               };
               callback(null, user, {});
             } else {
@@ -103,7 +111,11 @@ describe("Google OAuth", () => {
         (
           strategy: string,
           options: any,
-          callback?: (err: Error | null, user: IUser | false, info: any) => void
+          callback?: (
+            err: Error | null,
+            user: UserInterface | false,
+            info: any
+          ) => void
         ) => {
           return (req: Request, res: Response, next: NextFunction) => {
             if (callback) {

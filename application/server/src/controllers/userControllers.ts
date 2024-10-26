@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
-import { IUser } from "../models/User"; // Import IUser for assertions if needed
+import { User as UserInterface } from "../interfaces/User"; // Import the User interface
 
 const getUser = (req: Request, res: Response) => {
-  const userId = (req.user as IUser).id; // Assert req.user as IUser if necessary
-  if (!userId) {
+  // Cast req.user as UserInterface directly within the function
+  const user = req.user as UserInterface | undefined;
+
+  if (!user?.id) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   // Fetch and respond with user profile using userId
-  res.json({ userId });
+  res.json({ userId: user.id });
 };
 
 export { getUser };
