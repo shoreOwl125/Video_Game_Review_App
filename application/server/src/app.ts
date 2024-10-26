@@ -1,8 +1,8 @@
 // app.ts
 
 import express from "express";
-import passport from "passport"; // <-- Import passport here
-import { Strategy as GoogleStrategy } from "passport-google-oauth20"; // Import GoogleStrategy
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import authRouter from "./routes/authRoutes";
 import { connectUserDB } from "./connections/database";
 import dotenv from "dotenv";
@@ -11,11 +11,11 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes";
-import gameRoutes from "./routes/gameRoutes"; // Updated import
+import gameRoutes from "./routes/gameRoutes";
 import { authenticate } from "./middleware/authMiddleware";
 import { errorHandler } from "./middleware/errorMiddleware";
 import path from "path";
-import searchRouter from "./routes/gameRoutes"; // Assuming your route is in a file named search.ts
+import searchRouter from "./routes/gameRoutes";
 
 // Load environment variables from .env file
 dotenv.config();
