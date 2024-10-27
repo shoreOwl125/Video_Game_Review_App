@@ -7,19 +7,19 @@ CREATE DATABASE IF NOT EXISTS ratings_dev_db;
 -- Use the database
 USE ratings_dev_db;
 
--- Create the user_data table first, as it will be referenced by users
 CREATE TABLE IF NOT EXISTS user_data (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    search_history TEXT DEFAULT NULL,
-    interests TEXT DEFAULT NULL,
-    view_history TEXT DEFAULT NULL,
-    review_history TEXT DEFAULT NULL,
-    genres TEXT DEFAULT NULL,
+    search_history JSON,
+    interests JSON,
+    view_history JSON,
+    review_history JSON,
+    genres JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create the users table
+
+
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS users (
     FOREIGN KEY (user_data_id) REFERENCES user_data(id) ON DELETE SET NULL
 );
 
--- Create the games table
 CREATE TABLE IF NOT EXISTS games (
     game_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -45,7 +44,6 @@ CREATE TABLE IF NOT EXISTS games (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create the reviews table
 CREATE TABLE IF NOT EXISTS reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,  -- Foreign key to users table
@@ -58,20 +56,18 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (game_id) REFERENCES games(game_id) ON DELETE CASCADE
 );
 
--- Populate the user_data table
 INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES
-('["game1", "game2"]', '["sports", "action"]', '["game1"]', '["1", "2"]', '["RPG", "Adventure"]'),
-('["game3", "game4"]', '["adventure", "strategy"]', '["game3"]', '["3", "4"]', '["Shooter", "Puzzle"]'),
-('["game2", "game5"]', '["puzzle", "arcade"]', '["game2"]', '["5", "6"]', '["Strategy", "Action"]'),
-('["game6", "game1"]', '["action", "sports"]', '["game6"]', '["7", "8"]', '["Adventure", "Shooter"]'),
-('["game7", "game3"]', '["arcade", "puzzle"]', '["game7"]', '["9", "10"]', '["Sports", "RPG"]'),
-('["game5", "game4"]', '["RPG", "adventure"]', '["game5"]', '["11", "12"]', '["Action", "Puzzle"]'),
-('["game8", "game2"]', '["action", "arcade"]', '["game8"]', '["13", "14"]', '["Shooter", "Sports"]'),
-('["game1", "game6"]', '["strategy", "sports"]', '["game1"]', '["15", "16"]', '["Puzzle", "Adventure"]'),
-('["game9", "game5"]', '["puzzle", "RPG"]', '["game9"]', '["17", "18"]', '["Strategy", "Action"]'),
-('["game10", "game7"]', '["arcade", "sports"]', '["game10"]', '["19", "20"]', '["RPG", "Shooter"]');
+    ('["game1", "game2"]', '["sports", "action"]', '["game1"]', '["1", "2"]', '["RPG", "Adventure"]'),
+    ('["game3", "game4"]', '["adventure", "strategy"]', '["game3"]', '["3", "4"]', '["Shooter", "Puzzle"]'),
+    ('["game2", "game5"]', '["puzzle", "arcade"]', '["game2"]', '["5", "6"]', '["Strategy", "Action"]'),
+    ('["game6", "game1"]', '["action", "sports"]', '["game6"]', '["7", "8"]', '["Adventure", "Shooter"]'),
+    ('["game7", "game3"]', '["arcade", "puzzle"]', '["game7"]', '["9", "10"]', '["Sports", "RPG"]'),
+    ('["game5", "game4"]', '["RPG", "adventure"]', '["game5"]', '["11", "12"]', '["Action", "Puzzle"]'),
+    ('["game8", "game2"]', '["action", "arcade"]', '["game8"]', '["13", "14"]', '["Shooter", "Sports"]'),
+    ('["game1", "game6"]', '["strategy", "sports"]', '["game1"]', '["15", "16"]', '["Puzzle", "Adventure"]'),
+    ('["game9", "game5"]', '["puzzle", "RPG"]', '["game9"]', '["17", "18"]', '["Strategy", "Action"]'),
+    ('["game10", "game7"]', '["arcade", "sports"]', '["game10"]', '["19", "20"]', '["RPG", "Shooter"]');
 
--- Populate the users table
 INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Alice Smith', 'alice.smith@example.com', '$2a$10$EIX/9rRBRZG0syGm5McZ1.3pO9xPhQPrG2.LM.cHg35VgPBUtHpO2', 'light', 1),
 ('Bob Johnson', 'bob.johnson@example.com', '$2a$10$R1G6h/DqTr7U9M9j0zBP2u8NEClM24z3cVZx7MucZyU2W/u2W9Y1C', 'dark', 2),
@@ -84,7 +80,6 @@ INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Ivy Green', 'ivy.green@example.com', '$2a$10$Jz9q5dMLg6hMZ7D5tYX0xOOG84lEj0EGjC5Y8jX.JFVQdr3.Y.PaK', 'light', 9),
 ('Jack White', 'jack.white@example.com', '$2a$10$EJ2i7E/9JojRNHtIHLjhl.TYKUOd13KJ8tTO6OCaQxxdX/ZZzNLG.', 'dark', 10);
 
--- Populate the games table
 INSERT INTO games (title, description, genre, release_date, cover_image, review_rating) VALUES
 ('Game 1', 'An exciting adventure game.', 'Adventure', '2023-01-01', 'https://example.com/image1.jpg', 9),
 ('Game 2', 'A challenging RPG game.', 'RPG', '2022-02-15', 'https://example.com/image2.jpg', 8),
@@ -97,7 +92,6 @@ INSERT INTO games (title, description, genre, release_date, cover_image, review_
 ('Game 9', 'A casual puzzle game for everyone.', 'Puzzle', '2021-09-10', 'https://example.com/image9.jpg', 6),
 ('Game 10', 'An epic adventure game with beautiful graphics.', 'Adventure', '2023-10-20', 'https://example.com/image10.jpg', 10);
 
--- Populate the reviews table
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
 (1, 1, 5, 'Amazing game, loved every minute!'),
 (2, 2, 4, 'Great game, but could use more levels.'),
