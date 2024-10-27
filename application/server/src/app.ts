@@ -3,19 +3,20 @@
 import express from "express";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import authRouter from "./routes/authRoutes";
 import { connectUserDB } from "./connections/database";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import userRouter from "./routes/userRoutes";
-import gameRoutes from "./routes/gameRoutes";
 import { authenticate } from "./middleware/authMiddleware";
 import { errorHandler } from "./middleware/errorMiddleware";
 import path from "path";
+import authRouter from "./routes/authRoutes";
 import searchRouter from "./routes/gameRoutes";
+import userDataRouter from "./routes/userDataRoutes";
+import userRouter from "./routes/userRoutes";
+import gameRouter from "./routes/gameRoutes";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -73,7 +74,8 @@ passport.deserializeUser((obj: any, done) => {
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/users", authenticate, userRouter);
-app.use("/api/games", gameRoutes);
+app.use("/api/games", gameRouter);
+app.use("/api/userdata", userDataRouter);
 
 // Error handling middleware
 app.use(errorHandler);
