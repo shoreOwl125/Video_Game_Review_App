@@ -22,7 +22,6 @@ class Game {
     await pool.query(sql, values);
   };
 
-  // Find games based on filters
   findGames = async (
     query: string,
     genre: string,
@@ -49,14 +48,12 @@ class Game {
     return rows as GameInterface[];
   };
 
-  // Delete a game by ID
   deleteGame = async (gameId: number): Promise<void> => {
     const sql = "DELETE FROM games WHERE game_id = ?";
     const pool = getPool();
     await pool.query(sql, [gameId]);
   };
 
-  // Update game details
   updateGame = async (
     gameId: number,
     updates: Partial<GameInterface>
@@ -75,7 +72,6 @@ class Game {
     await pool.query(sql, values);
   };
 
-  // Get a single game by ID
   getGameById = async (gameId: number): Promise<GameInterface | null> => {
     const sql = "SELECT * FROM games WHERE game_id = ?";
     const pool = getPool();

@@ -40,7 +40,6 @@ class UserData {
     };
   }
 
-  // Create user data record
   async createUserData(
     data: Omit<UserDataInterface, "id" | "created_at" | "updated_at">
   ): Promise<number> {
@@ -61,7 +60,6 @@ class UserData {
     return (result as RowDataPacket).insertId;
   }
 
-  // Get user data by ID
   async getUserDataById(id: number): Promise<UserDataInterface | null> {
     const pool = getPool();
     const sql = "SELECT * FROM user_data WHERE id = ?";
@@ -69,7 +67,6 @@ class UserData {
     return rows.length ? this.parseFields(rows[0]) : null;
   }
 
-  // Update user data by ID
   async updateUserData(
     id: number,
     updates: Partial<UserDataInterface>
@@ -89,7 +86,6 @@ class UserData {
     await pool.query(sql, values);
   }
 
-  // Delete user data by ID
   async deleteUserData(id: number): Promise<void> {
     const pool = getPool();
     const sql = "DELETE FROM user_data WHERE id = ?";

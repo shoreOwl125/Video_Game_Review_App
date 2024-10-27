@@ -4,7 +4,6 @@ import { UserData as UserDataInterface } from "../interfaces/UserData";
 
 const userDataModel = new UserDataModel();
 
-// Controller to create new user data
 export const createUserData = async (
   req: Request,
   res: Response
@@ -24,7 +23,6 @@ export const createUserData = async (
   }
 };
 
-// Controller to get user data by ID
 export const getUserDataById = async (
   req: Request,
   res: Response
@@ -44,7 +42,6 @@ export const getUserDataById = async (
   }
 };
 
-// Controller to update user data by ID
 export const updateUserData = async (
   req: Request,
   res: Response
@@ -60,7 +57,6 @@ export const updateUserData = async (
   }
 };
 
-// Controller to delete user data by ID
 export const deleteUserData = async (
   req: Request,
   res: Response

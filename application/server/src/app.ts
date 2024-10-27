@@ -17,6 +17,7 @@ import searchRouter from "./routes/gameRoutes";
 import userDataRouter from "./routes/userDataRoutes";
 import userRouter from "./routes/userRoutes";
 import gameRouter from "./routes/gameRoutes";
+import reviewRoter from "./routes/reviewRoutes";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -76,6 +77,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", authenticate, userRouter);
 app.use("/api/games", gameRouter);
 app.use("/api/userdata", userDataRouter);
+app.use("/api/reviews", reviewRoter);
 
 // Error handling middleware
 app.use(errorHandler);

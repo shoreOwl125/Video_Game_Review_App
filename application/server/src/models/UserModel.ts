@@ -4,18 +4,13 @@ import { RowDataPacket } from "mysql2/promise";
 import { User as UserInterface } from "../interfaces/User"; // Import the User interface as UserInterface
 
 class User {
-  // Accepts UserInterface without `id` when creating a new user
   static async create(
     user: Omit<UserInterface, "id" | "created_at" | "updated_at">
   ): Promise<UserInterface> {
     const { name, email, password, theme_preference, user_data_id } = user;
-
-    // Hash the password before saving
+    const pool = getPool();
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Get the pool using getPool()
-    const pool = getPool();
 
     // Insert the user into the database
     await pool.query(
@@ -29,7 +24,7 @@ class User {
       [email]
     );
 
-    const userRow = rows[0] as UserInterface; // TypeScript knows this is a UserInterface
+    const userRow = rows[0] as UserInterface;
 
     return userRow;
   }
