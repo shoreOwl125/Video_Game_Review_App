@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/User";
-import { User as UserInterface } from "../interfaces/User"; // Import the User interface
-
-// Extend the Request interface to include `user`
+import User from "../models/UserModel";
+import { User as UserInterface } from "../interfaces/User";
 
 const authenticate = async (
   req: Request,
@@ -27,7 +25,8 @@ const authenticate = async (
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    req.user = user as UserInterface; // Type `req.user` as UserInterface
+    req.user = user as UserInterface;
+
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized" });

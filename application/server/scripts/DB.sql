@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS games (
     genre VARCHAR(100),
     release_date DATE,
     cover_image VARCHAR(255),
+    review_rating INT CHECK (review_rating BETWEEN 1 AND 10),  -- New column for rating from 1 to 10
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -84,17 +85,17 @@ INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Jack White', 'jack.white@example.com', '$2a$10$EJ2i7E/9JojRNHtIHLjhl.TYKUOd13KJ8tTO6OCaQxxdX/ZZzNLG.', 'dark', 10);
 
 -- Populate the games table
-INSERT INTO games (title, description, genre, release_date, cover_image) VALUES
-('Game 1', 'An exciting adventure game.', 'Adventure', '2023-01-01', 'https://example.com/image1.jpg'),
-('Game 2', 'A challenging RPG game.', 'RPG', '2022-02-15', 'https://example.com/image2.jpg'),
-('Game 3', 'An action-packed shooter.', 'Shooter', '2023-03-10', 'https://example.com/image3.jpg'),
-('Game 4', 'An arcade classic.', 'Arcade', '2021-04-20', 'https://example.com/image4.jpg'),
-('Game 5', 'A strategic puzzle game.', 'Puzzle', '2022-05-25', 'https://example.com/image5.jpg'),
-('Game 6', 'A fun sports game.', 'Sports', '2020-06-30', 'https://example.com/image6.jpg'),
-('Game 7', 'An engaging RPG with deep story.', 'RPG', '2023-07-05', 'https://example.com/image7.jpg'),
-('Game 8', 'An action game with intense battles.', 'Action', '2022-08-15', 'https://example.com/image8.jpg'),
-('Game 9', 'A casual puzzle game for everyone.', 'Puzzle', '2021-09-10', 'https://example.com/image9.jpg'),
-('Game 10', 'An epic adventure game with beautiful graphics.', 'Adventure', '2023-10-20', 'https://example.com/image10.jpg');
+INSERT INTO games (title, description, genre, release_date, cover_image, review_rating) VALUES
+('Game 1', 'An exciting adventure game.', 'Adventure', '2023-01-01', 'https://example.com/image1.jpg', 9),
+('Game 2', 'A challenging RPG game.', 'RPG', '2022-02-15', 'https://example.com/image2.jpg', 8),
+('Game 3', 'An action-packed shooter.', 'Shooter', '2023-03-10', 'https://example.com/image3.jpg', 7),
+('Game 4', 'An arcade classic.', 'Arcade', '2021-04-20', 'https://example.com/image4.jpg', 6),
+('Game 5', 'A strategic puzzle game.', 'Puzzle', '2022-05-25', 'https://example.com/image5.jpg', 8),
+('Game 6', 'A fun sports game.', 'Sports', '2020-06-30', 'https://example.com/image6.jpg', 7),
+('Game 7', 'An engaging RPG with deep story.', 'RPG', '2023-07-05', 'https://example.com/image7.jpg', 10),
+('Game 8', 'An action game with intense battles.', 'Action', '2022-08-15', 'https://example.com/image8.jpg', 9),
+('Game 9', 'A casual puzzle game for everyone.', 'Puzzle', '2021-09-10', 'https://example.com/image9.jpg', 6),
+('Game 10', 'An epic adventure game with beautiful graphics.', 'Adventure', '2023-10-20', 'https://example.com/image10.jpg', 10);
 
 -- Populate the reviews table
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
@@ -110,7 +111,7 @@ INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
 (10, 10, 5, 'An epic adventure from start to finish!'),
 (1, 2, 4, 'Enjoyable RPG, but needs better graphics.'),
 (2, 3, 5, 'Loved the shooter gameplay, very thrilling.'),
-(3, 4, 2, 'Didn\'t find it engaging enough.'),
+(3, 4, 2, 'Did not find it engaging enough.'),
 (4, 5, 4, 'Challenging puzzles, really makes you think.'),
 (5, 6, 5, 'Best sports game of the year!'),
 (6, 7, 3, 'Decent RPG, but not very memorable.'),

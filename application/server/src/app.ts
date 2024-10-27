@@ -48,16 +48,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Initialize Passport
+// google oauth setup with passport google strategy
 app.use(passport.initialize());
-
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, "../public"))); // Serve static files from the public folder
-
-// Serve static files from the 'web/src' directory
-app.use(express.static(path.join(__dirname, "..", "..", "web", "src"))); // Serve static files from web/src
-
-// google oauth setup
 passport.use(
   new GoogleStrategy(
     {
@@ -71,8 +63,6 @@ passport.use(
     }
   )
 );
-
-// Serialize and deserialize user (minimal implementation)
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -80,17 +70,10 @@ passport.deserializeUser((obj: any, done) => {
   done(null, obj as Express.User);
 });
 
-// Route setup
+// Routes
 app.use("/api/auth", authRouter);
 app.use("/api/users", authenticate, userRouter);
-app.use("/api/games", gameRoutes); // Use /api/games for games routes
-
-// Serve index.html at the root
-app.get("/", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "..", "..", "web", "src", "public", "index.html")
-  );
-});
+app.use("/api/games", gameRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
