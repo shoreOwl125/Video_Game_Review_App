@@ -1,5 +1,4 @@
 // Check if elements exist before adding event listeners
-
 document.addEventListener('DOMContentLoaded', () => {
   const recommendationButton = document.getElementById('recommendation-button')
   if (recommendationButton) {
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await response.json()
 
-        // Assuming the data is in the format { recommendations: [ ... ] }
         if (Array.isArray(data.recommendations)) {
           data.recommendations.forEach((game) => {
             const gameContainer = document.createElement('div')

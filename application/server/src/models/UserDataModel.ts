@@ -1,6 +1,6 @@
-import { getPool } from "../connections/database";
-import { UserData as UserDataInterface } from "../interfaces/UserData";
-import { RowDataPacket } from "mysql2";
+import { getPool } from '../connections/database';
+import { UserData as UserDataInterface } from '../interfaces/UserData';
+import { RowDataPacket } from 'mysql2';
 
 class UserData {
   // Helper to stringify array fields before inserting or updating
@@ -20,28 +20,28 @@ class UserData {
     return {
       ...row,
       search_history:
-        typeof row.search_history === "string"
+        typeof row.search_history === 'string'
           ? JSON.parse(row.search_history)
           : row.search_history,
       interests:
-        typeof row.interests === "string"
+        typeof row.interests === 'string'
           ? JSON.parse(row.interests)
           : row.interests,
       view_history:
-        typeof row.view_history === "string"
+        typeof row.view_history === 'string'
           ? JSON.parse(row.view_history)
           : row.view_history,
       review_history:
-        typeof row.review_history === "string"
+        typeof row.review_history === 'string'
           ? JSON.parse(row.review_history)
           : row.review_history,
       genres:
-        typeof row.genres === "string" ? JSON.parse(row.genres) : row.genres,
+        typeof row.genres === 'string' ? JSON.parse(row.genres) : row.genres,
     };
   }
 
   async createUserData(
-    data: Omit<UserDataInterface, "id" | "created_at" | "updated_at">
+    data: Omit<UserDataInterface, 'id' | 'created_at' | 'updated_at'>
   ): Promise<number> {
     const pool = getPool();
     const stringifiedData = this.stringifyFields(data);
@@ -62,7 +62,7 @@ class UserData {
 
   async getUserDataById(id: number): Promise<UserDataInterface | null> {
     const pool = getPool();
-    const sql = "SELECT * FROM user_data WHERE id = ?";
+    const sql = 'SELECT * FROM user_data WHERE id = ?';
     const [rows] = await pool.query<RowDataPacket[]>(sql, [id]);
     return rows.length ? this.parseFields(rows[0]) : null;
   }
@@ -82,13 +82,13 @@ class UserData {
     }
 
     values.push(id);
-    const sql = `UPDATE user_data SET ${fields.join(", ")} WHERE id = ?`;
+    const sql = `UPDATE user_data SET ${fields.join(', ')} WHERE id = ?`;
     await pool.query(sql, values);
   }
 
   async deleteUserData(id: number): Promise<void> {
     const pool = getPool();
-    const sql = "DELETE FROM user_data WHERE id = ?";
+    const sql = 'DELETE FROM user_data WHERE id = ?';
     await pool.query(sql, [id]);
   }
 }
