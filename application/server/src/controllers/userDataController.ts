@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserDataModel from "../models/UserDataModel";
 import { UserData as UserDataInterface } from "../interfaces/UserData";
+import { getGameRecommendations } from "../services/recommendationService";
 
 const userDataModel = new UserDataModel();
 
@@ -68,5 +69,27 @@ export const deleteUserData = async (
   } catch (error) {
     console.error("Error deleting user data:", error);
     res.status(500).json({ message: "Error deleting user data", error });
+  }
+};
+
+// Helper function to parse JSON fields only if they're strings
+function parseJSONField(field: string | string[] | null | undefined): string[] {
+  if (typeof field === "string") {
+    return JSON.parse(field);
+  }
+  return field || [];
+}
+
+export const getRecommendations = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const recommendations = await getGameRecommendations(Number(id));
+    res.status(200).json(recommendations);
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    res.status(500).json({ message: "Error fetching recommendations", error });
   }
 };
