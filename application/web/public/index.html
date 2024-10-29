@@ -9,16 +9,14 @@
   <body>
     <header class="banner">
       <div class="banner-picture"></div>
-      <!-- New div for the background image -->
       <div class="banner-content">
         <h1 class="title">Rate My Video Game</h1>
         <div class="buttons">
-          <button class="pill-button">Sign Up</button>
-          <button class="pill-button">Login</button>
-          <!-- Updated the id to 'google-test' for valid HTML -->
-          <!-- index.html -->
-
-          <!-- Add this inside your banner or wherever appropriate -->
+          <a href="signup.html" class="pill-button">Sign Up</a>
+          <a href="login.html" class="pill-button">Login</a>
+          <a href="reccomendation.html" class="pill-button"
+            >Recommendation Demo</a
+          >
           <button id="google-login-button" class="pill-button">
             Login with Google
           </button>
@@ -28,28 +26,18 @@
 
     <section class="content-section">
       <div class="search-bar">
-        <div class="search-input-container">
-          <img src="game.png" class="search-icon" alt="Game Icon" />
-          <input
-            type="text"
-            class="search-input"
-            placeholder="Search for a video game"
-          />
-        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search for a video game"
+        />
         <button class="search-button">Search</button>
       </div>
-      <div class="buttons">
-        <label> Filter By: </label>
-        <button class="pill-button">Rating</button>
-      </div>
-      <div class="grid" id="gameGrid">
-        <!-- Existing game tiles -->
-        <div class="game-tile"></div>
-        <!-- ... other game tiles ... -->
-      </div>
+      <div id="gameGrid" class="grid"></div>
     </section>
 
-    <!-- Include your script.js file -->
+    <div id="recommendations"></div>
+    <!-- Add this div for recommendations -->
     <script src="script.js"></script>
   </body>
 </html>
