@@ -1,60 +1,36 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import User from "../models/User";
-import asyncHandler from "express-async-handler";
-import { AuthenticationError } from "./errorMiddleware";
+import jwt from "jsonwebtoken";
+import User from "../models/UserModel";
+import { User as UserInterface } from "../interfaces/User";
 
-// Declare UserBasicInfo interface
-interface UserBasicInfo {
-  id: number;
-  name: string;
-  email: string;
-}
+const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.cookies.jwt;
 
-// Extend the Express Request interface in this file
-declare global {
-  namespace Express {
-    interface Request {
-      user?: UserBasicInfo;
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
-}
 
-const authenticate = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const token = req.cookies.jwt;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: number;
+    };
 
-      if (!token) {
-        throw new AuthenticationError("Token not found");
-      }
+    const user = await User.findById(decoded.userId);
 
-      const jwtSecret = process.env.JWT_SECRET || "";
-      const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
-
-      if (!decoded || !decoded.userId) {
-        throw new AuthenticationError("UserId not found");
-      }
-
-      // Fetch the user by ID from MySQL
-      const user = await User.findById(decoded.userId);
-
-      if (!user) {
-        throw new AuthenticationError("User not found");
-      }
-
-      // Assign the user to req.user
-      req.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      };
-
-      next();
-    } catch (e) {
-      throw new AuthenticationError("Invalid token");
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
+
+    req.user = user as UserInterface;
+
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
-);
+};
 
 export { authenticate };

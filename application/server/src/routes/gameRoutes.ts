@@ -1,43 +1,27 @@
-import { Request, Response, Router } from "express";
-import { getPool } from "../connections/database";
-import { RowDataPacket } from "mysql2";
+import { Router } from "express";
+import {
+  createGame,
+  searchGames,
+  removeGame,
+  editGame,
+  getGame,
+} from "../controllers/gameController";
 
 const router = Router();
 
-router.get("/search", async (req: Request, res: Response) => {
-  const { query, genre, review_rating } = req.query;
+// Route to add a new game
+router.post("/", createGame);
 
-  let sql = "SELECT * FROM games WHERE 1=1";
-  let values: Array<string | number> = [];
+// Route to search games with filters
+router.get("/search", searchGames);
 
-  if (query) {
-    sql += " AND title LIKE ?";
-    values.push(`%${query}%`);
-  }
-  
-  if (genre) {
-    sql += " AND genre = ?";
-    values.push(genre as string);
-  }
+// Route to delete a game by ID
+router.delete("/:gameId", removeGame);
 
-  if (review_rating) {
-    sql += " AND review_rating >= ?";
-    values.push(Number(review_rating));
-  }
+// Route to update a game by ID
+router.put("/:gameId", editGame);
 
-  try {
-    const pool = getPool();
-    const [rows] = await pool.query<RowDataPacket[]>(sql, values);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ message: "No games found" });
-    }
-
-    return res.status(200).json(rows);
-  } catch (error) {
-    console.error("Error searching for games:", error);
-    return res.status(500).json({ message: "Server error", error });
-  }
-});
+// Route to get a game by ID
+router.get("/:gameId", getGame);
 
 export default router;

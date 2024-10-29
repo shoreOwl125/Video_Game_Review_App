@@ -2,6 +2,13 @@
 const searchButton = document.querySelector('.search-button')
 const searchInput = document.querySelector('.search-input')
 const gameGrid = document.getElementById('gameGrid')
+const googleLoginButton = document.getElementById('google-login-button')
+
+// Add an event listener to the Google login button
+googleLoginButton.addEventListener('click', () => {
+  // This should redirect to the backend URL at localhost:8000
+  window.location.href = 'http://localhost:8000/api/auth/google'
+})
 
 // Add an event listener to the search button
 searchButton.addEventListener('click', async () => {
@@ -10,11 +17,12 @@ searchButton.addEventListener('click', async () => {
   // Check if the input is not empty
   if (searchTerm) {
     try {
-      // Make a fetch request to the backend on EC2
+      // Make a fetch request to the backend
       const response = await fetch(
-        `/api/games?query=${encodeURIComponent(searchTerm)}`,
+        `http://localhost:8000/api/games/search?query=${encodeURIComponent(
+          searchTerm,
+        )}`,
       )
-
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }

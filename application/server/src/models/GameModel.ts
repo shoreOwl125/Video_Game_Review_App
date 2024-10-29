@@ -1,0 +1,84 @@
+import { getPool } from "../connections/database";
+import { Game as GameInterface } from "../interfaces/Game";
+
+class Game {
+  addGame = async (
+    game: Omit<GameInterface, "game_id" | "created_at" | "updated_at">
+  ): Promise<void> => {
+    const sql = `
+          INSERT INTO games (title, description, genre, release_date, cover_image, review_rating, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+        `;
+    const pool = getPool();
+    const values = [
+      game.title,
+      game.description,
+      game.genre,
+      game.release_date,
+      game.cover_image,
+      game.review_rating,
+    ];
+
+    await pool.query(sql, values);
+  };
+
+  findGames = async (
+    query: string,
+    genre: string,
+    reviewRating: number
+  ): Promise<GameInterface[]> => {
+    let sql = "SELECT * FROM games WHERE 1=1";
+    const values: (string | number)[] = [];
+    const pool = getPool();
+
+    if (query) {
+      sql += " AND title LIKE ?";
+      values.push(`%${query}%`);
+    }
+    if (genre) {
+      sql += " AND genre = ?";
+      values.push(genre);
+    }
+    if (reviewRating) {
+      sql += " AND review_rating >= ?";
+      values.push(reviewRating);
+    }
+
+    const [rows] = await pool.query(sql, values);
+    return rows as GameInterface[];
+  };
+
+  deleteGame = async (gameId: number): Promise<void> => {
+    const sql = "DELETE FROM games WHERE game_id = ?";
+    const pool = getPool();
+    await pool.query(sql, [gameId]);
+  };
+
+  updateGame = async (
+    gameId: number,
+    updates: Partial<GameInterface>
+  ): Promise<void> => {
+    const fields = [];
+    const values: (string | number)[] = [];
+    const pool = getPool();
+
+    for (const [key, value] of Object.entries(updates)) {
+      fields.push(`${key} = ?`);
+      values.push(value as string | number);
+    }
+    values.push(gameId);
+
+    const sql = `UPDATE games SET ${fields.join(", ")} WHERE game_id = ?`;
+    await pool.query(sql, values);
+  };
+
+  getGameById = async (gameId: number): Promise<GameInterface | null> => {
+    const sql = "SELECT * FROM games WHERE game_id = ?";
+    const pool = getPool();
+    const [rows] = await pool.query(sql, [gameId]);
+
+    return (rows as GameInterface[])[0] || null;
+  };
+}
+
+export default Game;
