@@ -55,17 +55,18 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 
 INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES
-    ('["game1", "game2"]', '["sports", "action"]', '["game1"]', '["1", "2"]', '["RPG", "Adventure"]'),
-    ('["game3", "game4"]', '["adventure", "strategy"]', '["game3"]', '["3", "4"]', '["Shooter", "Puzzle"]'),
-    ('["game2", "game5"]', '["puzzle", "arcade"]', '["game2"]', '["5", "6"]', '["Strategy", "Action"]'),
-    ('["game6", "game1"]', '["action", "sports"]', '["game6"]', '["7", "8"]', '["Adventure", "Shooter"]'),
-    ('["game7", "game3"]', '["arcade", "puzzle"]', '["game7"]', '["9", "10"]', '["Sports", "RPG"]'),
-    ('["game5", "game4"]', '["RPG", "adventure"]', '["game5"]', '["11", "12"]', '["Action", "Puzzle"]'),
-    ('["game8", "game2"]', '["action", "arcade"]', '["game8"]', '["13", "14"]', '["Shooter", "Sports"]'),
-    ('["game1", "game6"]', '["strategy", "sports"]', '["game1"]', '["15", "16"]', '["Puzzle", "Adventure"]'),
-    ('["game9", "game5"]', '["puzzle", "RPG"]', '["game9"]', '["17", "18"]', '["Strategy", "Action"]'),
-    ('["game10", "game7"]', '["arcade", "sports"]', '["game10"]', '["19", "20"]', '["RPG", "Shooter"]');
+    ('["The Witcher 3", "Cyberpunk 2077", "Hades", "Assassin\s Creed Valhalla", "Halo Infinite", "Fortnite", "Red Dead Redemption 2", "Apex Legends", "Valorant"]', '["sports", "action", "fantasy", "adventure", "simulation"]', '["The Witcher 3", "Valorant", "Hades", "Fortnite"]', '["1", "2", "5", "8"]', '["RPG", "Adventure", "Shooter", "Puzzle", "Sports"]'),
+    ('["Minecraft", "League of Legends", "Dark Souls III", "Hollow Knight", "Dota 2", "Rocket League", "Overwatch", "Skyrim", "Destiny 2"]', '["adventure", "strategy", "racing", "arcade", "mystery"]', '["League of Legends", "Hollow Knight", "Destiny 2", "Overwatch"]', '["3", "4", "7", "9"]', '["Shooter", "Puzzle", "Racing", "Action", "Adventure"]'),
+    ('["Animal Crossing", "Stardew Valley", "SimCity", "Cities: Skylines", "Zoo Tycoon", "The Sims 4", "Civilization VI", "Age of Empires II", "RollerCoaster Tycoon"]', '["puzzle", "arcade", "simulation", "racing", "fantasy"]', '["Stardew Valley", "SimCity", "Age of Empires II", "Zoo Tycoon"]', '["5", "6", "8", "10"]', '["Strategy", "Puzzle", "Sports", "Adventure", "Shooter"]'),
+    ('["Battlefield V", "Call of Duty: Warzone", "Apex Legends", "Fortnite", "Overwatch", "CS:GO", "PUBG", "Escape from Tarkov", "Rainbow Six Siege"]', '["action", "sports", "racing", "mystery", "sci-fi"]', '["Apex Legends", "Overwatch", "Fortnite", "Rainbow Six Siege"]', '["7", "8", "9", "10"]', '["Adventure", "Shooter", "Puzzle", "Action", "Sci-Fi"]'),
+    ('["Among Us", "Phasmophobia", "Dead by Daylight", "Left 4 Dead 2", "Resident Evil Village", "Silent Hill", "Outlast", "Alien: Isolation", "The Evil Within"]', '["arcade", "puzzle", "mystery", "horror", "fantasy"]', '["Phasmophobia", "Resident Evil Village", "Silent Hill", "Outlast"]', '["9", "10", "11", "12"]', '["Horror", "Mystery", "Shooter", "Adventure", "Fantasy"]'),
+    ('["Assassin\s Creed Odyssey", "God of War", "Horizon Zero Dawn", "Ghost of Tsushima", "Shadow of the Tomb Raider", "Uncharted 4", "Far Cry 5", "Sekiro", "Bloodborne"]', '["RPG", "adventure", "action", "strategy", "sci-fi"]', '["God of War", "Horizon Zero Dawn", "Far Cry 5", "Sekiro"]', '["11", "12", "13", "14"]', '["Action", "Puzzle", "Shooter", "Sci-Fi", "Fantasy"]'),
+    ('["Gran Turismo Sport", "Forza Horizon 4", "Need for Speed Heat", "F1 2020", "Project CARS 2", "Dirt 5", "Assetto Corsa", "Wreckfest", "Burnout Paradise"]', '["action", "arcade", "puzzle", "fantasy", "simulation"]', '["Forza Horizon 4", "Gran Turismo Sport", "Dirt 5", "Burnout Paradise"]', '["13", "14", "15", "16"]', '["Racing", "Arcade", "Puzzle", "Fantasy", "Sports"]'),
+    ('["Super Mario Odyssey", "The Legend of Zelda: Breath of the Wild", "Luigi\s Mansion 3", "Mario Kart 8 Deluxe", "Splatoon 2", "Super Smash Bros. Ultimate", "Donkey Kong Country", "Yoshi\s Crafted World", "Kirby Star Allies"]', '["strategy", "sports", "adventure", "action", "simulation"]', '["Super Mario Odyssey", "Mario Kart 8 Deluxe", "Splatoon 2", "The Legend of Zelda: Breath of the Wild"]', '["15", "16", "17", "18"]', '["Platformer", "Adventure", "Puzzle", "Action", "Sports"]'),
+    ('["Starcraft II", "Command & Conquer", "Warcraft III", "Total War: Three Kingdoms", "Age of Empires II", "Halo Wars", "XCOM 2", "Company of Heroes", "Wargame: Red Dragon"]', '["puzzle", "RPG", "strategy", "mystery", "simulation"]', '["Starcraft II", "Age of Empires II", "Company of Heroes", "Warcraft III"]', '["17", "18", "19", "20"]', '["Strategy", "Action", "Shooter", "Adventure", "Puzzle"]'),
+    ('["Doom Eternal", "Quake Champions", "Half-Life 2", "Borderlands 3", "Far Cry 6", "Halo Infinite", "Titanfall 2", "Metro Exodus", "Wolfenstein II"]', '["arcade", "sports", "mystery", "action", "fantasy"]', '["Doom Eternal", "Halo Infinite", "Metro Exodus", "Far Cry 6"]', '["19", "20", "21", "22"]', '["Shooter", "Action", "Adventure", "Sci-Fi", "Fantasy"]');
 
+-- Insert users with references to user data
 INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Alice Smith', 'alice.smith@example.com', '$2a$10$EIX/9rRBRZG0syGm5McZ1.3pO9xPhQPrG2.LM.cHg35VgPBUtHpO2', 'light', 1),
 ('Bob Johnson', 'bob.johnson@example.com', '$2a$10$R1G6h/DqTr7U9M9j0zBP2u8NEClM24z3cVZx7MucZyU2W/u2W9Y1C', 'dark', 2),
@@ -79,16 +80,21 @@ INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Jack White', 'jack.white@example.com', '$2a$10$EJ2i7E/9JojRNHtIHLjhl.TYKUOd13KJ8tTO6OCaQxxdX/ZZzNLG.', 'dark', 10);
 
 INSERT INTO games (title, description, genre, release_date, cover_image, review_rating) VALUES
-('Game 1', 'An exciting adventure game.', 'Adventure', '2023-01-01', 'https://example.com/image1.jpg', 9),
-('Game 2', 'A challenging RPG game.', 'RPG', '2022-02-15', 'https://example.com/image2.jpg', 8),
-('Game 3', 'An action-packed shooter.', 'Shooter', '2023-03-10', 'https://example.com/image3.jpg', 7),
-('Game 4', 'An arcade classic.', 'Arcade', '2021-04-20', 'https://example.com/image4.jpg', 6),
-('Game 5', 'A strategic puzzle game.', 'Puzzle', '2022-05-25', 'https://example.com/image5.jpg', 8),
-('Game 6', 'A fun sports game.', 'Sports', '2020-06-30', 'https://example.com/image6.jpg', 7),
-('Game 7', 'An engaging RPG with deep story.', 'RPG', '2023-07-05', 'https://example.com/image7.jpg', 10),
-('Game 8', 'An action game with intense battles.', 'Action', '2022-08-15', 'https://example.com/image8.jpg', 9),
-('Game 9', 'A casual puzzle game for everyone.', 'Puzzle', '2021-09-10', 'https://example.com/image9.jpg', 6),
-('Game 10', 'An epic adventure game with beautiful graphics.', 'Adventure', '2023-10-20', 'https://example.com/image10.jpg', 10);
+('Cyberpunk 2077', 'An open-world RPG set in a dystopian future.', 'RPG', '2020-12-10', 'https://example.com/image_cyberpunk.jpg', 7),
+('The Witcher 3: Wild Hunt', 'A fantasy RPG about a monster hunter on an epic quest.', 'RPG', '2015-05-18', 'https://example.com/image_witcher3.jpg', 10),
+('Valorant', 'A tactical shooter game with unique characters.', 'Shooter', '2020-06-02', 'https://example.com/image_valorant.jpg', 9),
+('Red Dead Redemption 2', 'An action-adventure game set in the Wild West.', 'Adventure', '2018-10-26', 'https://example.com/image_rdr2.jpg', 10),
+('Hades', 'A rogue-like dungeon crawler based on Greek mythology.', 'Adventure', '2020-09-17', 'https://example.com/image_hades.jpg', 8),
+('Overwatch', 'A team-based shooter with unique heroes and abilities.', 'Shooter', '2016-05-24', 'https://example.com/image_overwatch.jpg', 9),
+('Minecraft', 'An open-world sandbox game with creative building.', 'Adventure', '2011-11-18', 'https://example.com/image_minecraft.jpg', 10),
+('Dota 2', 'A popular multiplayer online battle arena (MOBA) game.', 'Strategy', '2013-07-09', 'https://example.com/image_dota2.jpg', 8),
+('Stardew Valley', 'A farming simulation game with RPG elements.', 'Simulation', '2016-02-26', 'https://example.com/image_stardew_valley.jpg', 9),
+('Apex Legends', 'A free-to-play battle royale game with unique characters.', 'Shooter', '2019-02-04', 'https://example.com/image_apex_legends.jpg', 9),
+('Assassin\s Creed Valhalla', 'An open-world action RPG set in Viking times.', 'RPG', '2020-11-10', 'https://example.com/image_ac_valhalla.jpg', 8),
+('Hollow Knight', 'A challenging, atmospheric adventure in a bug kingdom.', 'Adventure', '2017-02-24', 'https://example.com/image_hollow_knight.jpg', 9),
+('League of Legends', 'A popular MOBA game with diverse champions.', 'Strategy', '2009-10-27', 'https://example.com/image_lol.jpg', 8),
+('Resident Evil Village', 'A horror survival game with a first-person perspective.', 'Horror', '2021-05-07', 'https://example.com/image_resident_evil.jpg', 9),
+('Phasmophobia', 'A multiplayer horror game where players hunt ghosts.', 'Horror', '2020-09-18', 'https://example.com/image_phasmophobia.jpg', 8);
 
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
 (1, 1, 5, 'Amazing game, loved every minute!'),

@@ -6,9 +6,9 @@ class Game {
     game: Omit<GameInterface, "game_id" | "created_at" | "updated_at">
   ): Promise<void> => {
     const sql = `
-          INSERT INTO games (title, description, genre, release_date, cover_image, review_rating, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
-        `;
+      INSERT INTO games (title, description, genre, release_date, cover_image, review_rating, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+    `;
     const pool = getPool();
     const values = [
       game.title,
@@ -23,26 +23,38 @@ class Game {
   };
 
   findGames = async (
-    query: string,
-    genre: string,
-    reviewRating: number
+    query: string = "",
+    genres: string = "",
+    minReviewRating: number = 0
   ): Promise<GameInterface[]> => {
+    const pool = getPool();
     let sql = "SELECT * FROM games WHERE 1=1";
     const values: (string | number)[] = [];
-    const pool = getPool();
 
+    console.log(
+      `Searching games with query: "${query}", genres: "${genres}", minimum review rating: ${minReviewRating}`
+    );
+
+    // Title search
     if (query) {
       sql += " AND title LIKE ?";
       values.push(`%${query}%`);
     }
-    if (genre) {
-      sql += " AND genre = ?";
-      values.push(genre);
+
+    // Genre filtering with partial matching
+    if (genres) {
+      const genreList = genres.split(",").map((g) => g.trim());
+      sql += " AND (" + genreList.map(() => "genre LIKE ?").join(" OR ") + ")";
+      values.push(...genreList.map((genre) => `%${genre}%`));
     }
-    if (reviewRating) {
+
+    // Minimum review rating
+    if (minReviewRating) {
       sql += " AND review_rating >= ?";
-      values.push(reviewRating);
+      values.push(minReviewRating);
     }
+
+    console.log(`Final SQL Query: ${sql} with values:`, values);
 
     const [rows] = await pool.query(sql, values);
     return rows as GameInterface[];
@@ -78,6 +90,13 @@ class Game {
     const [rows] = await pool.query(sql, [gameId]);
 
     return (rows as GameInterface[])[0] || null;
+  };
+
+  getAllGames = async (limit: number = 50): Promise<GameInterface[]> => {
+    const sql = "SELECT * FROM games LIMIT ?";
+    const pool = getPool();
+    const [rows] = await pool.query(sql, [limit]);
+    return rows as GameInterface[];
   };
 }
 
