@@ -50,6 +50,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// telling server where to serve static files from first
+app.use(express.static(path.join(__dirname, "../../web/public")));
+
 // google oauth setup with passport google strategy
 app.use(passport.initialize());
 passport.use(
@@ -79,9 +82,10 @@ app.use("/api/games", gameRouter);
 app.use("/api/userdata", userDataRouter);
 app.use("/api/reviews", reviewRoter);
 
-// Route to handle root path
+
+// Fallback root route if index.html is not found
 app.get("/", (req, res) => {
-  res.send("Welcome to the API!");
+  res.send("The server is working, but the index page isn’t loading.");
 });
 
 
