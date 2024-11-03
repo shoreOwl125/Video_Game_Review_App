@@ -79,6 +79,12 @@ app.use("/api/games", gameRouter);
 app.use("/api/userdata", userDataRouter);
 app.use("/api/reviews", reviewRoter);
 
+// Route to handle root path
+app.get("/", (req, res) => {
+  res.send("Welcome to the API!");
+});
+
+
 // Error handling middleware
 app.use(errorHandler);
 
