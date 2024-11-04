@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rate My Video Game</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="banner">
+      <div class="banner-picture"></div>
+      <div class="banner-content">
+        <h1 class="title">Rate My Video Game</h1>
+        <div class="buttons">
+          <a href="signup.html" class="pill-button">Sign Up</a>
+          <a href="login.html" class="pill-button">Login</a>
+          <a href="reccomendation.html" class="pill-button"
+            >Recommendation Demo</a
+          >
+          <button id="google-login-button" class="pill-button">
+            Login with Google
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="content-section">
+        
+      <div class="search-bar">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search for a video game"
+        />
+        <button class="search-button">Search</button>
+      </div>
+      <div id="gameGrid" class="grid"></div>
+    </section>
+
+    <div class="game-info">
+
+        <div class="info-top">
+            <div class="game-stats">
+                <!-- rating stats content here-->
+                <p>Rating: ★★★★☆</p>
+                <p>Reviews: 1,234</p>
+            </div>
+
+            <div class="game-image">
+                <!--image content-->
+                <img src="gameinfo_testimage.png" alt="Game Image">
+            </div>
+        </div>
+
+        <div class="info-bottom">
+            <p>(info-bottom section) Platforms: Nintendo | Atari | Sega | Playstation</p>
+        </div>
+
+    </div>
+
+
+    <div class="game-reviews">
+    </div>
+    <!-- Add this div for recommendations -->
+    <script src="script.js"></script>
+  </body>
+</html>
