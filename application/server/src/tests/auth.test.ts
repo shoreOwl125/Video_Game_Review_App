@@ -1,11 +1,11 @@
 import request from "supertest";
-import app from "../app"; // Adjust this path based on your app.ts location
-import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
+import app from "../app";
+import { getPool } from "../connections/database";
 
 describe("User Registration, Login, Logout, and Profile API Tests", () => {
-  let uniqueEmail: string = ""; // Store unique email for testing
-  let jwtCookie: string = ""; // Store the JWT cookie after login
-  const pool = getPool(); // Retrieve the pool using getPool()
+  let uniqueEmail: string = "";
+  let jwtCookie: string = "";
+  const pool = getPool();
 
   // Close the database pool after all tests
   afterAll(async () => {
@@ -14,7 +14,7 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
 
   // Clean up users table before each test
   beforeEach(async () => {
-    uniqueEmail = `testuser@gmail.com`; // Generate a unique email for each test
+    uniqueEmail = `testuser@gmail.com`;
     await pool.query("DELETE FROM users");
   });
 

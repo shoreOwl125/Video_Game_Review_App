@@ -1,25 +1,27 @@
-import jwt from "jsonwebtoken";
-import { Response } from "express";
+import jwt from 'jsonwebtoken';
+import { Response } from 'express';
 
 const generateToken = (res: Response, userId: string) => {
-  const jwtSecret = process.env.JWT_SECRET || "";
+  const jwtSecret = process.env.JWT_SECRET || '';
   const token = jwt.sign({ userId }, jwtSecret, {
-    expiresIn: "1h",
+    expiresIn: '1h',
   });
 
-  const isProduction = process.env.NODE_ENV === "production";
+  console.log('Generated Token:', token); // Log the token to verify
 
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: "strict",
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  res.cookie('jwt', token, {
+    httpOnly: false,
+    secure: false,
+    sameSite: 'lax',
     maxAge: 60 * 60 * 1000,
   });
 };
 
 const clearToken = (res: Response) => {
-  res.cookie("jwt", "", {
-    httpOnly: true,
+  res.cookie('jwt', '', {
+    httpOnly: false,
     expires: new Date(0),
   });
 };
