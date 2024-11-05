@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 import request from "supertest";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import app from "../app";
 import { Request, Response, NextFunction } from "express";
-import { User as UserInterface } from "../interfaces/User"; // Import User interface
+import { User as UserInterface } from "../interfaces/User";
 
-// Configure the Google OAuth strategy directly in the test file
 passport.use(
   new GoogleStrategy(
     {

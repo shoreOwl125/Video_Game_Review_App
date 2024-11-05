@@ -1,8 +1,32 @@
-import { Request, Response, NextFunction } from "express";
-import User from "../models/UserModel";
-import { User as UserInterface } from "../interfaces/User";
-import passport from "passport";
-import { generateToken, clearToken } from "../utils/auth";
+import { Request, Response, NextFunction } from 'express';
+import User from '../models/UserModel';
+import { User as UserInterface } from '../interfaces/User';
+import passport from 'passport';
+import { generateToken, clearToken } from '../utils/auth';
+import jwt from 'jsonwebtoken';
+
+export const authStatus = async (req: Request, res: Response) => {
+  const token = req.cookies.jwt;
+
+  console.log('JWT Cookie:', token);
+
+  if (!token) {
+    return res.json({ loggedIn: false });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const user = await User.findById((decoded as any).userId);
+    if (user) {
+      return res.json({ loggedIn: true });
+    } else {
+      return res.json({ loggedIn: false });
+    }
+  } catch (error) {
+    console.error('JWT verification error:', error);
+    return res.json({ loggedIn: false });
+  }
+};
 
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, theme_preference, user_data_id } = req.body;
@@ -10,7 +34,7 @@ const registerUser = async (req: Request, res: Response) => {
   // Check if the user already exists
   const userExists = await User.findByEmail(email);
   if (userExists) {
-    return res.status(400).json({ message: "The user already exists" });
+    return res.status(400).json({ message: 'The user already exists' });
   }
 
   // Create a new user
@@ -53,39 +77,39 @@ const authenticateUser = async (req: Request, res: Response) => {
   } else {
     return res
       .status(401)
-      .json({ message: "User not found / password incorrect" });
+      .json({ message: 'User not found / password incorrect' });
   }
 };
 
 const logoutUser = (req: Request, res: Response) => {
   clearToken(res);
-  return res.status(200).json({ message: "User logged out" });
+  return res.status(200).json({ message: 'User logged out' });
 };
 
 // Google login initiation (redirects to Google)
-const googleLogin = passport.authenticate("google", {
-  scope: ["profile", "email"],
+const googleLogin = passport.authenticate('google', {
+  scope: ['profile', 'email'],
 });
 
 // Google login callback
 const googleCallback = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
-    "google",
+    'google',
     { session: false },
     (err: Error | null, user: UserInterface | null) => {
       if (err || !user) {
-        console.log("Authentication error or no user:", err); // Debug
+        console.log('Authentication error or no user:', err); // Debug
         return res
           .status(400)
-          .json({ message: "Google authentication failed" });
+          .json({ message: 'Google authentication failed' });
       }
 
-      console.log("Authenticated user:", user); // Check if user is populated
+      console.log('Authenticated user:', user); // Check if user is populated
 
       const token = generateToken(res, user.id.toString());
-      res.cookie("jwt", token, {
+      res.cookie('jwt', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
+        secure: process.env.NODE_ENV !== 'development',
         maxAge: 60 * 60 * 1000, // 1 hour
       });
 
