@@ -5,21 +5,27 @@ import passport from 'passport';
 import { generateToken, clearToken } from '../utils/auth';
 import jwt from 'jsonwebtoken';
 
-export const authStatus = async (req: Request, res: Response) => {
-  const token = req.cookies.jwt;
+const authStatus = async (req: Request, res: Response) => {
+  console.log('All Cookies:', req.cookies); // Log all cookies
 
-  console.log('JWT Cookie:', token);
+  const token = req.cookies.jwt;
+  console.log('JWT Cookie from request:', token); // Log only jwt cookie
 
   if (!token) {
+    console.log('No JWT cookie received');
     return res.json({ loggedIn: false });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    console.log('Decoded JWT:', decoded);
+
     const user = await User.findById((decoded as any).userId);
     if (user) {
+      console.log('User found:', user);
       return res.json({ loggedIn: true });
     } else {
+      console.log('User not found');
       return res.json({ loggedIn: false });
     }
   } catch (error) {
@@ -129,4 +135,5 @@ export {
   logoutUser,
   googleCallback,
   googleLogin,
+  authStatus,
 };

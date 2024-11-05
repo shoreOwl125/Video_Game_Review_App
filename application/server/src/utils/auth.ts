@@ -7,16 +7,16 @@ const generateToken = (res: Response, userId: string) => {
     expiresIn: '1h',
   });
 
-  console.log('Generated Token:', token); // Log the token to verify
-
-  const isProduction = process.env.NODE_ENV === 'production';
+  console.log('Generated Token:', token); // Log the token for verification
 
   res.cookie('jwt', token, {
-    httpOnly: false,
-    secure: false,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 1000,
+    httpOnly: false, // Temporarily set to false for debugging
+    secure: false, // Set to false for localhost
+    sameSite: 'lax', // Match the working test-cookie settings
+    maxAge: 60 * 60 * 1000, // 1 hour
   });
+
+  console.log('Set-Cookie Header:', res.getHeader('Set-Cookie'));
 };
 
 const clearToken = (res: Response) => {
@@ -25,5 +25,4 @@ const clearToken = (res: Response) => {
     expires: new Date(0),
   });
 };
-
 export { generateToken, clearToken };
