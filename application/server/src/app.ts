@@ -18,7 +18,6 @@ import userDataRouter from './routes/userDataRoutes';
 import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
-
 // Load environment variables from .env file
 dotenv.config();
 
