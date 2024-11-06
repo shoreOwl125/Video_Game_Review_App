@@ -1,26 +1,25 @@
 import request from "supertest";
-import app from "../app"; // Adjust this path based on your app.ts location
-import { getPool } from "../connections/database"; // Use getPool to retrieve the connection pool
+import app from "../app";
+import { getPool } from "../connections/database";
 
 describe("User Registration, Login, Logout, and Profile API Tests", () => {
-  let uniqueEmail: string = ""; // Store unique email for testing
-  let jwtCookie: string = ""; // Store the JWT cookie after login
-  const pool = getPool(); // Retrieve the pool using getPool()
+  let uniqueEmail: string = "";
+  let jwtCookie: string = "";
+  const pool = getPool();
 
-  // Close the database pool after the test is completed
+  // Close the database pool after all tests
   afterAll(async () => {
     await pool.end();
   });
 
   // Clean up users table before each test
   beforeEach(async () => {
+    uniqueEmail = `testuser@gmail.com`;
     await pool.query("DELETE FROM users");
   });
 
   /** Test case: Register a new user */
   it("should register a new user", async () => {
-    uniqueEmail = `testuser_${Date.now()}@example.com`; // Generate a unique email
-
     const res = await request(app)
       .post("/api/auth/register")
       .send({
@@ -36,20 +35,20 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
 
   /** Test case: Login with the registered user */
   it("should log in the user with correct credentials and return a token in cookies", async () => {
-    // First, register the user
+    // Register the user
     await request(app)
       .post("/api/auth/register")
       .send({
         name: "John Doe",
-        email: uniqueEmail, // Use the email registered in the previous test
+        email: uniqueEmail,
         password: "password123",
       });
 
-    // Now, login the user
+    // Login the user
     const res = await request(app)
       .post("/api/auth/login")
       .send({
-        email: uniqueEmail, // Use the same email used in registration
+        email: uniqueEmail,
         password: "password123",
       });
 
@@ -58,25 +57,36 @@ describe("User Registration, Login, Logout, and Profile API Tests", () => {
     expect(res.body).toHaveProperty("email", uniqueEmail); // Ensure the correct email is returned
 
     // Check if JWT token is set in cookies
-    const cookies = res.headers["set-cookie"]; // Get cookies from the response
+    const cookies = res.headers["set-cookie"];
     expect(cookies).toBeDefined(); // Check that cookies are set
     expect(cookies[0]).toMatch(/jwt=/); // Ensure the cookie contains the JWT token
 
-    // Store the cookie for future tests
+    // Store the JWT cookie for future tests
     jwtCookie = cookies[0];
   });
 
   /** Test case: Logout the user */
   it("should log out the user and clear the JWT token from cookies", async () => {
-    // Log in the user first to have a valid JWT token
+    // Register and log in the user to obtain a JWT token
     await request(app)
+      .post("/api/auth/register")
+      .send({
+        name: "John Doe",
+        email: uniqueEmail,
+        password: "password123",
+      });
+
+    const loginRes = await request(app)
       .post("/api/auth/login")
       .send({
         email: uniqueEmail,
         password: "password123",
       });
 
-    // Now, log out the user
+    // Store the JWT cookie from login
+    jwtCookie = loginRes.headers["set-cookie"][0];
+
+    // Logout the user
     const res = await request(app)
       .post("/api/auth/logout")
       .set("Cookie", jwtCookie); // Use the JWT token stored in the cookie

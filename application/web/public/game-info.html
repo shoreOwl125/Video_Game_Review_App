@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Review - Rate My Video Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="game-info.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="banner">
+        <div class="banner-picture"></div>
+        <div class="banner-content">
+            <!-- Make the title clickable -->
+            <h1 class="title">
+                <a href="index.html" class="title-link">Rate My Video Game</a>
+            </h1>
+            <div class="buttons">
+                <button class="pill-button">Sign Up</button>
+                <button class="pill-button">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section class="content-section">
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <div class="search-input-container">
+                <img src="game.png" class="search-icon" alt="Game Icon">
+                <input type="text" class="search-input" placeholder="Search for a video game">
+                <button class="search-button">Search</button>
+            </div>
+        </div>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-container">
+            <label for="rating-filter" class="filter-label">Filter By:</label>
+            <select id="rating-filter" class="pill-dropdown">
+                <option value="">Select Rating</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+        </div>
+
+
+
+
+        <div class="game-info">
+
+            <div class="info-top">
+                <div class="game-stats">
+                    <!-- rating stats content here-->
+                    <p>Rating: ★★★★☆</p>
+                    <p>Reviews: 1,234</p>
+                </div>
+
+                <div class="game-image">
+                    <!--image content-->
+                    <img src="gameinfo_testimage.png" alt="Game Image">
+                </div>
+            </div>
+
+            <div class="info-bottom">
+                <p>(info-bottom section) Platforms: Nintendo | Atari | Sega | Playstation</p>
+            </div>
+
+        </div>
+
+
+        <div class="game-reviews">
+        </div>
+
+        
+
+    </section>
+
+    <script src="script.js"></script>
+    <script src="game-info.js"></script>
+</body>
+</html>
