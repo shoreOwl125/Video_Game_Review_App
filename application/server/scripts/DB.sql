@@ -35,12 +35,22 @@ CREATE TABLE IF NOT EXISTS games (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     genre VARCHAR(100),
+    tags JSON,
+    platforms JSON,
+    playtime_estimate INT,
+    popularity_score INT,
+    developer VARCHAR(255),
+    publisher VARCHAR(255),
+    game_mode ENUM('single-player', 'multiplayer', 'both'),
     release_date DATE,
+    release_year_bucket ENUM('new', 'recent', 'classic'),
+    price_range ENUM('free', 'budget', 'mid-range', 'premium'),
+    review_rating INT CHECK (review_rating BETWEEN 1 AND 10),
     cover_image VARCHAR(255),
-    review_rating INT CHECK (review_rating BETWEEN 1 AND 10),  -- New column for rating from 1 to 10
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE IF NOT EXISTS reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,22 +89,23 @@ INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
 ('Ivy Green', 'ivy.green@example.com', '$2a$10$Jz9q5dMLg6hMZ7D5tYX0xOOG84lEj0EGjC5Y8jX.JFVQdr3.Y.PaK', 'light', 9),
 ('Jack White', 'jack.white@example.com', '$2a$10$EJ2i7E/9JojRNHtIHLjhl.TYKUOd13KJ8tTO6OCaQxxdX/ZZzNLG.', 'dark', 10);
 
-INSERT INTO games (title, description, genre, release_date, cover_image, review_rating) VALUES
-('Cyberpunk 2077', 'An open-world RPG set in a dystopian future.', 'RPG', '2020-12-10', 'https://example.com/image_cyberpunk.jpg', 7),
-('The Witcher 3: Wild Hunt', 'A fantasy RPG about a monster hunter on an epic quest.', 'RPG', '2015-05-18', 'https://example.com/image_witcher3.jpg', 10),
-('Valorant', 'A tactical shooter game with unique characters.', 'Shooter', '2020-06-02', 'https://example.com/image_valorant.jpg', 9),
-('Red Dead Redemption 2', 'An action-adventure game set in the Wild West.', 'Adventure', '2018-10-26', 'https://example.com/image_rdr2.jpg', 10),
-('Hades', 'A rogue-like dungeon crawler based on Greek mythology.', 'Adventure', '2020-09-17', 'https://example.com/image_hades.jpg', 8),
-('Overwatch', 'A team-based shooter with unique heroes and abilities.', 'Shooter', '2016-05-24', 'https://example.com/image_overwatch.jpg', 9),
-('Minecraft', 'An open-world sandbox game with creative building.', 'Adventure', '2011-11-18', 'https://example.com/image_minecraft.jpg', 10),
-('Dota 2', 'A popular multiplayer online battle arena (MOBA) game.', 'Strategy', '2013-07-09', 'https://example.com/image_dota2.jpg', 8),
-('Stardew Valley', 'A farming simulation game with RPG elements.', 'Simulation', '2016-02-26', 'https://example.com/image_stardew_valley.jpg', 9),
-('Apex Legends', 'A free-to-play battle royale game with unique characters.', 'Shooter', '2019-02-04', 'https://example.com/image_apex_legends.jpg', 9),
-('Assassin\s Creed Valhalla', 'An open-world action RPG set in Viking times.', 'RPG', '2020-11-10', 'https://example.com/image_ac_valhalla.jpg', 8),
-('Hollow Knight', 'A challenging, atmospheric adventure in a bug kingdom.', 'Adventure', '2017-02-24', 'https://example.com/image_hollow_knight.jpg', 9),
-('League of Legends', 'A popular MOBA game with diverse champions.', 'Strategy', '2009-10-27', 'https://example.com/image_lol.jpg', 8),
-('Resident Evil Village', 'A horror survival game with a first-person perspective.', 'Horror', '2021-05-07', 'https://example.com/image_resident_evil.jpg', 9),
-('Phasmophobia', 'A multiplayer horror game where players hunt ghosts.', 'Horror', '2020-09-18', 'https://example.com/image_phasmophobia.jpg', 8);
+INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, popularity_score, developer, publisher, game_mode, release_date, release_year_bucket, price_range, review_rating, cover_image) VALUES
+('Cyberpunk 2077', 'An open-world RPG set in a dystopian future.', 'RPG', '["open-world", "futuristic", "single-player"]', '["PC", "Xbox", "PlayStation"]', 100, 500000, 'CD Projekt Red', 'CD Projekt', 'single-player', '2020-12-10', 'new', 'premium', 7, 'https://example.com/image_cyberpunk.jpg'),
+('The Witcher 3: Wild Hunt', 'A fantasy RPG about a monster hunter on an epic quest.', 'RPG', '["fantasy", "open-world", "single-player"]', '["PC", "Xbox", "PlayStation", "Switch"]', 150, 800000, 'CD Projekt Red', 'CD Projekt', 'single-player', '2015-05-18', 'recent', 'premium', 10, 'https://example.com/image_witcher3.jpg'),
+('Valorant', 'A tactical shooter game with unique characters.', 'Shooter', '["tactical", "competitive", "multiplayer"]', '["PC"]', 50, 1200000, 'Riot Games', 'Riot Games', 'multiplayer', '2020-06-02', 'new', 'free', 9, 'https://example.com/image_valorant.jpg'),
+('Red Dead Redemption 2', 'An action-adventure game set in the Wild West.', 'Adventure', '["open-world", "western", "single-player", "multiplayer"]', '["PC", "Xbox", "PlayStation"]', 120, 1000000, 'Rockstar Games', 'Rockstar Games', 'both', '2018-10-26', 'recent', 'premium', 10, 'https://example.com/image_rdr2.jpg'),
+('Hades', 'A rogue-like dungeon crawler based on Greek mythology.', 'Adventure', '["rogue-like", "dungeon-crawler", "single-player"]', '["PC", "Switch"]', 25, 300000, 'Supergiant Games', 'Supergiant Games', 'single-player', '2020-09-17', 'new', 'mid-range', 8, 'https://example.com/image_hades.jpg'),
+('Overwatch', 'A team-based shooter with unique heroes and abilities.', 'Shooter', '["team-based", "competitive", "multiplayer"]', '["PC", "Xbox", "PlayStation", "Switch"]', 40, 2500000, 'Blizzard Entertainment', 'Blizzard Entertainment', 'multiplayer', '2016-05-24', 'recent', 'premium', 9, 'https://example.com/image_overwatch.jpg'),
+('Minecraft', 'An open-world sandbox game with creative building.', 'Adventure', '["sandbox", "creative", "multiplayer"]', '["PC", "Xbox", "PlayStation", "Switch", "Mobile"]', 1000, 10000000, 'Mojang Studios', 'Mojang Studios', 'both', '2011-11-18', 'classic', 'mid-range', 10, 'https://example.com/image_minecraft.jpg'),
+('Dota 2', 'A popular multiplayer online battle arena (MOBA) game.', 'Strategy', '["MOBA", "competitive", "multiplayer"]', '["PC"]', 200, 5000000, 'Valve', 'Valve', 'multiplayer', '2013-07-09', 'classic', 'free', 8, 'https://example.com/image_dota2.jpg'),
+('Stardew Valley', 'A farming simulation game with RPG elements.', 'Simulation', '["farming", "life-simulation", "single-player"]', '["PC", "Xbox", "PlayStation", "Switch", "Mobile"]', 60, 600000, 'ConcernedApe', 'ConcernedApe', 'single-player', '2016-02-26', 'recent', 'budget', 9, 'https://example.com/image_stardew_valley.jpg'),
+('Apex Legends', 'A free-to-play battle royale game with unique characters.', 'Shooter', '["battle-royale", "multiplayer", "competitive"]', '["PC", "Xbox", "PlayStation"]', 30, 900000, 'Respawn Entertainment', 'Electronic Arts', 'multiplayer', '2019-02-04', 'new', 'free', 9, 'https://example.com/image_apex_legends.jpg'),
+('Assassins Creed Valhalla', 'An open-world action RPG set in Viking times.', 'RPG', '["open-world", "action", "single-player"]', '["PC", "Xbox", "PlayStation"]', 80, 700000, 'Ubisoft', 'Ubisoft', 'single-player', '2020-11-10', 'new', 'premium', 8, 'https://example.com/image_ac_valhalla.jpg'),
+('Hollow Knight', 'A challenging, atmospheric adventure in a bug kingdom.', 'Adventure', '["platformer", "single-player", "indie"]', '["PC", "Switch", "PlayStation", "Xbox"]', 50, 400000, 'Team Cherry', 'Team Cherry', 'single-player', '2017-02-24', 'recent', 'budget', 9, 'https://example.com/image_hollow_knight.jpg'),
+('League of Legends', 'A popular MOBA game with diverse champions.', 'Strategy', '["MOBA", "competitive", "multiplayer"]', '["PC"]', 200, 12000000, 'Riot Games', 'Riot Games', 'multiplayer', '2009-10-27', 'classic', 'free', 8, 'https://example.com/image_lol.jpg'),
+('Resident Evil Village', 'A horror survival game with a first-person perspective.', 'Horror', '["horror", "first-person", "single-player"]', '["PC", "Xbox", "PlayStation"]', 20, 800000, 'Capcom', 'Capcom', 'single-player', '2021-05-07', 'new', 'premium', 9, 'https://example.com/image_resident_evil.jpg'),
+('Phasmophobia', 'A multiplayer horror game where players hunt ghosts.', 'Horror', '["horror", "multiplayer", "co-op"]', '["PC"]', 15, 500000, 'Kinetic Games', 'Kinetic Games', 'multiplayer', '2020-09-18', 'new', 'budget', 8, 'https://example.com/image_phasmophobia.jpg');
+
 
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
 (1, 1, 5, 'Amazing game, loved every minute!'),
