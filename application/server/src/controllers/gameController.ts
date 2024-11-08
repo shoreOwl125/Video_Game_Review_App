@@ -1,3 +1,5 @@
+// gameController.ts
+
 import { Request, Response } from 'express';
 import Game from '../models/GameModel';
 import { Game as GameInterface } from '../interfaces/Game';
@@ -45,6 +47,7 @@ export const searchGames = async (
       res.status(200).json(games);
     }
   } catch (error) {
+    console.error('Error in searchGames controller:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
@@ -59,6 +62,7 @@ export const removeGame = async (
     await gameModel.deleteGame(Number(gameId));
     res.status(200).json({ message: 'Game deleted successfully' });
   } catch (error) {
+    console.error('Error in removeGame controller:', error);
     res.status(500).json({ message: 'Error deleting game', error });
   }
 };
@@ -75,6 +79,7 @@ export const editGame = async (req: Request, res: Response): Promise<void> => {
     await gameModel.updateGame(Number(gameId), updates);
     res.status(200).json({ message: 'Game updated successfully' });
   } catch (error) {
+    console.error('Error in editGame controller:', error);
     res.status(500).json({ message: 'Error updating game', error });
   }
 };
@@ -91,6 +96,22 @@ export const getGame = async (req: Request, res: Response): Promise<void> => {
       res.status(200).json(game);
     }
   } catch (error) {
+    console.error('Error in getGame controller:', error);
     res.status(500).json({ message: 'Error fetching game', error });
+  }
+};
+
+// Controller to get all games with a limit
+export const getAllGames = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 50;
+    const games = await gameModel.getAllGames(limit);
+    res.status(200).json(games);
+  } catch (error) {
+    console.error('Error in getAllGames controller:', error);
+    res.status(500).json({ message: 'Error fetching games', error });
   }
 };
