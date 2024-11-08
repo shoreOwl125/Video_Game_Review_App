@@ -218,3 +218,25 @@ if (googleLoginButton) {
     window.location.href = 'http://127.0.0.1:8000/api/auth/google';
   });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Select the profile picture elements
+  const profilePicUpload = document.getElementById('profilePicUpload');
+  const profilePic = document.getElementById('profilePic');
+
+  // Only add the event listener if the elements exist
+  if (profilePicUpload && profilePic) {
+      profilePicUpload.addEventListener('change', function(event) {
+          console.log("File selected"); // Add this to verify event trigger
+          const file = event.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  console.log("Image loaded"); // Add this to verify loading
+                  profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
+              };
+              reader.readAsDataURL(file);
+          }
+      });
+  }
+});
