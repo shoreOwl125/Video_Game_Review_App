@@ -194,6 +194,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!response.ok) throw new Error('Network response was not ok');
 
           const games = await response.json();
+          console.log('Current data from the API: ', games)
+
           gameGrid.innerHTML = '';
           games.forEach(game => {
             const gameTile = document.createElement('div');
