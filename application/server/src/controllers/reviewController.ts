@@ -3,7 +3,6 @@ import ReviewModel from "../models/ReviewModel";
 
 const reviewModel = new ReviewModel();
 
-// Controller to create a new review
 export const createReview = async (
   req: Request,
   res: Response
@@ -23,7 +22,6 @@ export const createReview = async (
   }
 };
 
-// Controller to get review by ID
 export const getReviewById = async (
   req: Request,
   res: Response
@@ -63,7 +61,6 @@ export const getReviewByGameId = async (
   }
 };
 
-// Controller to update a review by ID
 export const updateReview = async (
   req: Request,
   res: Response
@@ -79,7 +76,6 @@ export const updateReview = async (
   }
 };
 
-// Controller to delete a review by ID
 export const deleteReview = async (
   req: Request,
   res: Response

@@ -1,6 +1,6 @@
 import { getPool } from '../connections/database';
 import { UserData as UserDataInterface } from '../interfaces/UserData';
-import { RowDataPacket } from 'mysql2';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 class UserData {
   // Helper to stringify array fields before inserting or updating
@@ -15,7 +15,6 @@ class UserData {
     };
   }
 
-  // Helper to parse array fields from JSON after retrieving
   private parseFields(row: any): UserDataInterface {
     return {
       ...row,
@@ -41,23 +40,24 @@ class UserData {
   }
 
   async createUserData(
-    data: Omit<UserDataInterface, 'id' | 'created_at' | 'updated_at'>
+    userData: Omit<UserDataInterface, 'id' | 'created_at' | 'updated_at'>
   ): Promise<number> {
     const pool = getPool();
-    const stringifiedData = this.stringifyFields(data);
-    const sql = `
-      INSERT INTO user_data (search_history, interests, view_history, review_history, genres)
-      VALUES (?, ?, ?, ?, ?)
-    `;
-    const [result] = await pool.query(sql, [
-      stringifiedData.search_history,
-      stringifiedData.interests,
-      stringifiedData.view_history,
-      stringifiedData.review_history,
-      stringifiedData.genres,
-    ]);
 
-    return (result as RowDataPacket).insertId;
+    // Insert user data
+    const [result] = await pool.query<ResultSetHeader>(
+      'INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES (?, ?, ?, ?, ?)',
+      [
+        JSON.stringify(userData.search_history || []),
+        JSON.stringify(userData.interests || []),
+        JSON.stringify(userData.view_history || []),
+        JSON.stringify(userData.review_history || []),
+        JSON.stringify(userData.genres || []),
+      ]
+    );
+
+    // Return the ID of the newly created user_data entry
+    return result.insertId;
   }
 
   async getUserDataById(id: number): Promise<UserDataInterface | null> {

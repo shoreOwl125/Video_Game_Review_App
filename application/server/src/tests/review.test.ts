@@ -1,11 +1,11 @@
-import request from "supertest";
-import app from "../app";
-import { getPool } from "../connections/database";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
+import request from 'supertest';
+import app from '../app';
+import { getPool } from '../connections/database';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 let pool = getPool();
 
-describe("Review API Tests", () => {
+describe('Review API Tests', () => {
   beforeAll(async () => {
     if (pool === null) {
       pool = getPool();
@@ -17,15 +17,14 @@ describe("Review API Tests", () => {
   });
 
   beforeEach(async () => {
-    await pool.query("START TRANSACTION"); // Start a transaction for data isolation
+    await pool.query('START TRANSACTION'); // Start a transaction for data isolation
   });
 
   afterEach(async () => {
-    await pool.query("ROLLBACK"); // Rollback any changes to maintain test isolation
+    await pool.query('ROLLBACK'); // Rollback any changes to maintain test isolation
   });
 
-  /** Test case: Create a new review */
-  it("should create a new review successfully", async () => {
+  it('should create a new review successfully', async () => {
     await pool.query(
       "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
     );
@@ -37,18 +36,18 @@ describe("Review API Tests", () => {
       user_id: 1,
       game_id: 1,
       rating: 4,
-      review_text: "Great game!",
+      review_text: 'Great game!',
     };
 
     const res = await request(app)
-      .post("/api/reviews")
+      .post('/api/reviews')
       .send(newReview);
 
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("message", "Review created successfully");
+    expect(res.body).toHaveProperty('message', 'Review created successfully');
 
     const [reviewData] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM reviews WHERE review_id = ?",
+      'SELECT * FROM reviews WHERE review_id = ?',
       [res.body.reviewId]
     );
 
@@ -57,8 +56,7 @@ describe("Review API Tests", () => {
     expect(reviewData[0].review_text).toEqual(newReview.review_text);
   });
 
-  /** Test case: Retrieve review by ID */
-  it("should retrieve a review by ID", async () => {
+  it('should retrieve a review by ID', async () => {
     await pool.query(
       "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
     );
@@ -76,11 +74,10 @@ describe("Review API Tests", () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.rating).toEqual(4);
-    expect(res.body.review_text).toEqual("Awesome game");
+    expect(res.body.review_text).toEqual('Awesome game');
   });
 
-  /** Test case: Update review by ID */
-  it("should update a review by ID", async () => {
+  it('should update a review by ID', async () => {
     await pool.query(
       "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
     );
@@ -94,22 +91,21 @@ describe("Review API Tests", () => {
 
     const res = await request(app)
       .put(`/api/reviews/${result.insertId}`)
-      .send({ rating: 5, review_text: "Excellent game!" });
+      .send({ rating: 5, review_text: 'Excellent game!' });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("message", "Review updated successfully");
+    expect(res.body).toHaveProperty('message', 'Review updated successfully');
 
     const [updatedReview] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM reviews WHERE review_id = ?",
+      'SELECT * FROM reviews WHERE review_id = ?',
       [result.insertId]
     );
 
     expect(updatedReview[0].rating).toEqual(5);
-    expect(updatedReview[0].review_text).toEqual("Excellent game!");
+    expect(updatedReview[0].review_text).toEqual('Excellent game!');
   });
 
-  /** Test case: Delete review by ID */
-  it("should delete a review by ID", async () => {
+  it('should delete a review by ID', async () => {
     await pool.query(
       "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
     );
@@ -126,10 +122,10 @@ describe("Review API Tests", () => {
       .send();
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("message", "Review deleted successfully");
+    expect(res.body).toHaveProperty('message', 'Review deleted successfully');
 
     const [deletedReview] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM reviews WHERE review_id = ?",
+      'SELECT * FROM reviews WHERE review_id = ?',
       [result.insertId]
     );
 

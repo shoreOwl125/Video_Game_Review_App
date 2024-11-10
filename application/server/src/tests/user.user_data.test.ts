@@ -1,11 +1,11 @@
-import request from "supertest";
-import app from "../app";
-import { getPool } from "../connections/database";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
+import request from 'supertest';
+import app from '../app';
+import { getPool } from '../connections/database';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 let pool = getPool();
 
-describe("User Data API Tests", () => {
+describe('User Data API Tests', () => {
   beforeAll(async () => {
     if (pool === null) {
       pool = getPool();
@@ -17,37 +17,36 @@ describe("User Data API Tests", () => {
   });
 
   beforeEach(async () => {
-    await pool.query("DELETE FROM user_data");
-    await pool.query("COMMIT");
+    await pool.query('DELETE FROM user_data');
+    await pool.query('COMMIT');
   });
 
-  /** Test case: Add a new user data record */
-  it("should add a new user data record successfully", async () => {
+  it('should add a new user data record successfully', async () => {
     const newUserData = {
-      search_history: ["game5", "game6"],
-      interests: ["strategy", "puzzle"],
-      view_history: ["game5"],
-      review_history: ["1", "3"],
-      genres: ["Action", "Puzzle"],
+      search_history: ['game5', 'game6'],
+      interests: ['strategy', 'puzzle'],
+      view_history: ['game5'],
+      review_history: ['1', '3'],
+      genres: ['Action', 'Puzzle'],
     };
 
     const res = await request(app)
-      .post("/api/userdata")
+      .post('/api/userdata')
       .send(newUserData);
-    console.log("Create response:", res.statusCode, res.body);
+    console.log('Create response:', res.statusCode, res.body);
 
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty(
-      "message",
-      "User data created successfully"
+      'message',
+      'User data created successfully'
     );
 
     const [userData] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM user_data WHERE id = ?",
+      'SELECT * FROM user_data WHERE id = ?',
       [res.body.userDataId]
     );
 
-    console.log("Queried userData:", userData);
+    console.log('Queried userData:', userData);
 
     expect(userData.length).toEqual(1);
     expect(userData[0].search_history).toEqual(newUserData.search_history);
@@ -57,14 +56,13 @@ describe("User Data API Tests", () => {
     expect(userData[0].genres).toEqual(newUserData.genres);
   });
 
-  /** Test case: Retrieve user data by ID */
-  it("should retrieve user data by ID", async () => {
+  it('should retrieve user data by ID', async () => {
     const sampleUserData = {
-      search_history: ["game1", "game2"],
-      interests: ["sports", "action"],
-      view_history: ["game1"],
-      review_history: ["1", "2"],
-      genres: ["RPG", "Adventure"],
+      search_history: ['game1', 'game2'],
+      interests: ['sports', 'action'],
+      view_history: ['game1'],
+      review_history: ['1', '2'],
+      genres: ['RPG', 'Adventure'],
     };
 
     const [result]: [ResultSetHeader, any] = await pool.query(
@@ -85,7 +83,7 @@ describe("User Data API Tests", () => {
     const res = await request(app)
       .get(`/api/userdata/${insertedId}`)
       .send();
-    console.log("Retrieve response:", res.statusCode, res.body);
+    console.log('Retrieve response:', res.statusCode, res.body);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.search_history).toEqual(sampleUserData.search_history);
@@ -95,14 +93,13 @@ describe("User Data API Tests", () => {
     expect(res.body.genres).toEqual(sampleUserData.genres);
   });
 
-  /** Test case: Update user data by ID */
-  it("should update user data successfully", async () => {
+  it('should update user data successfully', async () => {
     const sampleUserData = {
-      search_history: ["game1", "game2"],
-      interests: ["sports", "action"],
-      view_history: ["game1"],
-      review_history: ["1", "2"],
-      genres: ["RPG", "Adventure"],
+      search_history: ['game1', 'game2'],
+      interests: ['sports', 'action'],
+      view_history: ['game1'],
+      review_history: ['1', '2'],
+      genres: ['RPG', 'Adventure'],
     };
 
     const [result]: [ResultSetHeader, any] = await pool.query(
@@ -121,37 +118,36 @@ describe("User Data API Tests", () => {
     const insertedId = result.insertId;
 
     const updates = {
-      interests: ["sports", "adventure"],
-      genres: ["RPG", "Sports"],
+      interests: ['sports', 'adventure'],
+      genres: ['RPG', 'Sports'],
     };
 
     const res = await request(app)
       .put(`/api/userdata/${insertedId}`)
       .send(updates);
-    console.log("Update response:", res.statusCode, res.body);
+    console.log('Update response:', res.statusCode, res.body);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty(
-      "message",
-      "User data updated successfully"
+      'message',
+      'User data updated successfully'
     );
 
     const [updatedUserData] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM user_data WHERE id = ?",
+      'SELECT * FROM user_data WHERE id = ?',
       [insertedId]
     );
     expect(updatedUserData[0].interests).toEqual(updates.interests);
     expect(updatedUserData[0].genres).toEqual(updates.genres);
   });
 
-  /** Test case: Delete user data by ID */
-  it("should delete user data by ID", async () => {
+  it('should delete user data by ID', async () => {
     const sampleUserData = {
-      search_history: ["game1", "game2"],
-      interests: ["sports", "action"],
-      view_history: ["game1"],
-      review_history: ["1", "2"],
-      genres: ["RPG", "Adventure"],
+      search_history: ['game1', 'game2'],
+      interests: ['sports', 'action'],
+      view_history: ['game1'],
+      review_history: ['1', '2'],
+      genres: ['RPG', 'Adventure'],
     };
 
     const [result]: [ResultSetHeader, any] = await pool.query(
@@ -172,16 +168,16 @@ describe("User Data API Tests", () => {
     const res = await request(app)
       .delete(`/api/userdata/${insertedId}`)
       .send();
-    console.log("Delete response:", res.statusCode, res.body);
+    console.log('Delete response:', res.statusCode, res.body);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty(
-      "message",
-      "User data deleted successfully"
+      'message',
+      'User data deleted successfully'
     );
 
     const [deletedUserData] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM user_data WHERE id = ?",
+      'SELECT * FROM user_data WHERE id = ?',
       [insertedId]
     );
     expect(deletedUserData.length).toEqual(0);
