@@ -13,12 +13,22 @@ import { authenticate } from './middleware/authMiddleware';
 import { errorHandler } from './middleware/errorMiddleware';
 import path from 'path';
 import authRouter from './routes/authRoutes';
-import searchRouter from './routes/gameRoutes';
 import userDataRouter from './routes/userDataRoutes';
 import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendationRouter from './routes/recommendationRoutes';
+
+// import { getGameById } from './api/rawg';
+
+// getGameById(3498).then(game => {
+//   if (game) {
+//     console.log('Game:', game);
+//   } else {
+//     console.log('Game not found or there was an error.');
+//   }
+// });
+
 // Load environment variables from .env file
 dotenv.config();
 

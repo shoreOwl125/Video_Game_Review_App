@@ -58,7 +58,7 @@ export const generateEmbeddings = async (
   }
 };
 
-// Convert Tensor to array for further processing (like PCA)
+// Convert Tensor to array for further processing
 export const tensorToArray = async (
   tensor: tf.Tensor2D
 ): Promise<number[][]> => {
@@ -75,7 +75,7 @@ export const applyPCA = (
   const pcaInstance = new PCA(embeddings);
   const reduced = pcaInstance
     .predict(embeddings, { nComponents: components })
-    .to2DArray(); // Convert Matrix to number[][]
+    .to2DArray();
   return reduced;
 };
 
