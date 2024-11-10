@@ -40,41 +40,78 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Signup logic
-  const signupForm = document.getElementById('signup-form');
-  if (signupForm) {
-    signupForm.addEventListener('submit', async event => {
-      event.preventDefault();
+  // Search functionality
+  if (searchButton && searchInput && gameGrid) {
+    searchButton.addEventListener('click', async () => {
+      const searchTerm = searchInput.value;
+      if (searchTerm) {
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(searchTerm)}`,
+            {
+              credentials: 'include',
+            }
+          );
 
-      const name = signupForm.username.value;
-      const email = signupForm.email.value;
-      const password = signupForm.password.value;
-      const confirmPassword = signupForm.confirm_password.value;
+          if (!response.ok) throw new Error('Network response was not ok');
 
-      if (password !== confirmPassword) {
-        alert('Passwords do not match.');
-        return;
+          const games = await response.json();
+          console.log('Current data from the API: ', games);
+
+          gameGrid.innerHTML = '';
+
+          games.forEach(game => {
+            const gameTile = document.createElement('div');
+            gameTile.className = 'game-tile';
+
+            // Create an image element for the game
+            const gameImage = document.createElement('img');
+            gameImage.src = game.cover_image; 
+            gameImage.alt = game.title;
+            gameTile.appendChild(gameImage);
+
+            // Add the game title as text
+            const gameTitle = document.createElement('p');
+            gameTitle.textContent = game.title; // Add the game title as text
+            gameTile.appendChild(gameTitle); // Append the title to the game tile
+
+            // Make the game tile clickable and redirect to the gameinfo page
+            gameTile.addEventListener('click', () => {
+              window.location.href = `game-info.html?gameId=${game.game_id}`;
+            });
+            
+
+            gameGrid.appendChild(gameTile);
+          });
+        } catch (error) {
+          console.error('Error fetching games:', error);
+        }
+      } else {
+        alert('Please enter a search term');
       }
+    });
+  }
 
+  // Logout functionality
+  if (logoutButton) {
+    logoutButton.addEventListener('click', async event => {
+      event.preventDefault();
       try {
-        const response = await fetch(
-          'http://127.0.0.1:8000/api/auth/register',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
-          }
-        );
+        const response = await fetch('http://127.0.0.1:8000/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
 
         if (response.ok) {
-          alert('Account created successfully! You can now log in.');
-          window.location.href = 'login.html';
+          console.log('Logout successful');
+          alert('Successfully logged out');
+          window.location.reload();
         } else {
-          const errorData = await response.json();
-          alert(`Registration failed: ${errorData.message}`);
+          console.warn('Logout failed');
+          alert('Logout failed. Please try again.');
         }
       } catch (error) {
-        console.error('Error registering:', error);
+        console.error('Error during logout:', error);
         alert('An error occurred. Please try again.');
       }
     });
@@ -110,107 +147,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Call checkAuthStatus on page load
   await checkAuthStatus();
-
-  // Logout functionality
-  if (logoutButton) {
-    logoutButton.addEventListener('click', async event => {
-      event.preventDefault();
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          console.log('Logout successful');
-          alert('Successfully logged out');
-          window.location.reload();
-        } else {
-          console.warn('Logout failed');
-          alert('Logout failed. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error during logout:', error);
-        alert('An error occurred. Please try again.');
-      }
-    });
-  }
-
-  // Fetch recommendations
-  const recommendationButton = document.getElementById('recommendation-button');
-  if (recommendationButton) {
-    recommendationButton.addEventListener('click', async () => {
-      console.log('Fetching recommendations...');
-      const recommendationsDiv = document.getElementById('recommendations');
-      recommendationsDiv.innerHTML = '';
-
-      try {
-        const response = await fetch(
-          'http://127.0.0.1:8000/api/userdata/2/recommendations',
-          {
-            credentials: 'include',
-          }
-        );
-
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.json();
-        if (Array.isArray(data.recommendations)) {
-          data.recommendations.forEach(game => {
-            const gameContainer = document.createElement('div');
-            for (const [key, value] of Object.entries(game)) {
-              const pTag = document.createElement('p');
-              pTag.textContent = `${key}: ${value}`;
-              gameContainer.appendChild(pTag);
-            }
-            recommendationsDiv.appendChild(gameContainer);
-            recommendationsDiv.appendChild(document.createElement('hr'));
-          });
-        } else {
-          throw new Error('Expected an array of games in data.recommendations');
-        }
-      } catch (error) {
-        console.error('Error fetching recommendations:', error);
-        recommendationsDiv.innerHTML = `<p>Error fetching recommendations. Please try again later.</p>`;
-      }
-    });
-  }
-
-  // Search functionality
-  if (searchButton && searchInput && gameGrid) {
-    searchButton.addEventListener('click', async () => {
-      const searchTerm = searchInput.value;
-      if (searchTerm) {
-        try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
-              searchTerm
-            )}`,
-            {
-              credentials: 'include',
-            }
-          );
-
-          if (!response.ok) throw new Error('Network response was not ok');
-
-          const games = await response.json();
-          console.log('Current data from the API: ', games)
-
-          gameGrid.innerHTML = '';
-          games.forEach(game => {
-            const gameTile = document.createElement('div');
-            gameTile.className = 'game-tile';
-            gameTile.textContent = game.title;
-            gameGrid.appendChild(gameTile);
-          });
-        } catch (error) {
-          console.error('Error fetching games:', error);
-        }
-      } else {
-        alert('Please enter a search term');
-      }
-    });
-  }
 });
 
 // Google login button functionality
@@ -221,24 +157,3 @@ if (googleLoginButton) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Select the profile picture elements
-  const profilePicUpload = document.getElementById('profilePicUpload');
-  const profilePic = document.getElementById('profilePic');
-
-  // Only add the event listener if the elements exist
-  if (profilePicUpload && profilePic) {
-      profilePicUpload.addEventListener('change', function(event) {
-          console.log("File selected"); // Add this to verify event trigger
-          const file = event.target.files[0];
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  console.log("Image loaded"); // Add this to verify loading
-                  profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
-              };
-              reader.readAsDataURL(file);
-          }
-      });
-  }
-});
