@@ -71,9 +71,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             gameTile.appendChild(gameImage);
 
             // Add the game title as text
-            const gameTitle = document.createElement('p');
-            gameTitle.textContent = game.title; // Add the game title as text
-            gameTile.appendChild(gameTitle); // Append the title to the game tile
+            // const gameTitle = document.createElement('p');
+            // gameTitle.textContent = game.title; // Add the game title as text
+            // gameTile.appendChild(gameTitle); // Append the title to the game tile
 
             // Make the game tile clickable and redirect to the gameinfo page
             gameTile.addEventListener('click', () => {
