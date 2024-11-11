@@ -159,6 +159,13 @@ body {
   justify-content: center;
   border-radius: 10px;
 }
+.game-tile img {
+  width: 100%; /* Fit the image to the width of the tile */
+  height: auto; /* Maintain the aspect ratio */
+  object-fit: cover; /* Ensures it covers the tile area without distortion */
+  border-radius: 5px; /* Optional: rounded corners */
+}
+
 .pill-dropdown {
   padding: 10px 20px;
   border-radius: 50px;

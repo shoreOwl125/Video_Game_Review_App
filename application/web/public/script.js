@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           );
 
           const games = await response.json();
+
+          console.log(games)
+
           gameGrid.innerHTML = '';
 
           games.forEach(game => {
@@ -25,7 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             gameTile.className = 'game-tile';
 
             const gameImage = document.createElement('img');
-            gameImage.src = game.cover_image;
+            //gameImage.src = game.cover_image; //this is uncommented when the json data has an image
+            gameImage.src = 'gameinfo_testimage.png'
             gameImage.alt = game.title;
             gameTile.appendChild(gameImage);
 
