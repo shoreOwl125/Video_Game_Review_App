@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 import { getPool } from '../connections/database';
 import { RowDataPacket } from 'mysql2';
-import cron from 'cron';
+import { CronJob } from 'cron';
 
 dotenv.config();
 
@@ -51,24 +51,45 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
   const gamesToInsert: any[] = [];
 
   for (const game of games) {
+    if (!game || typeof game !== 'object') {
+      console.error(`Invalid game object: ${JSON.stringify(game)}`);
+      console.log('Invalid game object:', game);
+      continue; // Skip invalid games
+    }
+
     try {
       const title = game.name;
+      if (!title) {
+        console.error('Game title is undefined or empty');
+        continue; // Skip games without a title
+      }
+
       const description = game.description || '';
-      const genre = game.genres.map((g: any) => g.name).join(', ') || null;
-      const tags = JSON.stringify(game.tags.map((tag: any) => tag.name));
+      const genre = game.genres?.map((g: any) => g.name).join(', ') || null;
+      const tags = JSON.stringify(game.tags?.map((tag: any) => tag.name) || []);
       const platforms = JSON.stringify(
-        game.platforms.map((p: any) => p.platform.name)
+        game.platforms?.map((p: any) => p.platform.name) || []
       );
       const playtime_estimate = game.playtime || 0;
       const developer =
         game.developers?.length > 0 ? game.developers[0].name : 'Unknown';
       const publisher =
         game.publishers?.length > 0 ? game.publishers[0].name : 'Unknown';
-      const game_mode = platforms.includes('multiplayer')
-        ? 'multiplayer'
-        : 'single-player';
+
+      // Validate and determine game_mode
+      const lowerCasePlatforms = platforms.toLowerCase();
+      let game_mode: string = 'single-player'; // Default
+      if (lowerCasePlatforms.includes('multiplayer')) {
+        game_mode = 'multiplayer';
+      } else if (lowerCasePlatforms.includes('both')) {
+        game_mode = 'both';
+      }
+
+      // Validate and clamp review_rating
+      const rawRating = game.rating || 0; // If no rating, default to 0
+      const review_rating = Math.min(Math.max(Math.round(rawRating), 1), 10); // Clamp between 1 and 10
+
       const release_date = game.released;
-      const review_rating = game.rating ? Math.round(game.rating) : 0;
       const cover_image = game.background_image;
 
       // Check if the game already exists
@@ -95,7 +116,7 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
         cover_image,
       ]);
     } catch (error) {
-      console.error(`Error processing game "${game.name}":`, error);
+      console.error(`Error processing game "${game?.name}":`, error);
     }
   }
 
@@ -140,16 +161,58 @@ const fetchNewGames = async (maxFetch: number = 50): Promise<any[]> => {
   }
 };
 
-const job = new cron.CronJob('0 0 */10 * *', async () => {
-  console.log('Running cron job to fetch and add new games...');
-  const maxFetch = 50; // Limit to 50 games
-  const newGames = await fetchNewGames(maxFetch);
-  if (newGames.length > 0) {
-    await addNewGamesToDatabase(newGames);
-  } else {
-    console.log('No new games found.');
-  }
-});
-job.start();
+const testAddGames = async () => {
+  const testIds = [1, 2, 3, 4, 5];
+  const gamesData = [];
 
-export { getGameById, addNewGamesToDatabase, fetchNewGames };
+  for (const gameId of testIds) {
+    const gameData = await getGameById(gameId);
+    if (gameData) {
+      gamesData.push(gameData);
+    } else {
+      console.error(`Game with ID ${gameId} could not be fetched.`);
+    }
+  }
+
+  if (gamesData.length > 0) {
+    try {
+      await addNewGamesToDatabase(gamesData);
+      console.log('Test games added successfully.');
+    } catch (error) {
+      console.error('Error while adding games:', error);
+    }
+  } else {
+    console.log('No games fetched to add.');
+  }
+};
+
+// const fetchAndAddGamesJob = new CronJob(
+//   '0 0 */10 * *', // Runs every 10 days at midnight
+//   async () => {
+//     console.log('Cron job started: Fetching new games...');
+
+//     try {
+//       // Fetch the new games (max 50 by default)
+//       const newGames = await fetchNewGames(50);
+
+//       if (newGames.length === 0) {
+//         console.log('No new games fetched.');
+//         return;
+//       }
+
+//       console.log(`Fetched ${newGames.length} games. Adding them to the database...`);
+
+//       // Add the fetched games to the database
+//       await addNewGamesToDatabase(newGames);
+
+//       console.log('Successfully added new games to the database.');
+//     } catch (error) {
+//       console.error('Error in the cron job while fetching or adding games:', error);
+//     }
+//   },
+//   null, // No "onComplete" callback
+//   true, // Start the job immediately
+//   'America/Los_Angeles' // Time zone
+// );
+
+export { getGameById, addNewGamesToDatabase, fetchNewGames, testAddGames };

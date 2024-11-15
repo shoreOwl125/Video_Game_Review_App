@@ -18,24 +18,7 @@ import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendationRouter from './routes/recommendationRoutes';
-
-import { getGameById, addGameToDatabase } from './api/rawg';
-
-// Example usage
-addGameToDatabase(3498)
-  .then(() => {
-    console.log('Game added successfully');
-  })
-  .catch(error => {
-    console.log('Game not added or there was an error:', error);
-  });
-// getGameById(3498).then(game => {
-//   if (game) {
-//     console.log('Game:', game);
-//   } else {
-//     console.log('Game not found or there was an error.');
-//   }
-// });
+import { getGameById, addNewGamesToDatabase, testAddGames } from './api/rawg';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -108,6 +91,22 @@ app.use('/api/recommendations', recommendationRouter);
 app.get('/', (req, res) => {
   res.send('The server is working, but the index page isn’t loading.');
 });
+
+// Example usage
+testAddGames()
+  .then(() => {
+    console.log('success');
+  })
+  .catch(error => {
+    console.log('error:', error);
+  });
+// getGameById(3498).then(game => {
+//   if (game) {
+//     console.log('Game:', game);
+//   } else {
+//     console.log('Game not found or there was an error.');
+//   }
+// });
 
 // Error handling middleware
 app.use(errorHandler);
