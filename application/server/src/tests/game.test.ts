@@ -21,11 +21,11 @@ describe('Games API Tests', () => {
     await pool.query('DELETE FROM games');
 
     await pool.query(`
-      INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, popularity_score, developer, publisher, game_mode, release_date, release_year_bucket, price_range, review_rating, cover_image)
+      INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, developer, publisher, game_mode, release_date, review_rating, cover_image)
       VALUES
-        ('Fortnite', 'Battle royale shooter where the last player standing wins!', 'Shooter', '["battle-royale"]', '["PC", "PlayStation", "Xbox"]', 50, 1000000, 'Epic Games', 'Epic Games', 'multiplayer', '2018-03-12', 'recent', 'free', 8, '/assets/images/fortnite.jpg'),
-        ('FIFA 21', 'Soccer simulation game with the latest player rosters.', 'Sports', '["sports", "simulation"]', '["PC", "PlayStation", "Xbox"]', 40, 800000, 'EA Sports', 'Electronic Arts', 'multiplayer', '2020-10-06', 'new', 'premium', 7, '/assets/images/fifa21.jpg'),
-        ('Minecraft', 'Create and explore worlds, and build anything your imagination can create.', 'Sandbox', '["sandbox", "creative"]', '["PC", "PlayStation", "Xbox", "Mobile"]', 1000, 15000000, 'Mojang Studios', 'Mojang Studios', 'both', '2011-11-18', 'classic', 'mid-range', 9, '/assets/images/minecraft.jpg');
+        ('Fortnite', 'Battle royale shooter where the last player standing wins!', 'Shooter', '["battle-royale"]', '["PC", "PlayStation", "Xbox"]', 50, 'Epic Games', 'Epic Games', 'multiplayer', '2018-03-12', 8, '/assets/images/fortnite.jpg'),
+        ('FIFA 21', 'Soccer simulation game with the latest player rosters.', 'Sports', '["sports", "simulation"]', '["PC", "PlayStation", "Xbox"]', 40, 'EA Sports', 'Electronic Arts', 'multiplayer', '2020-10-06', 7, '/assets/images/fifa21.jpg'),
+        ('Minecraft', 'Create and explore worlds, and build anything your imagination can create.', 'Sandbox', '["sandbox", "creative"]', '["PC", "PlayStation", "Xbox", "Mobile"]', 1000, 'Mojang Studios', 'Mojang Studios', 'both', '2011-11-18', 9, '/assets/images/minecraft.jpg');
     `);
   });
 
@@ -37,16 +37,14 @@ describe('Games API Tests', () => {
       tags: ['exploration', 'indie'],
       platforms: ['PC', 'Switch'],
       playtime_estimate: 30,
-      popularity_score: 50000,
       developer: 'Indie Dev',
       publisher: 'Indie Publisher',
       game_mode: 'single-player',
       release_date: '2021-11-25',
-      release_year_bucket: 'new',
-      price_range: 'budget',
       review_rating: 8,
       cover_image: '/assets/images/newgame.jpg',
     };
+
     const res = await request(app)
       .post('/api/games')
       .send(newGame);
@@ -58,9 +56,20 @@ describe('Games API Tests', () => {
       'SELECT * FROM games WHERE title = ?',
       [newGame.title]
     );
+
     expect(games.length).toEqual(1);
-    expect(games[0].tags).toEqual(newGame.tags); // Compare as arrays
-    expect(games[0].platforms).toEqual(newGame.platforms); // Compare as arrays
+
+    const dbTags =
+      typeof games[0].tags === 'string'
+        ? JSON.parse(games[0].tags)
+        : games[0].tags;
+    const dbPlatforms =
+      typeof games[0].platforms === 'string'
+        ? JSON.parse(games[0].platforms)
+        : games[0].platforms;
+
+    expect(dbTags).toEqual(newGame.tags);
+    expect(dbPlatforms).toEqual(newGame.platforms);
   });
 
   /** Test case: Search games by partial title */
@@ -131,7 +140,6 @@ describe('Games API Tests', () => {
     const updates = {
       title: 'FIFA 22',
       review_rating: 9,
-      price_range: 'mid-range',
     };
     const res = await request(app)
       .put(`/api/games/${gameId}`)
@@ -146,6 +154,5 @@ describe('Games API Tests', () => {
     );
     expect(updatedGame[0].title).toEqual('FIFA 22');
     expect(updatedGame[0].review_rating).toEqual(9);
-    expect(updatedGame[0].price_range).toEqual('mid-range');
   });
 });

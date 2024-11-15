@@ -19,8 +19,16 @@ import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendationRouter from './routes/recommendationRoutes';
 
-// import { getGameById } from './api/rawg';
+import { getGameById, addGameToDatabase } from './api/rawg';
 
+// Example usage
+addGameToDatabase(3498)
+  .then(() => {
+    console.log('Game added successfully');
+  })
+  .catch(error => {
+    console.log('Game not added or there was an error:', error);
+  });
 // getGameById(3498).then(game => {
 //   if (game) {
 //     console.log('Game:', game);

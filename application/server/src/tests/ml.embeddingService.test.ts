@@ -5,6 +5,7 @@ import { getPool as actualGetPool } from '../connections/database';
 import { generateEmbeddings } from '../ml/embeddingService';
 import { Game as GameInterface } from '../interfaces/Game';
 
+// Mock Universal Sentence Encoder
 jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
   load: jest.fn().mockResolvedValue({
     embed: jest.fn(async (input: string[]) => {
@@ -16,6 +17,7 @@ jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
   }),
 }));
 
+// Mock Database Connection
 jest.mock('../connections/database', () => {
   const originalModule = jest.requireActual('../connections/database');
   return {
@@ -76,16 +78,13 @@ describe('Recommendations API Tests', () => {
         title: 'Sample Game 1',
         description: 'An exciting adventure',
         genre: 'Adventure',
-        tags: [],
+        tags: [], // Use empty array for tags
         platforms: [],
         playtime_estimate: 20,
-        popularity_score: 80,
         developer: 'Sample Dev',
         publisher: 'Sample Publisher',
         game_mode: 'single-player',
         release_date: new Date('2022-01-01'),
-        release_year_bucket: 'recent',
-        price_range: 'budget',
         review_rating: 5,
         cover_image: '/path/to/image1.jpg',
         created_at: new Date(),
@@ -99,13 +98,10 @@ describe('Recommendations API Tests', () => {
         tags: [],
         platforms: [],
         playtime_estimate: 30,
-        popularity_score: 70,
         developer: 'Sample Dev',
         publisher: 'Sample Publisher',
         game_mode: 'multiplayer',
         release_date: new Date('2022-06-01'),
-        release_year_bucket: 'recent',
-        price_range: 'premium',
         review_rating: 4,
         cover_image: '/path/to/image2.jpg',
         created_at: new Date(),

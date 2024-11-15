@@ -26,19 +26,17 @@ export const createGame = async (
   }
 };
 
-// Controller to find games based on filters
 export const searchGames = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { query, genre, review_rating, game_mode, price_range } = req.query;
+    const { query, genre, review_rating, game_mode } = req.query;
     const games = await gameModel.findGames(
       query as string,
       genre as string,
       Number(review_rating),
-      game_mode as 'single-player' | 'multiplayer' | 'both',
-      price_range as 'free' | 'budget' | 'mid-range' | 'premium'
+      game_mode as 'single-player' | 'multiplayer' | 'both'
     );
 
     if (!games.length) {
