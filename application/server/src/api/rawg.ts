@@ -4,6 +4,15 @@ import { getPool } from '../connections/database';
 import { RowDataPacket } from 'mysql2';
 import { CronJob } from 'cron';
 
+// Example usage for testing
+// testAddGames()
+//   .then(() => {
+//     console.log('success');
+//   })
+//   .catch(error => {
+//     console.log('error:', error);
+//   });
+
 dotenv.config();
 
 const RAWG_API_KEY = process.env.RAWG_API_KEY;

@@ -92,15 +92,6 @@ app.get('/', (req, res) => {
   res.send('The server is working, but the index page isn’t loading.');
 });
 
-// Example usage
-testAddGames()
-  .then(() => {
-    console.log('success');
-  })
-  .catch(error => {
-    console.log('error:', error);
-  });
-
 // Error handling middleware
 app.use(errorHandler);
 
