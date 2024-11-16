@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import User from "../models/UserModel";
-import { User as UserInterface } from "../interfaces/User";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import User from '../models/UserModel';
+import { User as UserInterface } from '../interfaces/User';
 
 const authenticate = async (
   req: Request,
@@ -11,7 +11,7 @@ const authenticate = async (
   const token = req.cookies.jwt;
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 
   try {
@@ -22,14 +22,14 @@ const authenticate = async (
     const user = await User.findById(decoded.userId);
 
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     req.user = user as UserInterface;
 
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 };
 
