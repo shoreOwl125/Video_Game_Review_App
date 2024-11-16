@@ -45,7 +45,7 @@ describe('Games API Tests', () => {
     };
 
     const res = await request(app)
-      .post('/api/games')
+      .post('/api/games/create')
       .send(newGame);
 
     expect(res.statusCode).toEqual(201);

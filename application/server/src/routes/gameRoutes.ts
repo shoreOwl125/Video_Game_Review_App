@@ -12,11 +12,11 @@ import {
 
 const router = Router();
 
-router.post('/', createGame);
+router.post('/create', createGame);
 router.get('/search', searchGames);
 router.delete('/:gameId', removeGame);
 router.put('/:gameId', editGame);
 router.get('/:gameId', getGame);
-router.get('/', getAllGames);
+router.get('/all', getAllGames);
 
 export default router;
