@@ -103,6 +103,9 @@ class Game {
   getAllGames = async (limit: number = 50): Promise<GameInterface[]> => {
     const sql = 'SELECT * FROM games LIMIT ?';
     const pool = getPool();
+
+    console.log(`Executing SQL: ${sql} with limit = ${limit}`);
+
     const [rows] = await pool.query(sql, [limit]);
     return rows as GameInterface[];
   };
