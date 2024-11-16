@@ -85,3 +85,20 @@ export const getRecommendations = async (
     res.status(500).json({ message: 'Error fetching recommendations', error });
   }
 };
+
+export const fetchUserData = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = Number(req.params.id);
+    const userData = await userDataModel.getUserDataById(userId);
+    if (!userData) {
+      res.status(404).json({ message: 'User data not found' });
+    } else {
+      res.status(200).json(userData);
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user data', error });
+  }
+};

@@ -6,10 +6,10 @@ import { generateToken, clearToken } from '../utils/auth';
 import jwt from 'jsonwebtoken';
 
 const authStatus = async (req: Request, res: Response) => {
-  console.log('All Cookies:', req.cookies); // Log all cookies
+  console.log('All Cookies:', req.cookies);
 
   const token = req.cookies.jwt;
-  console.log('JWT Cookie from request:', token); // Log only jwt cookie
+  console.log('JWT Cookie from request:', token);
 
   if (!token) {
     console.log('No JWT cookie received');
@@ -104,13 +104,13 @@ const googleCallback = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (err: Error | null, user: UserInterface | null) => {
       if (err || !user) {
-        console.log('Authentication error or no user:', err); // Debug
+        console.log('Authentication error or no user:', err);
         return res
           .status(400)
           .json({ message: 'Google authentication failed' });
       }
 
-      console.log('Authenticated user:', user); // Check if user is populated
+      console.log('Authenticated user:', user);
 
       const token = generateToken(res, user.id.toString());
       res.cookie('jwt', token, {

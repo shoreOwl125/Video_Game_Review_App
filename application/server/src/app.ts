@@ -13,11 +13,13 @@ import { authenticate } from './middleware/authMiddleware';
 import { errorHandler } from './middleware/errorMiddleware';
 import path from 'path';
 import authRouter from './routes/authRoutes';
-import searchRouter from './routes/gameRoutes';
 import userDataRouter from './routes/userDataRoutes';
 import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
+import recommendationRouter from './routes/recommendationRoutes';
+import { getGameById, addNewGamesToDatabase, testAddGames } from './api/rawg';
+
 // Load environment variables from .env file
 dotenv.config();
 
@@ -50,7 +52,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // telling server where to serve static files from first
-app.use(express.static(path.join(__dirname, "../../web/public")));
+app.use(express.static(path.join(__dirname, '../../web/public')));
 
 // google oauth setup with passport google strategy
 app.use(passport.initialize());
@@ -74,24 +76,23 @@ passport.deserializeUser((obj: any, done) => {
   done(null, obj as Express.User);
 });
 
+// Database connection
+connectUserDB();
+
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/users', authenticate, userRouter);
 app.use('/api/games', gameRouter);
 app.use('/api/userdata', userDataRouter);
 app.use('/api/reviews', reviewRoter);
-
+app.use('/api/recommendations', recommendationRouter);
 
 // Fallback root route if index.html is not found
-app.get("/", (req, res) => {
-  res.send("The server is working, but the index page isn’t loading.");
+app.get('/', (req, res) => {
+  res.send('The server is working, but the index page isn’t loading.');
 });
-
 
 // Error handling middleware
 app.use(errorHandler);
-
-// Database connection
-connectUserDB(); // No need to assign pool here, unless you use it in this file
 
 export default app;

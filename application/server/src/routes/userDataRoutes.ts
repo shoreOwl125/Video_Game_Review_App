@@ -13,8 +13,6 @@ router.post("/", createUserData);
 router.get("/:id", getUserDataById);
 router.put("/:id", updateUserData);
 router.delete("/:id", deleteUserData);
-
-// open AI routes
 router.get("/:id/recommendations", getRecommendations);
 
 export default router;
