@@ -100,8 +100,19 @@ export const getAllGames = async (
   res: Response
 ): Promise<void> => {
   try {
-    const limit = parseInt(req.query.limit as string) || 50;
+    let limit = parseInt(req.query.limit as string, 10) || 50;
+
+    if (isNaN(limit) || limit <= 0) {
+      limit = 50; // Default to 50 if invalid
+    }
+
     const games = await gameModel.getAllGames(limit);
+
+    if (games.length === 0) {
+      res.status(404).json({ message: 'No games found' });
+      return;
+    }
+
     res.status(200).json(games);
   } catch (error) {
     console.error('Error in getAllGames controller:', error);

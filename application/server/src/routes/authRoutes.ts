@@ -21,14 +21,4 @@ router.get(
 );
 router.get('/google/callback', googleCallback);
 
-router.get('/test-cookie', (req, res) => {
-  res.cookie('testCookie', 'testValue', {
-    httpOnly: false,
-    secure: false,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 1000,
-  });
-  res.send('Test cookie set');
-});
-
 export default router;
