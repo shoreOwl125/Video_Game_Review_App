@@ -8,16 +8,16 @@ const generateToken = (res: Response, userId: string) => {
   });
 
   res.cookie('jwt', token, {
-    httpOnly: false, // Temporarily set to false for debugging
-    secure: false, // Set to false for localhost
-    sameSite: 'lax', // Match the working test-cookie settings
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
     maxAge: 60 * 60 * 1000, // 1 hour
   });
 };
 
 const clearToken = (res: Response) => {
   res.cookie('jwt', '', {
-    httpOnly: false,
+    httpOnly: true,
     expires: new Date(0),
   });
 };
