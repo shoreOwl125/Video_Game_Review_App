@@ -162,29 +162,53 @@ const fetchNewGames = async (maxFetch: number = 50): Promise<any[]> => {
 };
 
 const testAddGames = async () => {
-  const testIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const gamesData = [];
+  const amountOfGames = 50;
 
-  for (const gameId of testIds) {
-    const gameData = await getGameById(gameId);
-    if (gameData) {
-      gamesData.push(gameData);
-    } else {
-      console.error(`Game with ID ${gameId} could not be fetched.`);
-    }
-  }
+  try {
+    console.log('Fetching new games...');
 
-  if (gamesData.length > 0) {
-    try {
+    const gamesData = await fetchNewGames(amountOfGames);
+
+    if (gamesData.length > 0) {
+      console.log(
+        `Fetched ${gamesData.length} games. Adding them to the database...`
+      );
+
       await addNewGamesToDatabase(gamesData);
+
       console.log('Test games added successfully.');
-    } catch (error) {
-      console.error('Error while adding games:', error);
+    } else {
+      console.log('No new games fetched.');
     }
-  } else {
-    console.log('No games fetched to add.');
+  } catch (error) {
+    console.error('Error during testAddGames:', error);
   }
 };
+
+// const testAddGames = async () => {
+//   const testIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+//   const gamesData = [];
+
+//   for (const gameId of testIds) {
+//     const gameData = await getGameById(gameId);
+//     if (gameData) {
+//       gamesData.push(gameData);
+//     } else {
+//       console.error(`Game with ID ${gameId} could not be fetched.`);
+//     }
+//   }
+
+//   if (gamesData.length > 0) {
+//     try {
+//       await addNewGamesToDatabase(gamesData);
+//       console.log('Test games added successfully.');
+//     } catch (error) {
+//       console.error('Error while adding games:', error);
+//     }
+//   } else {
+//     console.log('No games fetched to add.');
+//   }
+// };
 
 // const fetchAndAddGamesJob = new CronJob(
 //   '0 0 */10 * *', // Runs every 10 days at midnight

@@ -93,20 +93,13 @@ app.get('/', (req, res) => {
 });
 
 // Example usage
-// testAddGames()
-//   .then(() => {
-//     console.log('success');
-//   })
-//   .catch(error => {
-//     console.log('error:', error);
-//   });
-// getGameById(3498).then(game => {
-//   if (game) {
-//     console.log('Game:', game);
-//   } else {
-//     console.log('Game not found or there was an error.');
-//   }
-// });
+testAddGames()
+  .then(() => {
+    console.log('success');
+  })
+  .catch(error => {
+    console.log('error:', error);
+  });
 
 // Error handling middleware
 app.use(errorHandler);
