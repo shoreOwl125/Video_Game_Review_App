@@ -104,13 +104,13 @@ const googleCallback = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (err: Error | null, user: UserInterface | null) => {
       if (err || !user) {
-        console.log('Authentication error or no user:', err); // Debug
+        console.log('Authentication error or no user:', err);
         return res
           .status(400)
           .json({ message: 'Google authentication failed' });
       }
 
-      console.log('Authenticated user:', user); // Check if user is populated
+      console.log('Authenticated user:', user);
 
       const token = generateToken(res, user.id.toString());
       res.cookie('jwt', token, {

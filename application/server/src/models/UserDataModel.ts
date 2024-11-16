@@ -15,7 +15,6 @@ class UserData {
     };
   }
 
-  // Helper to parse array fields from JSON after retrieving
   private parseFields(row: any): UserDataInterface {
     return {
       ...row,

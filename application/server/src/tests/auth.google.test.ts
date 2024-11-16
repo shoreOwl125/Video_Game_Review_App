@@ -22,20 +22,20 @@ passport.use(
         name: profile.displayName || "Test User",
         email: profile.emails?.[0]?.value || "testuser@gmail.com",
         password: "", // No password for OAuth users
-        theme_preference: "light", // Default theme preference
-        user_data_id: null, // Set user_data_id to null or a test value
-        created_at: new Date(), // Mock creation date
-        updated_at: new Date(), // Mock update date
+        theme_preference: "light",
+        user_data_id: null,
+        created_at: new Date(),
+        updated_at: new Date(),
       };
       done(null, user);
     }
   )
 );
 
-// Initialize passport (required since we're configuring it here)
+// Initialize passport, required since we're configuring it here
 app.use(passport.initialize());
 
-// Suppress console.log and console.error during tests (optional)
+// Suppress console.log and console.error during tests
 beforeEach(() => {
   jest.spyOn(console, "log").mockImplementation(() => {});
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -70,10 +70,10 @@ describe("Google OAuth", () => {
                 name: "Test User",
                 email: "testuser@gmail.com",
                 password: "",
-                theme_preference: "light", // Default theme preference
-                user_data_id: null, // Set user_data_id to null or a test value
-                created_at: new Date(), // Mock creation date
-                updated_at: new Date(), // Mock update date
+                theme_preference: "light",
+                user_data_id: null,
+                created_at: new Date(),
+                updated_at: new Date(),
               };
               callback(null, user, {});
             } else {

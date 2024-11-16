@@ -7,7 +7,6 @@ import { Game as GameInterface } from '../interfaces/Game';
 // Instantiate Game class
 const gameModel = new Game();
 
-// Controller to add a new game
 export const createGame = async (
   req: Request,
   res: Response
@@ -50,7 +49,6 @@ export const searchGames = async (
   }
 };
 
-// Controller to delete a game by ID
 export const removeGame = async (
   req: Request,
   res: Response
@@ -65,7 +63,6 @@ export const removeGame = async (
   }
 };
 
-// Controller to update game details
 export const editGame = async (req: Request, res: Response): Promise<void> => {
   try {
     const { gameId } = req.params;
@@ -82,7 +79,6 @@ export const editGame = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Controller to get a single game by ID
 export const getGame = async (req: Request, res: Response): Promise<void> => {
   try {
     const { gameId } = req.params;
@@ -99,7 +95,6 @@ export const getGame = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Controller to get all games with a limit
 export const getAllGames = async (
   req: Request,
   res: Response

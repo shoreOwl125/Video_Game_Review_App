@@ -60,7 +60,6 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (game_id) REFERENCES games(game_id) ON DELETE CASCADE
 );
 
--- Insert data into user_data
 INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES
     ('["The Witcher 3", "Cyberpunk 2077", "Hades"]', '["sports", "action"]', '["The Witcher 3"]', '["1"]', '["RPG", "Adventure"]'),
     ('["Minecraft", "League of Legends", "Dark Souls III"]', '["adventure", "strategy"]', '["Minecraft"]', '["2"]', '["Strategy", "Puzzle"]'),
@@ -73,7 +72,6 @@ INSERT INTO user_data (search_history, interests, view_history, review_history, 
     ('["Starcraft II", "Command & Conquer"]', '["strategy", "simulation"]', '["Starcraft II"]', '["9"]', '["RTS"]'),
     ('["Doom Eternal", "Half-Life 2"]', '["action", "horror"]', '["Doom Eternal"]', '["10"]', '["Shooter"]');
 
--- Insert data into users with references to user_data
 INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
     ('Alice Smith', 'alice.smith@example.com', 'password1', 'light', 1),
     ('Bob Johnson', 'bob.johnson@example.com', 'password2', 'dark', 2),
@@ -86,7 +84,6 @@ INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
     ('Ivy Green', 'ivy.green@example.com', 'password9', 'light', 9),
     ('Jack White', 'jack.white@example.com', 'password10', 'dark', 10);
 
--- Insert data into games
 INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, developer, publisher, game_mode, release_date, review_rating, cover_image) VALUES
     ('Fortnite', 'Battle royale shooter', 'Shooter', '["battle-royale"]', '["PC", "PlayStation", "Xbox"]', 50, 'Epic Games', 'Epic Games', 'multiplayer', '2018-03-12', 8, '/assets/images/fortnite.jpg'),
     ('FIFA 21', 'Soccer simulation game', 'Sports', '["sports", "simulation"]', '["PC", "PlayStation", "Xbox"]', 40, 'EA Sports', 'Electronic Arts', 'multiplayer', '2020-10-06', 7, '/assets/images/fifa21.jpg'),
@@ -99,7 +96,6 @@ INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate
     ('Cyberpunk 2077', 'Futuristic RPG', 'RPG', '["open-world", "sci-fi"]', '["PC", "PlayStation", "Xbox"]', 100, 'CD Projekt Red', 'CD Projekt', 'single-player', '2020-12-10', 7, '/assets/images/cyberpunk.jpg'),
     ('Stardew Valley', 'Farming simulation', 'Simulation', '["farming", "life-simulation"]', '["PC", "PlayStation", "Xbox", "Mobile"]', 60, 'ConcernedApe', 'ConcernedApe', 'single-player', '2016-02-26', 9, '/assets/images/stardew.jpg');
 
--- Insert data into reviews
 INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
     (1, 1, 5, 'Amazing battle royale game!'),
     (2, 2, 4, 'Good simulation game, love it!'),

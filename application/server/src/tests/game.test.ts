@@ -6,7 +6,6 @@ import { RowDataPacket } from 'mysql2';
 let pool = getPool();
 
 describe('Games API Tests', () => {
-  // Ensure pool is available and reset data before tests
   beforeAll(async () => {
     if (pool === null) {
       pool = getPool();
@@ -72,7 +71,6 @@ describe('Games API Tests', () => {
     expect(dbPlatforms).toEqual(newGame.platforms);
   });
 
-  /** Test case: Search games by partial title */
   it('should return games that partially match the query', async () => {
     const res = await request(app)
       .get('/api/games/search?query=Fort')
@@ -83,7 +81,6 @@ describe('Games API Tests', () => {
     expect(res.body[0]).toHaveProperty('title', 'Fortnite');
   });
 
-  /** Test case: Search with no matching games */
   it('should return 404 if no games match the query', async () => {
     const res = await request(app)
       .get('/api/games/search?query=UnknownGame')
@@ -93,7 +90,6 @@ describe('Games API Tests', () => {
     expect(res.body).toHaveProperty('message', 'No games found');
   });
 
-  /** Test case: Get a game by ID */
   it('should retrieve a game by ID', async () => {
     const [game] = await pool.query<RowDataPacket[]>(
       "SELECT game_id FROM games WHERE title = 'Minecraft'"
@@ -109,7 +105,6 @@ describe('Games API Tests', () => {
     expect(res.body).toHaveProperty('game_mode', 'both');
   });
 
-  /** Test case: Delete a game by ID */
   it('should delete a game by ID', async () => {
     const [game] = await pool.query<RowDataPacket[]>(
       "SELECT game_id FROM games WHERE title = 'Fortnite'"
@@ -130,7 +125,6 @@ describe('Games API Tests', () => {
     expect(deletedGame.length).toEqual(0);
   });
 
-  /** Test case: Update a game */
   it('should update a game successfully', async () => {
     const [game] = await pool.query<RowDataPacket[]>(
       "SELECT game_id FROM games WHERE title = 'FIFA 21'"

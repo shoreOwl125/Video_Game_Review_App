@@ -17,7 +17,6 @@ jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
   }),
 }));
 
-// Mock Database Connection
 jest.mock('../connections/database', () => {
   const originalModule = jest.requireActual('../connections/database');
   return {
@@ -70,7 +69,6 @@ describe('Recommendations API Tests', () => {
     }
   });
 
-  // New test to check if generateEmbeddings creates correct shape
   it('generateEmbeddings should create embeddings with correct shape', async () => {
     const sampleGames: GameInterface[] = [
       {
@@ -78,7 +76,7 @@ describe('Recommendations API Tests', () => {
         title: 'Sample Game 1',
         description: 'An exciting adventure',
         genre: 'Adventure',
-        tags: [], // Use empty array for tags
+        tags: [],
         platforms: [],
         playtime_estimate: 20,
         developer: 'Sample Dev',

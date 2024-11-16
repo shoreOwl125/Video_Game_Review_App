@@ -54,14 +54,14 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
     if (!game || typeof game !== 'object') {
       console.error(`Invalid game object: ${JSON.stringify(game)}`);
       console.log('Invalid game object:', game);
-      continue; // Skip invalid games
+      continue;
     }
 
     try {
       const title = game.name;
       if (!title) {
         console.error('Game title is undefined or empty');
-        continue; // Skip games without a title
+        continue;
       }
 
       const description = game.description || '';
@@ -78,7 +78,7 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
 
       // Validate and determine game_mode
       const lowerCasePlatforms = platforms.toLowerCase();
-      let game_mode: string = 'single-player'; // Default
+      let game_mode: string = 'single-player';
       if (lowerCasePlatforms.includes('multiplayer')) {
         game_mode = 'multiplayer';
       } else if (lowerCasePlatforms.includes('both')) {
@@ -86,8 +86,8 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
       }
 
       // Validate and clamp review_rating
-      const rawRating = game.rating || 0; // If no rating, default to 0
-      const review_rating = Math.min(Math.max(Math.round(rawRating), 1), 10); // Clamp between 1 and 10
+      const rawRating = game.rating || 0;
+      const review_rating = Math.min(Math.max(Math.round(rawRating), 1), 10);
 
       const release_date = game.released;
       const cover_image = game.background_image;
@@ -162,7 +162,7 @@ const fetchNewGames = async (maxFetch: number = 50): Promise<any[]> => {
 };
 
 const testAddGames = async () => {
-  const testIds = [1, 2, 3, 4, 5];
+  const testIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const gamesData = [];
 
   for (const gameId of testIds) {

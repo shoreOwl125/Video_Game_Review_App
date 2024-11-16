@@ -93,13 +93,13 @@ app.get('/', (req, res) => {
 });
 
 // Example usage
-testAddGames()
-  .then(() => {
-    console.log('success');
-  })
-  .catch(error => {
-    console.log('error:', error);
-  });
+// testAddGames()
+//   .then(() => {
+//     console.log('success');
+//   })
+//   .catch(error => {
+//     console.log('error:', error);
+//   });
 // getGameById(3498).then(game => {
 //   if (game) {
 //     console.log('Game:', game);

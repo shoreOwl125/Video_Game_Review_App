@@ -29,12 +29,10 @@ export const loadUSEModel = async () => {
   }
 };
 
-// Fetch games from the database
 export const fetchGamesData = async (): Promise<GameInterface[]> => {
   return await gameModel.getAllGames();
 };
 
-// Fetch specific user data by user ID using the model function
 export const fetchUserData = async (
   userId: number
 ): Promise<UserDataInterface | null> => {
@@ -79,7 +77,6 @@ export const applyPCA = (
   return reduced;
 };
 
-// Main function to generate embeddings with PCA
 export const generateGameEmbeddingsWithPCA = async (): Promise<number[][]> => {
   const games = await fetchGamesData();
   const embeddingsTensor = await generateEmbeddings(games);
