@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const gameImage = document.createElement('img');
             //gameImage.src = game.cover_image; //this is uncommented when the json data has an image
-            gameImage.src = 'gameinfo_testimage.png'
+            gameImage.src = 'game-info/gameinfo_testimage.png'
             gameImage.alt = game.title;
             gameTile.appendChild(gameImage);
 
             gameTile.addEventListener('click', () => {
-              window.location.href = `game-info.html?gameId=${game.game_id}`;
+              window.location.href = `game-info/game-info.html?gameId=${game.game_id}`;
             });
 
             gameGrid.appendChild(gameTile);
