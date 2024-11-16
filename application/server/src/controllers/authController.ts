@@ -13,7 +13,7 @@ const authStatus = async (req: Request, res: Response) => {
 
   if (!token) {
     console.log('No JWT cookie received');
-    return res.json({ loggedIn: false });
+    return res.json({ loggedIn: false, userId: null });
   }
 
   try {
@@ -23,14 +23,14 @@ const authStatus = async (req: Request, res: Response) => {
     const user = await User.findById((decoded as any).userId);
     if (user) {
       console.log('User found:', user);
-      return res.json({ loggedIn: true });
+      return res.json({ loggedIn: true, userId: user.id });
     } else {
       console.log('User not found');
-      return res.json({ loggedIn: false });
+      return res.json({ loggedIn: false, userId: null });
     }
   } catch (error) {
     console.error('JWT verification error:', error);
-    return res.json({ loggedIn: false });
+    return res.json({ loggedIn: false, userId: null });
   }
 };
 
