@@ -22,9 +22,20 @@ import recommendationRouter from './routes/recommendationRoutes';
 dotenv.config();
 
 const app = express();
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': ["'self'"],
+        'connect-src': ["'self'", 'http://127.0.0.1:8000'],
+      },
+    },
+  })
+);
 
-app.use(helmet());
 const allowedOrigins = [
+  'http://localhost:8000',
+  'http://127.0.0.1:8000',
   'http://localhost:3000',
   'http://127.0.0.1:5500',
   'https://gameratings-63hlr9lx0-abccodes-projects.vercel.app/',
@@ -34,13 +45,15 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function(origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
