@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const gameGrid = document.getElementById('gameGrid');
   const recommendationButton = document.getElementById('recommendation-button');
   const googleLoginButton = document.getElementById('google-login-button');
-  
 
   // Check Authentication Status
   const checkAuthStatus = async () => {
@@ -20,11 +19,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         method: 'GET',
         credentials: 'include',
       });
-  
+
       const data = await response.json();
-  
+
       if (data.loggedIn) {
-        if(data.userId){
+        if (data.userId) {
           userId = data.userId;
         }
         console.log(`User is logged in. User ID: ${userId}`);
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (settingsButton) settingsButton.style.display = 'inline-block';
       } else {
         console.log('User is not logged in');
-  
+
         // Show/Hide elements based on their existence
         if (logoutButton) logoutButton.style.display = 'none';
         if (settingsButton) settingsButton.style.display = 'none';
@@ -227,14 +226,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentPath !== 'view-profile.html') return;
 
     if (!userId) {
-      console.error('User ID is not available. Cannot fetch profile information.');
+      console.error(
+        'User ID is not available. Cannot fetch profile information.'
+      );
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/users/${userId}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      );
 
       if (response.ok) {
         const user = await response.json();
@@ -258,23 +262,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Profile picture upload does not save to user db yet
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Select the profile picture elements
   const profilePicUpload = document.getElementById('profilePicUpload');
   const profilePic = document.getElementById('profilePic');
   // Only add the event listener if the elements exist
   if (profilePicUpload && profilePic) {
-      profilePicUpload.addEventListener('change', function(event) {
-          console.log("File selected"); // Add this to verify event trigger
-          const file = event.target.files[0];
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  console.log("Image loaded"); // Add this to verify loading
-                  profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
-              };
-              reader.readAsDataURL(file);
-          }
-      });
+    profilePicUpload.addEventListener('change', function (event) {
+      console.log('File selected'); // Add this to verify event trigger
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          console.log('Image loaded'); // Add this to verify loading
+          profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
+        };
+        reader.readAsDataURL(file);
+      }
+    });
   }
 });
