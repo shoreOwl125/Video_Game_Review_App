@@ -38,6 +38,33 @@ interface GameData {
   metacritic: number | null;
 }
 
+const stripHtmlTags = (str: string | null): string => {
+  if (!str) return '';
+  return str.replace(/<\/?[^>]+(>|$)/g, '');
+};
+
+const getMostPopularGames = async (
+  limit: number = 100
+): Promise<GameData[]> => {
+  try {
+    const response = await fetch(
+      `https://api.rawg.io/api/games?ordering=-rating&key=${RAWG_API_KEY}&page_size=${limit}`
+    );
+    if (!response.ok) {
+      console.error(
+        `Failed to fetch most popular games: ${response.statusText}`
+      );
+      return [];
+    }
+    const data = await response.json();
+    console.log('data:', data);
+    return data.results || [];
+  } catch (error) {
+    console.error('Error fetching most popular games:', error);
+    return [];
+  }
+};
+
 const getGameById = async (gameId: number): Promise<GameData | null> => {
   try {
     const response = await fetch(
@@ -73,7 +100,7 @@ const addNewGamesToDatabase = async (games: any[]): Promise<void> => {
         continue;
       }
 
-      const description = game.description || '';
+      const description = stripHtmlTags(game.description) || '';
       const genre = game.genres?.map((g: any) => g.name).join(', ') || null;
       const tags = JSON.stringify(game.tags?.map((tag: any) => tag.name) || []);
       const platforms = JSON.stringify(
@@ -248,4 +275,10 @@ const testAddGames = async () => {
 //   'America/Los_Angeles' // Time zone
 // );
 
-export { getGameById, addNewGamesToDatabase, fetchNewGames, testAddGames };
+export {
+  getGameById,
+  addNewGamesToDatabase,
+  fetchNewGames,
+  testAddGames,
+  getMostPopularGames,
+};

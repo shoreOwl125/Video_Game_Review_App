@@ -18,14 +18,11 @@ import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendationRouter from './routes/recommendationRoutes';
-import { getGameById, addNewGamesToDatabase, testAddGames } from './api/rawg';
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 
-// Middleware setup
 app.use(helmet());
 const allowedOrigins = [
   'http://localhost:3000',
