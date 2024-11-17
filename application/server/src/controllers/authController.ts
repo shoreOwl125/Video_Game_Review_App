@@ -16,6 +16,7 @@ const authStatus = async (req: Request, res: Response) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
     const user = await User.findById((decoded as any).userId);
+
     if (user) {
       return res.json({ loggedIn: true, userId: user.id });
     } else {
@@ -29,42 +30,54 @@ const authStatus = async (req: Request, res: Response) => {
 const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, theme_preference, user_data_id } = req.body;
 
-  // Check if the user already exists
-  const userExists = await User.findByEmail(email);
-  if (userExists) {
-    return res.status(400).json({ message: 'The user already exists' });
+  try {
+    const userExistsByEmail = await User.findByEmail(email);
+    if (userExistsByEmail) {
+      return res
+        .status(400)
+        .json({ message: 'A user with this email already exists' });
+    }
+
+    const userExistsByUsername = await User.findByUsername(name);
+    if (userExistsByUsername) {
+      return res
+        .status(400)
+        .json({ message: 'This username is already taken' });
+    }
+
+    const user: UserInterface = await User.create({
+      name,
+      email,
+      password,
+      theme_preference,
+      user_data_id,
+    });
+
+    const userIdStr = user.id.toString();
+    generateToken(res, userIdStr);
+
+    return res.status(201).json({
+      id: userIdStr,
+      name: user.name,
+      email: user.email,
+      theme_preference: user.theme_preference,
+      user_data_id: user.user_data_id,
+    });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    return res.status(500).json({ message: 'Error registering user', error });
   }
-
-  // Create a new user
-  const user: UserInterface = await User.create({
-    name,
-    email,
-    password,
-    theme_preference,
-    user_data_id,
-  });
-
-  // Generate token using user id as string
-  const userIdStr = user.id.toString();
-  generateToken(res, userIdStr);
-
-  return res.status(201).json({
-    id: userIdStr,
-    name: user.name,
-    email: user.email,
-    theme_preference: user.theme_preference,
-    user_data_id: user.user_data_id,
-  });
 };
 
 const authenticateUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, name, password } = req.body;
 
-  // Find user by email
-  const user = await User.findByEmail(email);
+  const user = email
+    ? await User.findByEmail(email)
+    : await User.findByUsername(name);
 
+  console.log('USER: ' + user);
   if (user && (await User.comparePassword(user.password, password))) {
-    // Generate token using user id as string
     const userIdStr = user.id.toString();
     generateToken(res, userIdStr);
     return res.status(200).json({
