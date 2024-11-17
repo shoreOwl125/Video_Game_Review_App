@@ -22,6 +22,7 @@ export const getUser = async (req: Request, res: Response) => {
       email: fullUserData.email,
       theme_preference: fullUserData.theme_preference,
       user_data_id: fullUserData.user_data_id,
+      created_at: fullUserData.created_at,
     });
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -46,6 +47,27 @@ export const getUserByEmail = async (req: Request, res: Response) => {
     res.json(user);
   } catch (error) {
     console.error('Error fetching user by email:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getUserByUserName = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+
+    if (!name) {
+      return res.status(400).json({ message: 'Missing username parameter' });
+    }
+
+    const user = await User.findByUsername(name);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

@@ -13,7 +13,6 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', authenticateUser);
 router.post('/logout', logoutUser);
-// Check authentication status
 router.get('/status', authStatus);
 router.get(
   '/google',
