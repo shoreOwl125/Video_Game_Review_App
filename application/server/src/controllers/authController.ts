@@ -27,7 +27,10 @@ const authStatus = async (req: Request, res: Response) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, theme_preference, user_data_id } = req.body;
+  const { name, email, password, profile_pic, theme_preference, user_data_id } = req.body;
+
+  // Use provided profile picture or default to the predefined path
+  const profilePic = profile_pic || 'application/web/public/Default-Profile-Picture.jpg';
 
   // Check if the user already exists
   const userExists = await User.findByEmail(email);
@@ -40,6 +43,7 @@ const registerUser = async (req: Request, res: Response) => {
     name,
     email,
     password,
+    profile_pic: profilePic, // Assign the processed profile picture
     theme_preference,
     user_data_id,
   });
@@ -52,10 +56,12 @@ const registerUser = async (req: Request, res: Response) => {
     id: userIdStr,
     name: user.name,
     email: user.email,
+    profile_pic: user.profile_pic, // Include profile_pic in the response
     theme_preference: user.theme_preference,
     user_data_id: user.user_data_id,
   });
 };
+
 
 const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;

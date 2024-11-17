@@ -22,6 +22,7 @@ passport.use(
         name: profile.displayName || "Test User",
         email: profile.emails?.[0]?.value || "testuser@gmail.com",
         password: "", // No password for OAuth users
+        profile_pic: "",
         theme_preference: "light",
         user_data_id: null,
         created_at: new Date(),
@@ -70,6 +71,7 @@ describe("Google OAuth", () => {
                 name: "Test User",
                 email: "testuser@gmail.com",
                 password: "",
+                profile_pic: "",
                 theme_preference: "light",
                 user_data_id: null,
                 created_at: new Date(),

@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const email = signupForm.email.value;
       const password = signupForm.password.value;
       const confirmPassword = signupForm.confirm_password.value;
+      const profile_pic = "application/web/public/Default-Profile-Picture.jpg"
 
       if (password !== confirmPassword) {
         alert('Passwords do not match.');
@@ -100,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ name, email, profile_pic, password }),
           }
         );
 
@@ -242,6 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (response.ok) {
         const user = await response.json();
+        console.log(user.profile_pic);
         document.getElementById('username').textContent = user.name;
         document.getElementById('user-username').textContent = user.name;
         document.getElementById('user-email').textContent = user.email;

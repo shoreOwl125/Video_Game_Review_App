@@ -16,10 +16,12 @@ export const getUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Sends selected user info fetched from the database as a JSON response
     res.json({
       id: fullUserData.id,
       name: fullUserData.name,
       email: fullUserData.email,
+      profile_pic: fullUserData.profile_pic,
       theme_preference: fullUserData.theme_preference,
       user_data_id: fullUserData.user_data_id,
     });
