@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (response.ok) {
         const user = await response.json();
         console.log(user.profile_pic);
+        console.log('user created at ' + user);
         document.getElementById('username').textContent = user.name;
         document.getElementById('user-username').textContent = user.name;
         document.getElementById('user-email').textContent = user.email;

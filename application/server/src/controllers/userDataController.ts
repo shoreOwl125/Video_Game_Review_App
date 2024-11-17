@@ -49,8 +49,31 @@ export const updateUserData = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const updates: Partial<UserDataInterface> = req.body;
-    await userDataModel.updateUserData(Number(id), updates);
+    const updates: Record<string, any> = req.body;
+
+    const validFields = [
+      'search_history',
+      'interests',
+      'view_history',
+      'review_history',
+      'genres',
+    ];
+
+    // Filter out fields not in the validFields array
+    const filteredUpdates: Record<string, any> = {};
+    for (const key in updates) {
+      if (validFields.includes(key)) {
+        filteredUpdates[key] = updates[key];
+      }
+    }
+
+    if (Object.keys(filteredUpdates).length === 0) {
+      res.status(400).json({ message: 'No valid fields to update' });
+      return;
+    }
+
+    await userDataModel.updateUserData(Number(id), filteredUpdates);
+
     res.status(200).json({ message: 'User data updated successfully' });
   } catch (error) {
     console.error('Error updating user data:', error);
