@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/UserModel';
 import { User as UserInterface } from '../interfaces/User';
+import { UserData as UserDataInterface } from '../interfaces/UserData';
+import UserData from '../models/UserDataModel';
 import passport from 'passport';
 import { generateToken, clearToken } from '../utils/auth';
 import jwt from 'jsonwebtoken';
+
+const userDataModel = new UserData();
 
 const authStatus = async (req: Request, res: Response) => {
   const token = req.cookies.jwt;
@@ -45,12 +49,25 @@ const registerUser = async (req: Request, res: Response) => {
         .json({ message: 'This username is already taken' });
     }
 
+    const userData: Omit<
+      UserDataInterface,
+      'id' | 'created_at' | 'updated_at'
+    > = {
+      search_history: [],
+      interests: [],
+      view_history: [],
+      review_history: [],
+      genres: [],
+    };
+
+    const userDataId = await userDataModel.createUserData(userData);
+
     const user: UserInterface = await User.create({
       name,
       email,
       password,
       theme_preference,
-      user_data_id,
+      user_data_id: userDataId,
     });
 
     const userIdStr = user.id.toString();
