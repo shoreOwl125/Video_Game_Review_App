@@ -19,6 +19,16 @@ import recommendationRouter from './routes/recommendationRoutes';
 dotenv.config();
 
 const app = express();
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': ["'self'"],
+        'connect-src': ["'self'", 'http://127.0.0.1:8000'],
+      },
+    },
+  })
+);
 
 app.use(cookieParser());
 
@@ -43,7 +53,9 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true, // Ensure cookies are sent
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
