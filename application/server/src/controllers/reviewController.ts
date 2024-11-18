@@ -3,6 +3,7 @@ import ReviewModel from "../models/ReviewModel";
 
 const reviewModel = new ReviewModel();
 
+// Controller to create a new review
 export const createReview = async (
   req: Request,
   res: Response
@@ -22,13 +23,14 @@ export const createReview = async (
   }
 };
 
+// Controller to get review by ID
 export const getReviewById = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const review = await reviewModel.getReviewById(Number(id));
+    const review = await reviewModel.getReviewByGameId(Number(id));
 
     if (!review) {
       res.status(404).json({ message: "Review not found" });
@@ -41,6 +43,28 @@ export const getReviewById = async (
   }
 };
 
+//get reviews by game id
+export const getReviewByGameId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { gameId } = req.params;
+    const reviews = await reviewModel.getReviewByGameId(Number(gameId));
+
+    if (!reviews || reviews.length === 0) {
+      res.status(404).json({ message: "No reviews found for this game" });
+    } else {
+      res.status(200).json(reviews); // Send the array of reviews
+    }
+  } catch (error) {
+    console.error("Error fetching reviews by gameId:", error);
+    res.status(500).json({ message: "Error fetching reviews", error });
+  }
+};
+
+
+// Controller to update a review by ID
 export const updateReview = async (
   req: Request,
   res: Response
@@ -56,6 +80,7 @@ export const updateReview = async (
   }
 };
 
+// Controller to delete a review by ID
 export const deleteReview = async (
   req: Request,
   res: Response

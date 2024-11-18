@@ -1,3 +1,4 @@
+
 /* Basic reset */
 * {
   margin: 0;
@@ -74,12 +75,13 @@ body {
 /* Section below the banner*/
 .content-section {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
   margin-top: 0;
-  padding-top: 12vh; /* Increase padding to create more vertical space above the content */
-  background-color: #f4e6e6;
-  min-height: calc(100vh - 16.67vh); /* Ensure it fills the rest of the viewport */
+  padding-top: 8.3vh;
+  background-color: #f4e6E6;
+  min-height: calc(100vh - 16.67vh); /* Ensure it takes the rest of the viewport height */
+
 }
 
 /* Search Bar */
@@ -157,6 +159,13 @@ body {
   justify-content: center;
   border-radius: 10px;
 }
+.game-tile img {
+  width: 100%; /* Fit the image to the width of the tile */
+  height: auto; /* Maintain the aspect ratio */
+  object-fit: cover; /* Ensures it covers the tile area without distortion */
+  border-radius: 5px; /* Optional: rounded corners */
+}
+
 .pill-dropdown {
   padding: 10px 20px;
   border-radius: 50px;
@@ -421,7 +430,7 @@ footer {
 
 .profile-picture-container {
   position: absolute;
-  top: 180px;
+  top: 160px;
   right: 50px;
   width: 90px;
   height: 90px;
@@ -440,13 +449,15 @@ footer {
 /* Profile Container */
 .profile-container {
   background-color: #fff;
-  padding: 40px 60px; /* Increase padding for more vertical space inside the container */
-  margin-top: 40px; /* Add margin to space it from the profile picture */
+  padding: 20px 40px;
+  margin-top: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 800px;
-  margin: 40px auto; /* Ensure it's centered */
+  margin: auto;
 }
+
+
 
 /* Header with Edit Button */
 .header {
@@ -535,7 +546,7 @@ footer {
 
 /* Reviews Section */
 .reviews-section {
-  margin-top: 60px; /* Add more spacing below the profile container */
+  margin-top: 40px;
   padding: 20px 0;
   color: #3e2e2f;
   font-weight: bold;

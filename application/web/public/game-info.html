@@ -24,58 +24,48 @@
         </div>
     </header>
 
-    <!-- Main Content Section -->
+    <!-- Main Content Section Below Banner-->
     <section class="content-section">
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <div class="search-input-container">
-                <img src="game.png" class="search-icon" alt="Game Icon">
-                <input type="text" class="search-input" placeholder="Search for a video game">
-                <button class="search-button">Search</button>
-            </div>
-        </div>
-
-        <!-- Filter Dropdown -->
-        <div class="filter-container">
-            <label for="rating-filter" class="filter-label">Filter By:</label>
-            <select id="rating-filter" class="pill-dropdown">
-                <option value="">Select Rating</option>
-                <option value="1">1 Star</option>
-                <option value="2">2 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="5">5 Stars</option>
-            </select>
-        </div>
-
-
-
-
+    <!-- Main Content Section: Game Info(top) and Reviews(bottom)-->
         <div class="game-info">
 
             <div class="info-top">
                 <div class="game-stats">
-                    <!-- rating stats content here-->
-                    <p>Rating: ★★★★☆</p>
-                    <p>Reviews: 1,234</p>
-                </div>
+                    <h1 id="game-title">Loading...</h1>
+                    <p id="game-rating">Loading...</p>
+                    <p id="game-release-date">Loading...</p>
+                  </div>
+                  
 
                 <div class="game-image">
-                    <!--image content-->
+                    <!-- Use the dummy image -->
                     <img src="gameinfo_testimage.png" alt="Game Image">
+                    <!-- Commenting out the line that would pull the database image -->
+                    <!-- <img id="game-cover" src="" alt="Game Image"> -->
                 </div>
+                               
             </div>
 
             <div class="info-bottom">
-                <p>(info-bottom section) Platforms: Nintendo | Atari | Sega | Playstation</p>
+                <p>Platforms:</p>
+                <p>Nintendo</p>
+                <p>|</p>
+                <p>Atari</p>
+                <p>|</p>
+                <p>Sega</p>
+                <p>|</p>
+                <p>Playstation</p>
             </div>
-
         </div>
 
 
         <div class="game-reviews">
+            <h3>Game Reviews</h3>
+            <!-- Reviews will be added here dynamically -->
+            <div id="reviews-container"></div>
         </div>
+        
 
         
 
