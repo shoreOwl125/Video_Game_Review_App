@@ -29,13 +29,13 @@ class ReviewModel {
     return rows.length ? (rows[0] as ReviewInterface) : null;
   }
 
-  async getReviewByGameId(game_id: number): Promise<ReviewInterface[] | null> {
+  async getReviewByGameId(game_id: number): Promise<ReviewInterface[]> {
     const pool = getPool();
     const sql = "SELECT * FROM reviews WHERE game_id = ?";
     const [rows] = await pool.query<RowDataPacket[]>(sql, [game_id]);
   
-    return rows.length ? (rows as ReviewInterface[]) : null;
-  }
+    return rows as ReviewInterface[]; // Always return an array
+  }  
   
 
   async updateReview(
