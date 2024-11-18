@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
           // Check if the reviews data is fetched
           if (reviewsData) {
-              console.log('I have the data:', reviewsData);
+          console.log('I have the data:', reviewsData);
           
           // Turning the reviewsData object into an array to loop through:
           const reviewsArray = Array.isArray(reviewsData) ? reviewsData : [reviewsData];
@@ -42,8 +42,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           const reviewsContainer = document.querySelector('.game-reviews');
           reviewsContainer.innerHTML = ''; // Clear any existing content
   
+          // Loop through the reviews and display them
           reviewsArray.forEach(review => {
-            const reviewElement = document.createElement('p');
+            const reviewElement = document.createElement('div');
+            
+            // Add a class to the review element for styling
+            reviewElement.classList.add('review-box'); 
             
             // Construct a string to display all the properties of the review
             reviewElement.innerHTML = `
@@ -57,16 +61,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Append the review element to the container
             reviewsContainer.appendChild(reviewElement);
-        });               
-
+          });
+                    
       } else {
           console.log('No reviews data found.');
       }
-      } catch (error) {
-          console.error('Error fetching reviews:', error);
-      }
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
     }
+  }
   
-  });
+});
   
   
