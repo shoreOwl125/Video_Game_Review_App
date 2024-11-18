@@ -27,27 +27,16 @@
     <!-- Main Content Section Below Banner-->
     <section class="content-section">
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <div class="search-input-container">
-                <img src="game.png" class="search-icon" alt="Game Icon">
-                <input type="text" class="search-input" placeholder="Search for a video game">
-                <button class="search-button">Search</button>
-            </div>
-        </div>
-
-
-
     <!-- Main Content Section: Game Info(top) and Reviews(bottom)-->
         <div class="game-info">
 
             <div class="info-top">
                 <div class="game-stats">
-                    <!-- rating stats content here-->
-                    <p>Rating: ★★★★☆</p>
-                    <p>Title of Game</p>
-                    <p>Release Date</p>
-                </div>
+                    <h1 id="game-title">Loading...</h1>
+                    <p id="game-rating">Loading...</p>
+                    <p id="game-release-date">Loading...</p>
+                  </div>
+                  
 
                 <div class="game-image">
                     <!-- Use the dummy image -->
@@ -72,8 +61,11 @@
 
 
         <div class="game-reviews">
-            <p> Here are game reviews </p>
+            <h3>Game Reviews</h3>
+            <!-- Reviews will be added here dynamically -->
+            <div id="reviews-container"></div>
         </div>
+        
 
         
 

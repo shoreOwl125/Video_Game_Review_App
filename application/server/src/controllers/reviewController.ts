@@ -30,7 +30,27 @@ export const getReviewById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const review = await reviewModel.getReviewById(Number(id));
+    const review = await reviewModel.getReviewByGameId(Number(id));
+
+    if (!review) {
+      res.status(404).json({ message: "Review not found" });
+    } else {
+      res.status(200).json(review);
+    }
+  } catch (error) {
+    console.error("Error fetching review:", error);
+    res.status(500).json({ message: "Error fetching review", error });
+  }
+};
+
+// Controller to get review by Game ID
+export const getReviewByGameId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { gameId } = req.params;
+    const review = await reviewModel.getReviewByGameId(Number(gameId));
 
     if (!review) {
       res.status(404).json({ message: "Review not found" });
