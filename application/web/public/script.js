@@ -178,36 +178,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
  
 
-// Search functionality
-if (searchButton && searchInput && gameGrid) {
-  searchButton.addEventListener('click', async () => {
-    const searchTerm = searchInput.value;
-    if (searchTerm) {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(searchTerm)}`, 
-          {
-            credentials: 'include',
+  // Search functionality
+  if (searchButton && searchInput && gameGrid) {
+    searchButton.addEventListener('click', async () => {
+      const searchTerm = searchInput.value;
+      if (searchTerm) {
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(searchTerm)}`,
+            { credentials: 'include' }
+          );
+
+          const games = await response.json();
+
+          console.log(games)
+
+          gameGrid.innerHTML = '';
+
+          games.forEach(game => {
+            const gameTile = document.createElement('div');
+            gameTile.className = 'game-tile';
+
+            const gameImage = document.createElement('img');
+            gameImage.src = game.cover_image ? game.cover_image : 'gameinfo_testimage.png';
+            gameImage.alt = game.title;
+            gameTile.appendChild(gameImage);
+            
+
+            gameTile.addEventListener('click', () => {
+              window.location.href = `game-info.html?gameId=${game.game_id}`;
+            });
+
+            gameGrid.appendChild(gameTile);
           });
-
-    const games = await response.json();
-    console.log('Current data from the API: ', games)
-
-    gameGrid.innerHTML = '';
-    games.forEach(game => {
-      const gameTile = document.createElement('div');
-      gameTile.className = 'game-tile';
-      gameTile.textContent = game.title;
-      gameGrid.appendChild(gameTile);
+        } catch (error) {
+          console.error('Error fetching games:', error);
+        }
+      }
     });
-    } catch (error) {
-      console.error('Error fetching games:', error);
-    }
-  } else {
-    alert('Please enter a search term');
   }
-});
-};
+
 
 
 // Google login button functionality
@@ -237,5 +247,6 @@ document.addEventListener("DOMContentLoaded", function() {
               reader.readAsDataURL(file);
           }
       });
-  }
+    }
+  });
 });
