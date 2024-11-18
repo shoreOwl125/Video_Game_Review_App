@@ -185,33 +185,29 @@ if (searchButton && searchInput && gameGrid) {
     if (searchTerm) {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
-            searchTerm
-          )}`,
+          `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(searchTerm)}`, 
           {
             credentials: 'include',
-          }
-        );
+          });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+    const games = await response.json();
+    console.log('Current data from the API: ', games)
 
-        const games = await response.json();
-        gameGrid.innerHTML = '';
-        games.forEach(game => {
-          const gameTile = document.createElement('div');
-          gameTile.className = 'game-tile';
-          gameTile.textContent = game.title;
-          gameGrid.appendChild(gameTile);
-        });
-      } catch (error) {
-        console.error('Error fetching games:', error);
-      }
-    } else {
-      alert('Please enter a search term');
+    gameGrid.innerHTML = '';
+    games.forEach(game => {
+      const gameTile = document.createElement('div');
+      gameTile.className = 'game-tile';
+      gameTile.textContent = game.title;
+      gameGrid.appendChild(gameTile);
+    });
+    } catch (error) {
+      console.error('Error fetching games:', error);
     }
-  });
-}
+  } else {
+    alert('Please enter a search term');
+  }
 });
+};
 
 
 // Google login button functionality
