@@ -13,11 +13,11 @@ import { authenticate } from './middleware/authMiddleware';
 import { errorHandler } from './middleware/errorMiddleware';
 import path from 'path';
 import authRouter from './routes/authRoutes';
-import searchRouter from './routes/gameRoutes';
 import userDataRouter from './routes/userDataRoutes';
 import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
+import recommendations from './routes/recommendationRoutes';
 // Load environment variables from .env file
 dotenv.config();
 
@@ -29,13 +29,12 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        "default-src": ["'self'"],
-        "connect-src": ["'self'", "http://127.0.0.1:8000"],
+        'default-src': ["'self'"],
+        'connect-src': ["'self'", 'http://127.0.0.1:8000'],
       },
     },
   })
 );
-
 
 const allowedOrigins = [
   'http://localhost:8000',
@@ -47,7 +46,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: function(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -65,7 +64,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // telling server where to serve static files from first
-app.use(express.static(path.join(__dirname, "../../web/public")));
+app.use(express.static(path.join(__dirname, '../../web/public')));
 
 // google oauth setup with passport google strategy
 app.use(passport.initialize());
@@ -95,13 +94,12 @@ app.use('/api/users', authenticate, userRouter);
 app.use('/api/games', gameRouter);
 app.use('/api/userdata', userDataRouter);
 app.use('/api/reviews', reviewRoter);
-
+app.use('/api/recommendations', recommendations);
 
 // Fallback root route if index.html is not found
-app.get("/", (req, res) => {
-  res.send("The server is working, but the index page isn’t loading.");
+app.get('/', (req, res) => {
+  res.send('The server is working, but the index page isn’t loading.');
 });
-
 
 // Error handling middleware
 app.use(errorHandler);
