@@ -43,21 +43,35 @@ class UserData {
     userData: Omit<UserDataInterface, 'id' | 'created_at' | 'updated_at'>
   ): Promise<number> {
     const pool = getPool();
+    const connection = await pool.getConnection();
 
-    // Insert user data
-    const [result] = await pool.query<ResultSetHeader>(
-      'INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES (?, ?, ?, ?, ?)',
-      [
-        JSON.stringify(userData.search_history || []),
-        JSON.stringify(userData.interests || []),
-        JSON.stringify(userData.view_history || []),
-        JSON.stringify(userData.review_history || []),
-        JSON.stringify(userData.genres || []),
-      ]
-    );
+    try {
+      await connection.beginTransaction();
 
-    // Return the ID of the newly created user_data entry
-    return result.insertId;
+      // Insert user data
+      const [result] = await connection.query<ResultSetHeader>(
+        'INSERT INTO user_data (search_history, interests, view_history, review_history, genres) VALUES (?, ?, ?, ?, ?)',
+        [
+          JSON.stringify(userData.search_history || []),
+          JSON.stringify(userData.interests || []),
+          JSON.stringify(userData.view_history || []),
+          JSON.stringify(userData.review_history || []),
+          JSON.stringify(userData.genres || []),
+        ]
+      );
+
+      const insertId = result.insertId;
+      console.log('Inserted user_data ID:', insertId);
+
+      // Commit transaction
+      await connection.commit();
+      return insertId;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 
   async getUserDataById(id: number): Promise<UserDataInterface | null> {

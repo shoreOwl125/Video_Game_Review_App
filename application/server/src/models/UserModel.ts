@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { getPool } from '../connections/database';
 import { RowDataPacket } from 'mysql2/promise';
 import { User as UserInterface } from '../interfaces/User';
+
 class User {
   static async create(
     user: Omit<UserInterface, 'id' | 'created_at' | 'updated_at'>
