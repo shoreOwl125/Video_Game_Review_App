@@ -61,7 +61,6 @@ const registerUser = async (req: Request, res: Response) => {
     };
 
     const userDataId = await userDataModel.createUserData(userData);
-    console.log("USER DATA ID::: " + userDataId);
     const user: UserInterface = await User.create({
       name,
       email,

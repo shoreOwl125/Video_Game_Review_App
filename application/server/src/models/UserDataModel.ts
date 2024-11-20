@@ -55,7 +55,6 @@ class UserData {
         JSON.stringify(userData.genres || []),
       ]
     );
-    console.log('Insert Result for User Data:', result);
 
     // Return the ID of the newly created user_data entry
     return result.insertId;
