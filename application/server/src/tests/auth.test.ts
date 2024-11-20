@@ -15,7 +15,9 @@ describe('User Registration, Login, Logout, and Profile API Tests', () => {
   // Clean up users table before each test
   beforeEach(async () => {
     uniqueEmail = `testuser@gmail.com`;
+    // Delete child table first, then parent table
     await pool.query('DELETE FROM users');
+    await pool.query('DELETE FROM user_data');
   });
 
   it('should register a new user', async () => {
