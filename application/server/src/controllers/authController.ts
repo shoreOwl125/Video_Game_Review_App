@@ -32,7 +32,7 @@ const authStatus = async (req: Request, res: Response) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, theme_preference, user_data_id } = req.body;
+  const { name, email, password, theme_preference } = req.body;
 
   try {
     const userExistsByEmail = await User.findByEmail(email);
@@ -61,7 +61,7 @@ const registerUser = async (req: Request, res: Response) => {
     };
 
     const userDataId = await userDataModel.createUserData(userData);
-
+    console.log("USER DATA ID::: " + userDataId);
     const user: UserInterface = await User.create({
       name,
       email,
