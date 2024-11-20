@@ -32,10 +32,9 @@ const authStatus = async (req: Request, res: Response) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, theme_preference } = req.body;
+  const { name, email, password, theme_preference, user_data_id } = req.body;
 
   try {
-    // Check if email or username already exists
     const userExistsByEmail = await User.findByEmail(email);
     if (userExistsByEmail) {
       return res
@@ -50,7 +49,6 @@ const registerUser = async (req: Request, res: Response) => {
         .json({ message: 'This username is already taken' });
     }
 
-    // Create user_data entry
     const userData: Omit<
       UserDataInterface,
       'id' | 'created_at' | 'updated_at'
@@ -64,7 +62,6 @@ const registerUser = async (req: Request, res: Response) => {
 
     const userDataId = await userDataModel.createUserData(userData);
 
-    // Insert user entry
     const user: UserInterface = await User.create({
       name,
       email,
@@ -73,7 +70,6 @@ const registerUser = async (req: Request, res: Response) => {
       user_data_id: userDataId,
     });
 
-    // Generate token and respond
     const userIdStr = user.id.toString();
     generateToken(res, userIdStr);
 
