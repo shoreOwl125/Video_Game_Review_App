@@ -1,7 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/UserModel';
-import { User as UserInterface } from '../interfaces/User';
+import { Request, Response, NextFunction } from 'express';
 
 const authenticate = async (
   req: Request,
@@ -9,26 +7,20 @@ const authenticate = async (
   next: NextFunction
 ) => {
   const token = req.cookies.jwt;
-  console.log('token', token);
+
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      userId: number;
-    };
-
-    const user = await User.findById(decoded.userId);
-
-    if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    req.user = user as UserInterface;
-
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'testsecret'
+    ) as { userId: number };
+    req.user = { userId: decoded.userId };
     next();
   } catch (err) {
+    console.error('JWT Verification Error:', err);
     return res.status(401).json({ message: 'Unauthorized' });
   }
 };
