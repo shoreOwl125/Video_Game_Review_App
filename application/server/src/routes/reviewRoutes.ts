@@ -10,7 +10,7 @@ import { authenticate } from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.post('/', createReview);
+router.post('/', authenticate, createReview);
 router.get('/:id', getReviewById);
 router.get('/game/:gameId', getReviewByGameId);
 router.put('/:id', authenticate, updateReview);
