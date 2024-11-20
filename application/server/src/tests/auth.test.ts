@@ -1,23 +1,23 @@
 import request from 'supertest';
 import app from '../app';
-import { getPool } from '../connections/database';
+import {
+  resetDatabase,
+  seedDatabase,
+  closeDatabase,
+} from './scripts/setupTests';
 
 describe('User Registration, Login, Logout, and Profile API Tests', () => {
   let uniqueEmail: string = '';
   let jwtCookie: string = '';
-  const pool = getPool();
 
-  // Close the database pool after all tests
-  afterAll(async () => {
-    await pool.end();
+  beforeEach(async () => {
+    await resetDatabase();
+    await seedDatabase();
+    uniqueEmail = `testuser@gmail.com`;
   });
 
-  // Clean up users table before each test
-  beforeEach(async () => {
-    uniqueEmail = `testuser@gmail.com`;
-    // Delete child table first, then parent table
-    await pool.query('DELETE FROM users');
-    await pool.query('DELETE FROM user_data');
+  afterAll(async () => {
+    await closeDatabase();
   });
 
   it('should register a new user', async () => {

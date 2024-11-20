@@ -7,4 +7,4 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js'], // Recognize these file extensions
   testMatch: ['**/tests/**/*.test.ts'], // Find test files in the "tests" folder
   testTimeout: 25000, // 10 seconds timeout for all tests
-}
+};

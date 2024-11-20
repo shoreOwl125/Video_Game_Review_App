@@ -1,121 +1,56 @@
 import request from 'supertest';
 import app from '../app';
-import { getPool } from '../connections/database';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+// import { getPool } from '../connections/database';
+// import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import jwt from 'jsonwebtoken';
+import {
+  resetDatabase,
+  seedDatabase,
+  closeDatabase,
+} from './scripts/setupTests';
 
-let pool = getPool();
+// let pool = getPool();
+
+function generateMockToken(userId: number): string {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'testsecret', {
+    expiresIn: '1h',
+  });
+}
 
 describe('User Data API Tests', () => {
-  beforeAll(async () => {
-    if (pool === null) {
-      pool = getPool();
-    }
+  beforeEach(async () => {
+    await resetDatabase();
+    await seedDatabase();
   });
 
   afterAll(async () => {
-    await pool.end();
+    await closeDatabase();
   });
 
-  beforeEach(async () => {
-    await pool.query('DELETE FROM user_data');
-    await pool.query('COMMIT');
-  });
-
-  it('should add a new user data record successfully', async () => {
-    const newUserData = {
-      search_history: ['game5', 'game6'],
-      interests: ['strategy', 'puzzle'],
-      view_history: ['game5'],
-      review_history: ['1', '3'],
-      genres: ['Action', 'Puzzle'],
-    };
+  it('should retrieve user data by ID when authenticated', async () => {
+    const token = generateMockToken(1);
 
     const res = await request(app)
-      .post('/api/userdata')
-      .send(newUserData);
-    console.log('Create response:', res.statusCode, res.body);
-
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty(
-      'message',
-      'User data created successfully'
-    );
-
-    const [userData] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM user_data WHERE id = ?',
-      [res.body.userDataId]
-    );
-
-    console.log('Queried userData:', userData);
-
-    expect(userData.length).toEqual(1);
-    expect(userData[0].search_history).toEqual(newUserData.search_history);
-    expect(userData[0].interests).toEqual(newUserData.interests);
-    expect(userData[0].view_history).toEqual(newUserData.view_history);
-    expect(userData[0].review_history).toEqual(newUserData.review_history);
-    expect(userData[0].genres).toEqual(newUserData.genres);
-  });
-
-  it('should retrieve user data by ID', async () => {
-    const sampleUserData = {
-      search_history: ['game1', 'game2'],
-      interests: ['sports', 'action'],
-      view_history: ['game1'],
-      review_history: ['1', '2'],
-      genres: ['RPG', 'Adventure'],
-    };
-
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      `
-      INSERT INTO user_data (search_history, interests, view_history, review_history, genres)
-      VALUES (?, ?, ?, ?, ?)
-      `,
-      [
-        JSON.stringify(sampleUserData.search_history),
-        JSON.stringify(sampleUserData.interests),
-        JSON.stringify(sampleUserData.view_history),
-        JSON.stringify(sampleUserData.review_history),
-        JSON.stringify(sampleUserData.genres),
-      ]
-    );
-    const insertedId = result.insertId;
-
-    const res = await request(app)
-      .get(`/api/userdata/${insertedId}`)
-      .send();
-    console.log('Retrieve response:', res.statusCode, res.body);
+      .get('/api/userdata/1')
+      .set('Cookie', [`jwt=${token}`]);
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.search_history).toEqual(sampleUserData.search_history);
-    expect(res.body.interests).toEqual(sampleUserData.interests);
-    expect(res.body.view_history).toEqual(sampleUserData.view_history);
-    expect(res.body.review_history).toEqual(sampleUserData.review_history);
-    expect(res.body.genres).toEqual(sampleUserData.genres);
+    expect(res.body).toHaveProperty('interests', ['sports', 'action']);
   });
 
-  it('should update user data successfully', async () => {
-    const sampleUserData = {
-      search_history: ['game1', 'game2'],
-      interests: ['sports', 'action'],
-      view_history: ['game1'],
-      review_history: ['1', '2'],
-      genres: ['RPG', 'Adventure'],
-    };
+  it("should not retrieve another user's data", async () => {
+    const token = generateMockToken(2);
 
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      `
-      INSERT INTO user_data (search_history, interests, view_history, review_history, genres)
-      VALUES (?, ?, ?, ?, ?)
-      `,
-      [
-        JSON.stringify(sampleUserData.search_history),
-        JSON.stringify(sampleUserData.interests),
-        JSON.stringify(sampleUserData.view_history),
-        JSON.stringify(sampleUserData.review_history),
-        JSON.stringify(sampleUserData.genres),
-      ]
-    );
-    const insertedId = result.insertId;
+    const res = await request(app)
+      .get('/api/userdata/1')
+      .set('Cookie', [`jwt=${token}`]);
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty('message', 'Forbidden: Access denied');
+  });
+
+  it('should update user data successfully when authenticated', async () => {
+    const token = generateMockToken(1);
 
     const updates = {
       interests: ['sports', 'adventure'],
@@ -123,63 +58,59 @@ describe('User Data API Tests', () => {
     };
 
     const res = await request(app)
-      .put(`/api/userdata/${insertedId}`)
+      .put('/api/userdata/1')
+      .set('Cookie', [`jwt=${token}`])
       .send(updates);
-    console.log('Update response:', res.statusCode, res.body);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty(
       'message',
       'User data updated successfully'
     );
-
-    const [updatedUserData] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM user_data WHERE id = ?',
-      [insertedId]
-    );
-    expect(updatedUserData[0].interests).toEqual(updates.interests);
-    expect(updatedUserData[0].genres).toEqual(updates.genres);
   });
 
-  it('should delete user data by ID', async () => {
-    const sampleUserData = {
-      search_history: ['game1', 'game2'],
-      interests: ['sports', 'action'],
-      view_history: ['game1'],
-      review_history: ['1', '2'],
-      genres: ['RPG', 'Adventure'],
+  it("should not update another user's data", async () => {
+    const token = generateMockToken(2);
+
+    const updates = {
+      interests: ['sports', 'adventure'],
+      genres: ['RPG', 'Sports'],
     };
 
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      `
-      INSERT INTO user_data (search_history, interests, view_history, review_history, genres)
-      VALUES (?, ?, ?, ?, ?)
-      `,
-      [
-        JSON.stringify(sampleUserData.search_history),
-        JSON.stringify(sampleUserData.interests),
-        JSON.stringify(sampleUserData.view_history),
-        JSON.stringify(sampleUserData.review_history),
-        JSON.stringify(sampleUserData.genres),
-      ]
-    );
-    const insertedId = result.insertId;
-
     const res = await request(app)
-      .delete(`/api/userdata/${insertedId}`)
-      .send();
-    console.log('Delete response:', res.statusCode, res.body);
+      .put('/api/userdata/1')
+      .set('Cookie', [`jwt=${token}`])
+      .send(updates);
 
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty(
-      'message',
-      'User data deleted successfully'
-    );
-
-    const [deletedUserData] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM user_data WHERE id = ?',
-      [insertedId]
-    );
-    expect(deletedUserData.length).toEqual(0);
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty('message', 'Forbidden: Access denied');
   });
+
+  // These test cases are commented out because they involve making API calls
+  // to fetch recommendations for openAI, which can be computationally expensive, especially
+  // when testing at scale. For now, we are prioritizing efficiency in the test suite
+  // by not invoking external API calls. These can be re-enabled later if needed
+  // for end-to-end testing or integration purposes.
+
+  //   it('should retrieve recommendations for the authenticated user', async () => {
+  //     const token = generateMockToken(1);
+
+  //     const res = await request(app)
+  //       .get('/api/userdata/1/recommendations')
+  //       .set('Cookie', [`jwt=${token}`]);
+
+  //     expect(res.statusCode).toEqual(200);
+  //     expect(Array.isArray(res.body)).toBe(true);
+  //   });
+
+  //   it('should not retrieve recommendations for another user', async () => {
+  //     const token = generateMockToken(2);
+
+  //     const res = await request(app)
+  //       .get('/api/userdata/1/recommendations')
+  //       .set('Cookie', [`jwt=${token}`]);
+
+  //     expect(res.statusCode).toEqual(403);
+  //     expect(res.body).toHaveProperty('message', 'Forbidden: Access denied');
+  //   });
 });

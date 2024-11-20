@@ -1,9 +1,13 @@
 import request from 'supertest';
 import app from '../app';
 import * as tf from '@tensorflow/tfjs';
-import { getPool as actualGetPool } from '../connections/database';
 import { generateEmbeddings } from '../ml/embeddingService';
 import { Game as GameInterface } from '../interfaces/Game';
+import {
+  resetDatabase,
+  seedDatabase,
+  closeDatabase,
+} from './scripts/setupTests';
 
 // Mock Universal Sentence Encoder
 jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
@@ -17,12 +21,13 @@ jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
   }),
 }));
 
+// Mock database pool
 jest.mock('../connections/database', () => {
   const originalModule = jest.requireActual('../connections/database');
   return {
     ...originalModule,
     getPool: jest.fn().mockReturnValue({
-      query: jest.fn().mockImplementation((query: string, values) => {
+      query: jest.fn((query: string, values: any[]) => {
         if (query.includes('FROM games')) {
           return [
             [
@@ -36,11 +41,21 @@ jest.mock('../connections/database', () => {
         }
         return [[]];
       }),
+      end: jest.fn().mockResolvedValue(null), // Mock end to resolve properly
     }),
   };
 });
 
 describe('Recommendations API Tests', () => {
+  beforeEach(async () => {
+    await resetDatabase();
+    await seedDatabase();
+  });
+
+  afterAll(async () => {
+    await closeDatabase();
+  });
+
   it('should fetch games data successfully', async () => {
     const res = await request(app).get('/api/recommendations/fetchGames');
     expect(res.statusCode).toEqual(200);
@@ -109,7 +124,7 @@ describe('Recommendations API Tests', () => {
 
     const embeddings = await generateEmbeddings(sampleGames);
     expect(embeddings).toBeInstanceOf(tf.Tensor);
-    expect(embeddings.shape[0]).toBe(sampleGames.length); // Check that it matches number of input games
-    expect(embeddings.shape[1]).toBeGreaterThan(0); // Ensure there is at least one embedding dimension
+    expect(embeddings.shape[0]).toBe(sampleGames.length);
+    expect(embeddings.shape[1]).toBeGreaterThan(0);
   });
 });
