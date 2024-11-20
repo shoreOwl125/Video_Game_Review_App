@@ -2,8 +2,86 @@ import { Request, Response } from 'express';
 import UserDataModel from '../models/UserDataModel';
 import { UserData as UserDataInterface } from '../interfaces/UserData';
 import { getGameRecommendations } from '../services/recommendationService';
+import { RowDataPacket } from 'mysql2';
+import { getPool } from '../connections/database';
 
 const userDataModel = new UserDataModel();
+
+const verifyOwnership = (req: Request, res: Response, id: number): boolean => {
+  const userId = (req as any).user.userId;
+  if (userId !== id) {
+    res.status(403).json({ message: 'Forbidden: Access denied' });
+    return false;
+  }
+  return true;
+};
+
+export const getUserDataById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = Number(id);
+    if (!verifyOwnership(req, res, userId)) return;
+
+    const userData = await userDataModel.getUserDataById(userId);
+    if (!userData) {
+      res.status(404).json({ message: 'User data not found' });
+    } else {
+      res.status(200).json(userData);
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ message: 'Error fetching user data', error });
+  }
+};
+
+export const updateUserData = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = Number(id);
+    if (!verifyOwnership(req, res, userId)) return;
+
+    const updates: Partial<UserDataInterface> = req.body;
+    await userDataModel.updateUserData(userId, updates);
+    res.status(200).json({ message: 'User data updated successfully' });
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    res.status(500).json({ message: 'Error updating user data', error });
+  }
+};
+
+export const getRecommendations = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const pool = getPool();
+    const { id } = req.params;
+    const userId = Number(id);
+
+    if (!verifyOwnership(req, res, userId)) return;
+
+    const [userData] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM user_data WHERE id = ?',
+      [userId]
+    );
+
+    if (!userData.length) {
+      throw new Error('User data not found');
+    }
+
+    const recommendations = await getGameRecommendations(userId);
+    res.status(200).json(recommendations);
+  } catch (error) {
+    console.error('Error fetching recommendations:', error);
+    res.status(500).json({ message: 'Error fetching recommendations', error });
+  }
+};
 
 export const createUserData = async (
   req: Request,
@@ -24,40 +102,6 @@ export const createUserData = async (
   }
 };
 
-export const getUserDataById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const userData = await userDataModel.getUserDataById(Number(id));
-
-    if (!userData) {
-      res.status(404).json({ message: 'User data not found' });
-    } else {
-      res.status(200).json(userData);
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).json({ message: 'Error fetching user data', error });
-  }
-};
-
-export const updateUserData = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const updates: Partial<UserDataInterface> = req.body;
-    await userDataModel.updateUserData(Number(id), updates);
-    res.status(200).json({ message: 'User data updated successfully' });
-  } catch (error) {
-    console.error('Error updating user data:', error);
-    res.status(500).json({ message: 'Error updating user data', error });
-  }
-};
-
 export const deleteUserData = async (
   req: Request,
   res: Response
@@ -69,20 +113,6 @@ export const deleteUserData = async (
   } catch (error) {
     console.error('Error deleting user data:', error);
     res.status(500).json({ message: 'Error deleting user data', error });
-  }
-};
-
-export const getRecommendations = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const recommendations = await getGameRecommendations(Number(id));
-    res.status(200).json(recommendations);
-  } catch (error) {
-    console.error('Error fetching recommendations:', error);
-    res.status(500).json({ message: 'Error fetching recommendations', error });
   }
 };
 

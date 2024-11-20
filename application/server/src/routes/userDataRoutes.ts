@@ -6,6 +6,7 @@ import {
   deleteUserData,
   getRecommendations,
 } from '../controllers/userDataController';
+import { authenticate } from '../middleware/authMiddleware';
 
 const router = Router();
 
@@ -15,8 +16,8 @@ const router = Router();
 // router.post('/', createUserData);
 // router.delete("/:id", deleteUserData);
 
-router.get('/:id', getUserDataById);
-router.put('/:id', updateUserData);
-router.get('/:id/recommendations', getRecommendations);
+router.get('/:id', authenticate, getUserDataById);
+router.put('/:id', authenticate, updateUserData);
+router.get('/:id/recommendations', authenticate, getRecommendations);
 
 export default router;

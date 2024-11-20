@@ -16,7 +16,15 @@ export const seedDatabase = async () => {
   await pool.query(`
     INSERT INTO users (id, name, email, password, theme_preference)
     VALUES
-      (1, 'Test User', 'testuser@example.com', 'password123', 'light')
+    (1, 'Test User 1', 'testuser1@example.com', 'password123', 'dark'),
+    (2, 'Test User 2', 'testuser2@example.com', 'password123', 'light')
+  `);
+
+  await pool.query(`
+    INSERT INTO user_data (id, search_history, interests, view_history, review_history, genres)
+    VALUES
+    (1, '["game1", "game2"]', '["sports", "action"]', '["game1"]', '["1", "2"]', '["RPG", "Adventure"]'),
+    (2, '["game3", "game4"]', '["strategy", "puzzle"]', '["game3"]', '["3", "4"]', '["Puzzle", "Strategy"]')
   `);
 
   await pool.query(`
