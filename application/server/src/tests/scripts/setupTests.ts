@@ -3,10 +3,10 @@ import { getPool } from '../../connections/database';
 export const resetDatabase = async () => {
   const pool = getPool();
   await pool.query('SET FOREIGN_KEY_CHECKS=0');
-  await pool.query('DELETE FROM reviews');
-  await pool.query('DELETE FROM users');
-  await pool.query('DELETE FROM games');
-  await pool.query('DELETE FROM user_data');
+  await pool.query('TRUNCATE TABLE reviews');
+  await pool.query('TRUNCATE TABLE users');
+  await pool.query('TRUNCATE TABLE games');
+  await pool.query('TRUNCATE TABLE user_data');
   await pool.query('SET FOREIGN_KEY_CHECKS=1');
 };
 
@@ -30,13 +30,13 @@ export const seedDatabase = async () => {
   await pool.query(`
     INSERT INTO games (game_id, title, genre, developer, publisher)
     VALUES
-      (1, 'Test Game', 'Action', 'Test Developer', 'Test Publisher')
+    (1, 'Test Game 1', 'Action', 'Test Developer', 'Test Publisher')
   `);
 
   await pool.query(`
-    INSERT INTO reviews (user_id, game_id, rating, review_text)
+    INSERT INTO reviews (review_id, user_id, game_id, rating, review_text)
     VALUES
-      (1, 1, 4, 'Good game')
+    (1, 1, 1, 4, 'Good game')
   `);
 };
 

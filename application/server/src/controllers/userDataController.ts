@@ -4,17 +4,9 @@ import { UserData as UserDataInterface } from '../interfaces/UserData';
 import { getGameRecommendations } from '../services/recommendationService';
 import { RowDataPacket } from 'mysql2';
 import { getPool } from '../connections/database';
+import { verifyOwnership } from './helper/auth';
 
 const userDataModel = new UserDataModel();
-
-const verifyOwnership = (req: Request, res: Response, id: number): boolean => {
-  const userId = (req as any).user.userId;
-  if (userId !== id) {
-    res.status(403).json({ message: 'Forbidden: Access denied' });
-    return false;
-  }
-  return true;
-};
 
 export const getUserDataById = async (
   req: Request,
@@ -58,7 +50,7 @@ export const updateUserData = async (
 export const getRecommendations = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<Response | void> => {
   try {
     const pool = getPool();
     const { id } = req.params;

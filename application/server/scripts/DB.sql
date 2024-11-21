@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    profile_pic VARCHAR(255) DEFAULT 'application/web/public/Default-Profile-Picture.jpg', -- Added default profile picture path
     theme_preference ENUM('light', 'dark') DEFAULT 'light',
     user_data_id INT,  -- Foreign key linking to user_data table
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -72,17 +73,17 @@ INSERT INTO user_data (search_history, interests, view_history, review_history, 
     ('["Starcraft II", "Command & Conquer"]', '["strategy", "simulation"]', '["Starcraft II"]', '["9"]', '["RTS"]'),
     ('["Doom Eternal", "Half-Life 2"]', '["action", "horror"]', '["Doom Eternal"]', '["10"]', '["Shooter"]');
 
-INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES
-    ('Alice Smith', 'alice.smith@example.com', 'password1', 'light', 1),
-    ('Bob Johnson', 'bob.johnson@example.com', 'password2', 'dark', 2),
-    ('Charlie Brown', 'charlie.brown@example.com', 'password3', 'light', 3),
-    ('David Wilson', 'david.wilson@example.com', 'password4', 'dark', 4),
-    ('Eve Davis', 'eve.davis@example.com', 'password5', 'light', 5),
-    ('Frank Miller', 'frank.miller@example.com', 'password6', 'dark', 6),
-    ('Grace Lee', 'grace.lee@example.com', 'password7', 'light', 7),
-    ('Henry Adams', 'henry.adams@example.com', 'password8', 'dark', 8),
-    ('Ivy Green', 'ivy.green@example.com', 'password9', 'light', 9),
-    ('Jack White', 'jack.white@example.com', 'password10', 'dark', 10);
+INSERT INTO users (name, email, password, profile_pic, theme_preference, user_data_id) VALUES
+    ('Alice Smith', 'alice.smith@example.com', 'password1', '/uploads/profiles/alice.jpg', 'light', 1),
+    ('Bob Johnson', 'bob.johnson@example.com', 'password2', '/uploads/profiles/bob.jpg', 'dark', 2),
+    ('Charlie Brown', 'charlie.brown@example.com', 'password3', '/uploads/profiles/charlie.jpg', 'light', 3),
+    ('David Wilson', 'david.wilson@example.com', 'password4', '/uploads/profiles/david.jpg', 'dark', 4),
+    ('Eve Davis', 'eve.davis@example.com', 'password5', '/uploads/profiles/eve.jpg', 'light', 5),
+    ('Frank Miller', 'frank.miller@example.com', 'password6', '/uploads/profiles/frank.jpg', 'dark', 6),
+    ('Grace Lee', 'grace.lee@example.com', 'password7', '/uploads/profiles/grace.jpg', 'light', 7),
+    ('Henry Adams', 'henry.adams@example.com', 'password8', '/uploads/profiles/henry.jpg', 'dark', 8),
+    ('Ivy Green', 'ivy.green@example.com', 'password9', '/uploads/profiles/ivy.jpg', 'light', 9),
+    ('Jack White', 'jack.white@example.com', 'password10', '/uploads/profiles/jack.jpg', 'dark', 10);
 
 INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, developer, publisher, game_mode, release_date, review_rating, cover_image) VALUES
     ('Fortnite', 'Battle royale shooter', 'Shooter', '["battle-royale"]', '["PC", "PlayStation", "Xbox"]', 50, 'Epic Games', 'Epic Games', 'multiplayer', '2018-03-12', 8, '/assets/images/fortnite.jpg'),

@@ -18,13 +18,12 @@ import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendations from './routes/recommendationRoutes';
-// Load environment variables from .env file
+
 dotenv.config();
 
 const app = express();
 
-// Middleware setup
-//app.use(helmet());
+app.use(helmet());
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -63,10 +62,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// telling server where to serve static files from first
 app.use(express.static(path.join(__dirname, '../../web/public')));
 
-// google oauth setup with passport google strategy
 app.use(passport.initialize());
 passport.use(
   new GoogleStrategy(
@@ -88,7 +85,8 @@ passport.deserializeUser((obj: any, done) => {
   done(null, obj as Express.User);
 });
 
-// Routes
+app.use(errorHandler);
+
 app.use('/api/auth', authRouter);
 app.use('/api/users', authenticate, userRouter);
 app.use('/api/games', gameRouter);
@@ -101,10 +99,6 @@ app.get('/', (req, res) => {
   res.send('The server is working, but the index page isn’t loading.');
 });
 
-// Error handling middleware
-app.use(errorHandler);
-
-// Database connection
-connectUserDB(); // No need to assign pool here, unless you use it in this file
+connectUserDB();
 
 export default app;

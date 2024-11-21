@@ -32,7 +32,10 @@ const authStatus = async (req: Request, res: Response) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, theme_preference } = req.body;
+  const { name, email, password, profile_pic, theme_preference } = req.body;
+
+  // Use provided profile picture or default to the predefined path
+  const profilePic = profile_pic || 'application/web/public/Default-Profile-Picture.jpg';
 
   try {
     const userExistsByEmail = await User.findByEmail(email);
@@ -65,7 +68,8 @@ const registerUser = async (req: Request, res: Response) => {
       name,
       email,
       password,
-      theme_preference,
+      profile_pic: profilePic, // Assign the processed profile picture
+    theme_preference,
       user_data_id: userDataId,
     });
 
@@ -76,7 +80,8 @@ const registerUser = async (req: Request, res: Response) => {
       id: userIdStr,
       name: user.name,
       email: user.email,
-      theme_preference: user.theme_preference,
+      profile_pic: user.profile_pic, // Include profile_pic in the response
+    theme_preference: user.theme_preference,
       user_data_id: user.user_data_id,
     });
   } catch (error) {
@@ -84,6 +89,7 @@ const registerUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error registering user', error });
   }
 };
+
 
 const authenticateUser = async (req: Request, res: Response) => {
   const { email, name, password } = req.body;

@@ -4,17 +4,20 @@ import { RowDataPacket } from 'mysql2/promise';
 import { User as UserInterface } from '../interfaces/User';
 
 class User {
+  static updateProfilePicture(id: number, profilePicUrl: string) {
+    throw new Error('Method not implemented.');
+  }
   static async create(
     user: Omit<UserInterface, 'id' | 'created_at' | 'updated_at'>
   ): Promise<UserInterface> {
-    const { name, email, password, theme_preference, user_data_id } = user;
+    const { name, email, password, profile_pic, theme_preference, user_data_id } = user;
     const pool = getPool();
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await pool.query(
-      'INSERT INTO users (name, email, password, theme_preference, user_data_id) VALUES (?, ?, ?, ?, ?)',
-      [name, email, hashedPassword, theme_preference, user_data_id]
+      'INSERT INTO users (name, email, password, profile_pic, theme_preference, user_data_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, email, hashedPassword, profile_pic, theme_preference, user_data_id]
     );
 
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -65,6 +68,25 @@ class User {
     const userRow = rows[0] as UserInterface;
     return userRow || undefined;
   }
+
+  static async updateUserProfilePicture(
+    userId: number,
+    profilePicUrl: string
+  ): Promise<boolean> {
+    const pool = getPool();
+    const [result] = await pool.query(
+      'UPDATE users SET profile_pic = ? WHERE id = ?',
+      [profilePicUrl, userId]
+    );
+
+    // Check if any row was updated
+    const updateResult = result as { affectedRows: number };
+    return updateResult.affectedRows > 0;
+  }
+  
+
+
+  
 }
 
 export default User;

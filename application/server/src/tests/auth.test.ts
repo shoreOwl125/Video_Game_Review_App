@@ -54,12 +54,10 @@ describe('User Registration, Login, Logout, and Profile API Tests', () => {
     expect(res.body).toHaveProperty('id');
     expect(res.body).toHaveProperty('email', uniqueEmail);
 
-    // Check if JWT token is set in cookies
     const cookies = res.headers['set-cookie'];
     expect(cookies).toBeDefined();
     expect(cookies[0]).toMatch(/jwt=/);
 
-    // Store the JWT cookie for future tests
     jwtCookie = cookies[0];
   });
 
