@@ -130,7 +130,7 @@ describe('Review Routes API Tests', () => {
 
     console.log('Update review unauthenticated response:', res.body);
     expect(res.statusCode).toEqual(401);
-    expect(res.body).toHaveProperty('message', 'Unauthorized');
+    expect(res.body).toHaveProperty('message', 'Unauthorized: No token provided');
   });
 
   it('should not delete a review by ID when unauthenticated', async () => {
@@ -142,6 +142,6 @@ describe('Review Routes API Tests', () => {
 
     console.log('Delete review unauthenticated response:', res.body);
     expect(res.statusCode).toEqual(401);
-    expect(res.body).toHaveProperty('message', 'Unauthorized');
+    expect(res.body).toHaveProperty('message', 'Unauthorized: No token provided');
   });
 });

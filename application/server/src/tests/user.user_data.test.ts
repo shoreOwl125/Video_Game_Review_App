@@ -92,25 +92,25 @@ describe('User Data API Tests', () => {
   // by not invoking external API calls. These can be re-enabled later if needed
   // for end-to-end testing or integration purposes.
 
-  //   it('should retrieve recommendations for the authenticated user', async () => {
-  //     const token = generateMockToken(1);
+  // it('should retrieve recommendations for the authenticated user', async () => {
+  //   const token = generateMockToken(1);
 
-  //     const res = await request(app)
-  //       .get('/api/userdata/1/recommendations')
-  //       .set('Cookie', [`jwt=${token}`]);
+  //   const res = await request(app)
+  //     .get('/api/userdata/1/recommendations')
+  //     .set('Cookie', [`jwt=${token}`]);
 
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(Array.isArray(res.body)).toBe(true);
-  //   });
+  //   expect(res.statusCode).toEqual(200);
+  //   expect(Array.isArray(res.body)).toBe(true);
+  // });
 
-  //   it('should not retrieve recommendations for another user', async () => {
-  //     const token = generateMockToken(2);
+  // it('should not retrieve recommendations for another user', async () => {
+  //   const token = generateMockToken(2);
 
-  //     const res = await request(app)
-  //       .get('/api/userdata/1/recommendations')
-  //       .set('Cookie', [`jwt=${token}`]);
+  //   const res = await request(app)
+  //     .get('/api/userdata/1/recommendations')
+  //     .set('Cookie', [`jwt=${token}`]);
 
-  //     expect(res.statusCode).toEqual(403);
-  //     expect(res.body).toHaveProperty('message', 'Forbidden: Access denied');
-  //   });
+  //   expect(res.statusCode).toEqual(403);
+  //   expect(res.body).toHaveProperty('message', 'Forbidden: Access denied');
+  // });
 });

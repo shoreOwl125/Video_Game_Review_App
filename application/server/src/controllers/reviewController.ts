@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import ReviewModel from '../models/ReviewModel';
+import { verifyOwnership } from './helper/auth';
 
 const reviewModel = new ReviewModel();
 
@@ -8,9 +9,9 @@ export const createReview = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const userId = (req as any).user?.userId;
+    const { id } = req.params;
 
-    if (!userId) {
+    if (!id) {
       return res
         .status(401)
         .json({ message: 'Unauthorized: Please sign in to create a review' });
@@ -23,7 +24,7 @@ export const createReview = async (
     }
 
     const reviewId = await reviewModel.createReview({
-      user_id: userId,
+      user_id: Number(id),
       game_id,
       rating,
       review_text,
@@ -79,18 +80,15 @@ export const getReviewByGameId = async (
 export const updateReview = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.userId;
+    const reviewId = Number(id);
 
-    const review = await reviewModel.getReviewById(Number(id));
+    const review = await reviewModel.getReviewById(reviewId);
+
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    if (review.user_id !== userId) {
-      return res
-        .status(403)
-        .json({ message: 'Forbidden: You do not own this review' });
-    }
+    if (!verifyOwnership(req, res, review.user_id)) return;
 
     await reviewModel.updateReview(Number(id), req.body);
     res.status(200).json({ message: 'Review updated successfully' });
@@ -103,18 +101,15 @@ export const updateReview = async (req: Request, res: Response) => {
 export const deleteReview = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.userId;
+    const reviewId = Number(id);
 
-    const review = await reviewModel.getReviewById(Number(id));
+    const review = await reviewModel.getReviewById(reviewId);
+
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    if (review.user_id !== userId) {
-      return res
-        .status(403)
-        .json({ message: 'Forbidden: You do not own this review' });
-    }
+    if (!verifyOwnership(req, res, review.user_id)) return;
 
     await reviewModel.deleteReview(Number(id));
     res.status(200).json({ message: 'Review deleted successfully' });
