@@ -3,6 +3,9 @@ import { getPool } from '../connections/database';
 import { RowDataPacket } from 'mysql2/promise';
 import { User as UserInterface } from '../interfaces/User';
 class User {
+  static updateProfilePicture(id: number, profilePicUrl: string) {
+    throw new Error('Method not implemented.');
+  }
   static async create(
     user: Omit<UserInterface, 'id' | 'created_at' | 'updated_at'>
   ): Promise<UserInterface> {
@@ -64,6 +67,25 @@ class User {
     const userRow = rows[0] as UserInterface;
     return userRow || undefined;
   }
+
+  static async updateUserProfilePicture(
+    userId: number,
+    profilePicUrl: string
+  ): Promise<boolean> {
+    const pool = getPool();
+    const [result] = await pool.query(
+      'UPDATE users SET profile_pic = ? WHERE id = ?',
+      [profilePicUrl, userId]
+    );
+
+    // Check if any row was updated
+    const updateResult = result as { affectedRows: number };
+    return updateResult.affectedRows > 0;
+  }
+  
+
+
+  
 }
 
 export default User;

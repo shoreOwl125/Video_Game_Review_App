@@ -180,47 +180,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Search Functionality
-  if (searchButton && searchInput && gameGrid) {
-    searchButton.addEventListener('click', async () => {
-      const searchTerm = searchInput.value;
-      if (searchTerm) {
-        try {
-          const response = await fetch(
-            `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
-              searchTerm
-            )}`,
-            {
-              credentials: 'include',
-            }
-          );
-
-          if (!response.ok) throw new Error('Network response was not ok');
-
-          const games = await response.json();
-          gameGrid.innerHTML = '';
-          games.forEach(game => {
-            const gameTile = document.createElement('div');
-            gameTile.className = 'game-tile';
-            gameTile.textContent = game.title;
-            gameGrid.appendChild(gameTile);
-          });
-        } catch (error) {
-          console.error('Error fetching games:', error);
-        }
-      } else {
-        alert('Please enter a search term');
-      }
-    });
-  }
-
   // Google Login
   if (googleLoginButton) {
     googleLoginButton.addEventListener('click', () => {
       window.location.href = 'http://127.0.0.1:8000/api/auth/google';
     });
   }
-
   // Update Profile Information/Settings
   const updateProfileInformation = async () => {
     const currentPath = window.location.pathname.split('/').pop();
@@ -264,23 +229,52 @@ document.addEventListener('DOMContentLoaded', async () => {
   await updateProfileInformation();
 });
 
-// Profile picture upload does not save to user db yet
+// Profile picture upload and save to database
 document.addEventListener('DOMContentLoaded', function () {
   // Select the profile picture elements
   const profilePicUpload = document.getElementById('profilePicUpload');
   const profilePic = document.getElementById('profilePic');
+  
   // Only add the event listener if the elements exist
   if (profilePicUpload && profilePic) {
-    profilePicUpload.addEventListener('change', function (event) {
-      console.log('File selected'); // Add this to verify event trigger
+    profilePicUpload.addEventListener('change', async function (event) {
+      console.log('File selected'); // Log to verify event trigger
       const file = event.target.files[0];
+      
       if (file) {
+        // Display the preview
         const reader = new FileReader();
         reader.onload = function (e) {
-          console.log('Image loaded'); // Add this to verify loading
+          console.log('Image loaded'); // Log to verify loading
           profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
         };
         reader.readAsDataURL(file);
+
+        // Create FormData object to send the file to the server
+        const formData = new FormData();
+        formData.append('profilePicture', file);
+        formData.append('userId', userId); // Assuming you have `userId` from the auth status
+
+        try {
+          // Send the image to your server
+          const response = await fetch('http://127.0.0.1:8000/api/users/upload-profile-picture', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include', // Include credentials if needed
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Profile picture uploaded successfully', data);
+            alert('Profile picture uploaded successfully!');
+          } else {
+            console.error('Error uploading profile picture:', response.statusText);
+            alert('Failed to upload profile picture. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error uploading profile picture:', error);
+          alert('An error occurred while uploading. Please try again.');
+        }
       }
     });
   }
