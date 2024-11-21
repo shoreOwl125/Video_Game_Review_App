@@ -84,3 +84,27 @@ INSERT INTO users (name, email, password, profile_pic, theme_preference, user_da
     ('Henry Adams', 'henry.adams@example.com', 'password8', '/uploads/profiles/henry.jpg', 'dark', 8),
     ('Ivy Green', 'ivy.green@example.com', 'password9', '/uploads/profiles/ivy.jpg', 'light', 9),
     ('Jack White', 'jack.white@example.com', 'password10', '/uploads/profiles/jack.jpg', 'dark', 10);
+
+INSERT INTO games (title, description, genre, tags, platforms, playtime_estimate, developer, publisher, game_mode, release_date, review_rating, cover_image) VALUES
+    ('Fortnite', 'Battle royale shooter', 'Shooter', '["battle-royale"]', '["PC", "PlayStation", "Xbox"]', 50, 'Epic Games', 'Epic Games', 'multiplayer', '2018-03-12', 8, '/assets/images/fortnite.jpg'),
+    ('FIFA 21', 'Soccer simulation game', 'Sports', '["sports", "simulation"]', '["PC", "PlayStation", "Xbox"]', 40, 'EA Sports', 'Electronic Arts', 'multiplayer', '2020-10-06', 7, '/assets/images/fifa21.jpg'),
+    ('Minecraft', 'Open-world sandbox', 'Sandbox', '["sandbox", "creative"]', '["PC", "PlayStation", "Xbox", "Mobile"]', 1000, 'Mojang Studios', 'Mojang Studios', 'both', '2011-11-18', 9, '/assets/images/minecraft.jpg'),
+    ('The Witcher 3', 'Fantasy RPG', 'RPG', '["fantasy", "open-world"]', '["PC", "PlayStation", "Xbox"]', 150, 'CD Projekt Red', 'CD Projekt', 'single-player', '2015-05-18', 10, '/assets/images/witcher3.jpg'),
+    ('Valorant', 'Tactical shooter', 'Shooter', '["tactical", "competitive"]', '["PC"]', 50, 'Riot Games', 'Riot Games', 'multiplayer', '2020-06-02', 9, '/assets/images/valorant.jpg'),
+    ('Apex Legends', 'Battle royale with characters', 'Shooter', '["battle-royale", "character-based"]', '["PC", "PlayStation", "Xbox"]', 30, 'Respawn Entertainment', 'Electronic Arts', 'multiplayer', '2019-02-04', 9, '/assets/images/apex_legends.jpg'),
+    ('League of Legends', 'Popular MOBA', 'Strategy', '["MOBA", "competitive"]', '["PC"]', 200, 'Riot Games', 'Riot Games', 'multiplayer', '2009-10-27', 8, '/assets/images/lol.jpg'),
+    ('Overwatch', 'Team-based shooter', 'Shooter', '["team-based", "competitive"]', '["PC", "PlayStation", "Xbox"]', 40, 'Blizzard', 'Blizzard', 'multiplayer', '2016-05-24', 9, '/assets/images/overwatch.jpg'),
+    ('Cyberpunk 2077', 'Futuristic RPG', 'RPG', '["open-world", "sci-fi"]', '["PC", "PlayStation", "Xbox"]', 100, 'CD Projekt Red', 'CD Projekt', 'single-player', '2020-12-10', 7, '/assets/images/cyberpunk.jpg'),
+    ('Stardew Valley', 'Farming simulation', 'Simulation', '["farming", "life-simulation"]', '["PC", "PlayStation", "Xbox", "Mobile"]', 60, 'ConcernedApe', 'ConcernedApe', 'single-player', '2016-02-26', 9, '/assets/images/stardew.jpg');
+
+INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES
+    (1, 1, 5, 'Amazing battle royale game!'),
+    (2, 2, 4, 'Good simulation game, love it!'),
+    (3, 3, 5, 'Best sandbox game ever!'),
+    (4, 4, 4, 'Great RPG with engaging story.'),
+    (5, 5, 3, 'Too tactical, but enjoyable.'),
+    (6, 6, 5, 'One of the best battle royales.'),
+    (7, 7, 4, 'Addictive gameplay in MOBA.'),
+    (8, 8, 4, 'Fun shooter with unique heroes.'),
+    (9, 9, 2, 'Expected more, some bugs.'),
+    (10, 10, 5, 'Relaxing and fun farming game.');

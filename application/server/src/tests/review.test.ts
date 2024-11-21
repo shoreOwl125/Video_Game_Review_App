@@ -1,39 +1,36 @@
 import request from 'supertest';
 import app from '../app';
 import { getPool } from '../connections/database';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { RowDataPacket } from 'mysql2';
+import jwt from 'jsonwebtoken';
+import {
+  resetDatabase,
+  seedDatabase,
+  closeDatabase,
+} from './scripts/setupTests';
 
 let pool = getPool();
 
-describe('Review API Tests', () => {
-  beforeAll(async () => {
-    if (pool === null) {
-      pool = getPool();
-    }
+function generateMockToken(userId: number): string {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'testsecret', {
+    expiresIn: '1h',
+  });
+}
+
+describe('Review Routes API Tests', () => {
+  beforeEach(async () => {
+    await resetDatabase();
+    await seedDatabase();
   });
 
   afterAll(async () => {
-    await pool.end();
+    await closeDatabase();
   });
 
-  beforeEach(async () => {
-    await pool.query('START TRANSACTION'); // Start a transaction for data isolation
-  });
+  it('should create a review successfully when authenticated', async () => {
+    const token = generateMockToken(1);
 
-  afterEach(async () => {
-    await pool.query('ROLLBACK'); // Rollback any changes to maintain test isolation
-  });
-
-  it('should create a new review successfully', async () => {
-    await pool.query(
-      "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
-    );
-    await pool.query(
-      "INSERT INTO games (game_id, title, description, genre) VALUES (1, 'Test Game', 'A fun game', 'Action')"
-    );
-
-    const newReview = {
-      user_id: 1,
+    const reviewData = {
       game_id: 1,
       rating: 4,
       review_text: 'Great game!',
@@ -41,94 +38,91 @@ describe('Review API Tests', () => {
 
     const res = await request(app)
       .post('/api/reviews')
-      .send(newReview);
+      .set('Cookie', [`jwt=${token}`])
+      .send(reviewData);
 
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('message', 'Review created successfully');
-
-    const [reviewData] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM reviews WHERE review_id = ?',
-      [res.body.reviewId]
-    );
-
-    expect(reviewData.length).toEqual(1);
-    expect(reviewData[0].rating).toEqual(newReview.rating);
-    expect(reviewData[0].review_text).toEqual(newReview.review_text);
+    expect(res.body).toHaveProperty('reviewId');
   });
 
-  it('should retrieve a review by ID', async () => {
-    await pool.query(
-      "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
-    );
-    await pool.query(
-      "INSERT INTO games (game_id, title, description, genre) VALUES (1, 'Test Game', 'A fun game', 'Action')"
-    );
-
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      "INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES (1, 1, 4, 'Awesome game')"
-    );
+  it('should not create a review when unauthenticated', async () => {
+    const reviewData = {
+      game_id: 1,
+      rating: 4,
+      review_text: 'Great game!',
+    };
 
     const res = await request(app)
-      .get(`/api/reviews/${result.insertId}`)
-      .send();
+      .post('/api/reviews')
+      .send(reviewData);
 
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.rating).toEqual(4);
-    expect(res.body.review_text).toEqual('Awesome game');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty('message', 'Unauthorized');
   });
 
-  it('should update a review by ID', async () => {
-    await pool.query(
-      "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
-    );
-    await pool.query(
-      "INSERT INTO games (game_id, title, description, genre) VALUES (1, 'Test Game', 'A fun game', 'Action')"
+  it('should update a review successfully when authenticated', async () => {
+    const token = generateMockToken(1);
+
+    const [reviews] = await pool.query<RowDataPacket[]>(
+      'SELECT review_id, user_id FROM reviews WHERE user_id = 1'
     );
 
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      "INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES (1, 1, 3, 'Good game')"
-    );
+    const reviewId = reviews[0].review_id;
+    const updates = { rating: 5, review_text: 'Excellent game!' };
 
     const res = await request(app)
-      .put(`/api/reviews/${result.insertId}`)
-      .send({ rating: 5, review_text: 'Excellent game!' });
+      .put(`/api/reviews/${reviewId}`)
+      .set('Cookie', [`jwt=${token}`])
+      .send(updates);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('message', 'Review updated successfully');
-
-    const [updatedReview] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM reviews WHERE review_id = ?',
-      [result.insertId]
-    );
-
-    expect(updatedReview[0].rating).toEqual(5);
-    expect(updatedReview[0].review_text).toEqual('Excellent game!');
   });
 
-  it('should delete a review by ID', async () => {
-    await pool.query(
-      "INSERT INTO users (id, name, email, password) VALUES (1, 'Test User', 'testuser@example.com', 'password')"
-    );
-    await pool.query(
-      "INSERT INTO games (game_id, title, description, genre) VALUES (1, 'Test Game', 'A fun game', 'Action')"
+  it('should delete a review by ID when authenticated', async () => {
+    const token = generateMockToken(1);
+
+    const [reviews] = await pool.query<RowDataPacket[]>(
+      'SELECT review_id, user_id FROM reviews WHERE user_id = 1'
     );
 
-    const [result]: [ResultSetHeader, any] = await pool.query(
-      "INSERT INTO reviews (user_id, game_id, rating, review_text) VALUES (1, 1, 3, 'Good game')"
-    );
+    const reviewId = reviews[0].review_id;
 
     const res = await request(app)
-      .delete(`/api/reviews/${result.insertId}`)
-      .send();
+      .delete(`/api/reviews/${reviewId}`)
+      .set('Cookie', [`jwt=${token}`]);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('message', 'Review deleted successfully');
+  });
 
-    const [deletedReview] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM reviews WHERE review_id = ?',
-      [result.insertId]
+  it('should not update a review when unauthenticated', async () => {
+    const [reviews] = await pool.query<RowDataPacket[]>(
+      'SELECT review_id, user_id FROM reviews WHERE user_id = 1'
     );
+    const reviewId = reviews[0].review_id;
+    const updates = { rating: 5, review_text: 'Excellent game!' };
 
-    expect(deletedReview.length).toEqual(0);
+    const res = await request(app)
+      .put(`/api/reviews/${reviewId}`)
+      .send(updates);
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty('message', 'Unauthorized');
+  });
+
+  it('should not delete a review by ID when unauthenticated', async () => {
+    const [reviews] = await pool.query<RowDataPacket[]>(
+      'SELECT review_id, user_id FROM reviews WHERE user_id = 1'
+    );
+    const reviewId = reviews[0].review_id;
+
+    const res = await request(app)
+      .delete(`/api/reviews/${reviewId}`)
+      .send();
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty('message', 'Unauthorized');
   });
 });

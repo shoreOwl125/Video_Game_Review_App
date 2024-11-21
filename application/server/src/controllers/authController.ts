@@ -32,7 +32,7 @@ const authStatus = async (req: Request, res: Response) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, profile_pic, theme_preference, user_data_id } = req.body;
+  const { name, email, password, profile_pic, theme_preference } = req.body;
 
   // Use provided profile picture or default to the predefined path
   const profilePic = profile_pic || 'application/web/public/Default-Profile-Picture.jpg';
@@ -64,7 +64,6 @@ const registerUser = async (req: Request, res: Response) => {
     };
 
     const userDataId = await userDataModel.createUserData(userData);
-
     const user: UserInterface = await User.create({
       name,
       email,

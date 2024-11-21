@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { getPool } from '../connections/database';
 import { RowDataPacket } from 'mysql2/promise';
 import { User as UserInterface } from '../interfaces/User';
+
 class User {
   static updateProfilePicture(id: number, profilePicUrl: string) {
     throw new Error('Method not implemented.');

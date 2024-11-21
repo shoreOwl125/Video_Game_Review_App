@@ -2,6 +2,16 @@ let userId = null; // Global variable to store the logged-in user's ID
 
 document.addEventListener('DOMContentLoaded', async () => {
   // DOM Elements
+  // const searchTerm = 'f';
+  // const response = await fetch(
+  //   `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
+  //     searchTerm
+  //   )}`,
+  //   { credentials: 'include' }
+  // );
+
+  // console.log('Response:', response);
+
   const logoutButton = document.getElementById('logout-btn');
   const signupButton = document.querySelector('a[href="signup.html"]');
   const loginButton = document.querySelector('a[href="login.html"]');
@@ -88,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const email = signupForm.email.value;
       const password = signupForm.password.value;
       const confirmPassword = signupForm.confirm_password.value;
-      const profile_pic = "application/web/public/Default-Profile-Picture.jpg"
+      const profile_pic = 'application/web/public/Default-Profile-Picture.jpg';
 
       if (password !== confirmPassword) {
         alert('Passwords do not match.');
@@ -227,20 +237,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize on Page Load
   await checkAuthStatus();
   await updateProfileInformation();
-});
-
-// Profile picture upload and save to database
-document.addEventListener('DOMContentLoaded', function () {
   // Select the profile picture elements
   const profilePicUpload = document.getElementById('profilePicUpload');
   const profilePic = document.getElementById('profilePic');
-  
+
   // Only add the event listener if the elements exist
   if (profilePicUpload && profilePic) {
     profilePicUpload.addEventListener('change', async function (event) {
       console.log('File selected'); // Log to verify event trigger
       const file = event.target.files[0];
-      
+
       if (file) {
         // Display the preview
         const reader = new FileReader();
@@ -257,24 +263,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
           // Send the image to your server
-          const response = await fetch('http://127.0.0.1:8000/api/users/upload-profile-picture', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include', // Include credentials if needed
-          });
+          const response = await fetch(
+            'http://127.0.0.1:8000/api/users/upload-profile-picture',
+            {
+              method: 'POST',
+              body: formData,
+              credentials: 'include', // Include credentials if needed
+            }
+          );
 
           if (response.ok) {
             const data = await response.json();
             console.log('Profile picture uploaded successfully', data);
             alert('Profile picture uploaded successfully!');
           } else {
-            console.error('Error uploading profile picture:', response.statusText);
+            console.error(
+              'Error uploading profile picture:',
+              response.statusText
+            );
             alert('Failed to upload profile picture. Please try again.');
           }
         } catch (error) {
           console.error('Error uploading profile picture:', error);
           alert('An error occurred while uploading. Please try again.');
         }
+      }
+    });
+  }
+
+  if (searchButton && searchInput && gameGrid) {
+    searchButton.addEventListener('click', async () => {
+      const searchTerm = searchInput.value;
+      if (searchTerm) {
+        try {
+          const response = await fetch(
+            `http://localhost:8000/api/games/search?query=${encodeURIComponent(
+              searchTerm
+            )}`,
+            {
+              credentials: 'include',
+            }
+          );
+
+          if (!response.ok) throw new Error('Network response was not ok');
+
+          const games = await response.json();
+          gameGrid.innerHTML = '';
+          games.forEach(game => {
+            const gameTile = document.createElement('div');
+            gameTile.className = 'game-tile';
+            gameTile.textContent = game.title;
+            gameGrid.appendChild(gameTile);
+          });
+        } catch (error) {
+          console.error('Error fetching games:', error);
+        }
+      } else {
+        alert('Please enter a search term');
       }
     });
   }
