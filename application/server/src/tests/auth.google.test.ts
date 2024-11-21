@@ -21,12 +21,11 @@ passport.use(
       callbackURL: '/api/auth/google/callback',
     },
     (accessToken, refreshToken, profile, done) => {
-      // Simulate user retrieval or creation
       const user: UserInterface = {
         id: 1,
         name: profile.displayName || "Test User",
         email: profile.emails?.[0]?.value || "testuser@gmail.com",
-        password: "", // No password for OAuth users
+        password: "",
         profile_pic: "",
         theme_preference: "light",
         user_data_id: null,
@@ -62,7 +61,6 @@ describe('Google OAuth', () => {
   });
 
   it('should handle Google callback and authenticate user', async () => {
-    // Mock the authentication process
     jest
       .spyOn(passport, 'authenticate')
       .mockImplementation(
