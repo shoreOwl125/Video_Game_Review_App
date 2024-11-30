@@ -25,6 +25,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching game data:', error);
       }
 
+      const postReviewLink = document.getElementById('post-review-link');
+      if (postReviewLink) {
+          postReviewLink.href = `http://127.0.0.1:8000/game-review.html?gameId=${gameId}`;
+      }
+
       //Fetching reviews for the specific game
       try {
           // Fetch reviews for the specific game
