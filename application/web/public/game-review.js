@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const gameId = new URLSearchParams(window.location.search).get('gameId');
     console.log('Game ID:', gameId);
+
     if (!gameId) {
         console.error('No gameId provided in the URL. Redirecting to home page.');
         window.location.href = 'index.html'; // Redirect if gameId is missing
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const response = await fetch('http://127.0.0.1:8000/api/reviews', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // Ensures cookies or session tokens are sent
             body: JSON.stringify({
               game_id: parseInt(gameId),
               rating: selectedRating,
