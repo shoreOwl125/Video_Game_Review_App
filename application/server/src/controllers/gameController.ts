@@ -7,6 +7,23 @@ import { Game as GameInterface } from '../interfaces/Game';
 // Instantiate Game class
 const gameModel = new Game();
 
+export const populateGames = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const games = await gameModel.getTopRatedGames(30);
+    if (games.length === 0) {
+      res.status(404).json({ message: 'No games found' });
+      return;
+    }
+    res.status(200).json(games);
+  } catch (error) {
+    console.error('Error in populateGames controller:', error);
+    res.status(500).json({ message: 'Error fetching games', error });
+  }
+};
+
 export const createGame = async (
   req: Request,
   res: Response

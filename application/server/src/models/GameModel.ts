@@ -109,6 +109,17 @@ class Game {
     const [rows] = await pool.query(sql, [limit]);
     return rows as GameInterface[];
   };
+
+  getTopRatedGames = async (limit: number): Promise<GameInterface[]> => {
+    const sql = `
+      SELECT * FROM games
+      ORDER BY review_rating DESC, updated_at DESC
+      LIMIT ?
+    `;
+    const pool = getPool();
+    const [rows] = await pool.query(sql, [limit]);
+    return rows as GameInterface[];
+  };
 }
 
 export default Game;

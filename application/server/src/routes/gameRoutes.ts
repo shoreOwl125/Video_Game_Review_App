@@ -8,6 +8,7 @@ import {
   editGame,
   getGame,
   getAllGames,
+  populateGames,
 } from '../controllers/gameController';
 
 const router = Router();
@@ -17,6 +18,7 @@ const router = Router();
 
 // router.delete('/:gameId', removeGame);
 
+router.get('/populate', populateGames);
 router.get('/all', getAllGames);
 router.post('/create', createGame);
 router.get('/search', searchGames);
