@@ -162,8 +162,8 @@ body {
   border-radius: 10px;
 }
 .game-tile img {
-  width: 75%; /* Fit the image to the width of the tile */
-  height: auto; /* Maintain the aspect ratio */
+  width: 150px; /* Fit the image to the width of the tile */
+  height: 150px; /* Maintain the aspect ratio */
   object-fit: cover; /* Ensures it covers the tile area without distortion */
   border-radius: 5px;
 }
