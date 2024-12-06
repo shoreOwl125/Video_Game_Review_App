@@ -11,6 +11,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   const recommendationButton = document.getElementById('recommendation-button');
   const googleLoginButton = document.getElementById('google-login-button');
 
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/games/populate', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch populateGames');
+
+    const games = await response.json();
+    console.log('Top 30 games based on highest reviews:', games);
+
+    // Optionally render the games on your page
+    const gameGrid = document.getElementById('gameGrid');
+    if (gameGrid) {
+      gameGrid.innerHTML = ''; // Clear existing grid content
+      games.forEach(game => {
+        const gameTile = document.createElement('div');
+        gameTile.className = 'game-tile';
+        gameTile.textContent = game.title;
+
+        const gameImage = document.createElement('img');
+        gameImage.src = game.cover_image || 'gameinfo_testimage.png';
+        gameImage.alt = game.title;
+
+        gameTile.appendChild(gameImage);
+
+        gameTile.addEventListener('click', () => {
+          window.location.href = `game-info.html?gameId=${game.game_id}`;
+        });
+
+        gameGrid.appendChild(gameTile);
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching populateGames:', error);
+  }
+
   // Check Authentication Status
   const checkAuthStatus = async () => {
     try {
