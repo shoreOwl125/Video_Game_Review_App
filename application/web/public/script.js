@@ -1,17 +1,6 @@
 let userId = null; // Global variable to store the logged-in user's ID
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // DOM Elements
-  // const searchTerm = 'f';
-  // const response = await fetch(
-  //   `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
-  //     searchTerm
-  //   )}`,
-  //   { credentials: 'include' }
-  // );
-
-  // console.log('Response:', response);
-
   const logoutButton = document.getElementById('logout-btn');
   const signupButton = document.querySelector('a[href="signup.html"]');
   const loginButton = document.querySelector('a[href="login.html"]');
@@ -297,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (searchTerm) {
         try {
           const response = await fetch(
-            `http://localhost:8000/api/games/search?query=${encodeURIComponent(
+            `http://127.0.0.1:8000/api/games/search?query=${encodeURIComponent(
               searchTerm
             )}`,
             {
@@ -308,8 +297,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           const games = await response.json();
           if (!response.ok) throw new Error('Network response was not ok');
 
-          console.log(games)
-          
+          console.log(games);
+
           gameGrid.innerHTML = '';
 
           games.forEach(game => {
@@ -318,16 +307,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             gameTile.textContent = game.title;
 
             const gameImage = document.createElement('img');
-            gameImage.src = game.cover_image ? game.cover_image : 'gameinfo_testimage.png';
+            gameImage.src = game.cover_image
+              ? game.cover_image
+              : 'gameinfo_testimage.png';
             gameImage.alt = game.title;
             gameTile.appendChild(gameImage);
-            
+            gameImage.src = game.cover_image
+              ? game.cover_image
+              : 'gameinfo_testimage.png';
+            gameImage.alt = game.title;
+            gameTile.appendChild(gameImage);
 
             gameTile.addEventListener('click', () => {
               window.location.href = `game-info.html?gameId=${game.game_id}`;
             });
-
-
             gameGrid.appendChild(gameTile);
           });
         } catch (error) {

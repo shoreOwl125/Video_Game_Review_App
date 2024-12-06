@@ -1,93 +1,89 @@
 /* Center content in the main container */
 /* Center content in the main container */
 .content-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers content horizontally */
-    height: 100vh; /* Full viewport height for the main section */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers content horizontally */
+  height: 100vh; /* Full viewport height for the main section */
 }
 
-    .game-info {
-        display: flex;
-        flex-direction: column;
-        width: 80%; /* Adjust width as necessary */
-        box-sizing: border-box;
-        flex-grow: 1; /* Allows it to expand and take the remaining space */
-        overflow: hidden;
-    }
+.game-info {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Adjust width as necessary */
+  box-sizing: border-box;
+  flex-grow: 1; /* Allows it to expand and take the remaining space */
+  overflow: hidden;
+}
 
-        .info-top {
-            display: flex;
-            flex-direction: row;
-            flex-grow: 2; /* Ensures the game info takes more space */
-            width: 100%;
-        }
+.info-top {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 2; /* Ensures the game info takes more space */
+  width: 100%;
+}
 
-            .game-stats {
-                flex: 1; /* Takes up 1 part */
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-                padding: 10px;
-            }
+.game-stats {
+  flex: 1; /* Takes up 1 part */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+}
 
-            .game-image {
-                flex: 2; /* Takes up 2 parts */
-                overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+.game-image {
+  flex: 2; /* Takes up 2 parts */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-            .game-image img {
-                width: 100%;
-                height: auto;
-                object-fit: contain; /* Keeps the image within its box */
-            }
+.game-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keeps the image within its box */
+}
 
-        /* Ensure the text is vertically centered in info-bottom */
-        .info-bottom {
-            display: flex;
-            justify-content: center;   /* Center horizontally */
-            align-items: center;       /* Center vertically */
-            padding: 10px;
-            background-color: #EBD9D9;
-            border-radius: 5px;
-            text-align: center;
-            width: 100%;
-            margin-top: 20px;
-            height: 80px;  /* Explicitly set the height for more consistent behavior */
-            box-sizing: border-box;   /* Ensure padding is included in the height */
-        }
-        
-        
+/* Ensure the text is vertically centered in info-bottom */
+.info-bottom {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 10px;
+  background-color: #ebd9d9;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+  height: 80px; /* Explicitly set the height for more consistent behavior */
+  box-sizing: border-box; /* Ensure padding is included in the height */
+}
 
+.info-bottom span {
+  margin: 0 5px; /* Adds spacing between each platform item */
+}
 
-        .info-bottom span {
-            margin: 0 5px; /* Adds spacing between each platform item */
-        }
+/* Game reviews section */
+.game-reviews {
+  max-height: 50vh; /* Ensures reviews take up only the remaining space */
+  overflow-y: auto;
+  padding: 10px;
+  margin-top: 20px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the reviews horizontally */
+}
 
-    /* Game reviews section */
-    .game-reviews {
-        max-height: 50vh; /* Ensures reviews take up only the remaining space */
-        overflow-y: auto;
-        padding: 10px;
-        margin-top: 20px;
-        width: 80%;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Centers the reviews horizontally */
-    }
-
-        /* Review Box Style */
-    .review-box {
-        border: 2px solid #ddd; /* Light gray border */
-        padding: 10px;
-        margin-bottom: 10px; /* Adds some space between reviews */
-        width: 100%; /* Ensures it takes up full width of the container */
-        box-sizing: border-box;
-        border-radius: 5px; /* Optional: adds rounded corners */
-        background-color: #EBD9D9; /* Optional: adds a white background */
-    }
-
+/* Review Box Style */
+.review-box {
+  border: 2px solid #ddd; /* Light gray border */
+  padding: 10px;
+  margin-bottom: 10px; /* Adds some space between reviews */
+  width: 100%; /* Ensures it takes up full width of the container */
+  box-sizing: border-box;
+  border-radius: 5px; /* Optional: adds rounded corners */
+  background-color: #ebd9d9; /* Optional: adds a white background */
+}
