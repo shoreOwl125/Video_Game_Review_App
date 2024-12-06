@@ -12,6 +12,6 @@ export const verifyOwnership = (
     res.status(403).json({ message: 'Forbidden: Access denied' });
     return false;
   }
-  
+
   return true;
 };

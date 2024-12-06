@@ -14,11 +14,11 @@ export const getUserDataById = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = req.user as UserInterface;
-    const id = user.id;
-    if (!verifyOwnership(req, res, id)) return;
+    const targetUserId = Number(req.params.id);
 
-    const userData = await userDataModel.getUserDataById(id);
+    if (!verifyOwnership(req, res, targetUserId)) return;
+
+    const userData = await userDataModel.getUserDataById(targetUserId);
     if (!userData) {
       res.status(404).json({ message: 'User data not found' });
     } else {
@@ -35,12 +35,12 @@ export const updateUserData = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = req.user as UserInterface;
-    const id = user.id;
-    if (!verifyOwnership(req, res, id)) return;
+    const targetUserId = Number(req.params.id);
+
+    if (!verifyOwnership(req, res, targetUserId)) return;
 
     const updates: Partial<UserDataInterface> = req.body;
-    await userDataModel.updateUserData(id, updates);
+    await userDataModel.updateUserData(targetUserId, updates);
     res.status(200).json({ message: 'User data updated successfully' });
   } catch (error) {
     console.error('Error updating user data:', error);
@@ -100,8 +100,11 @@ export const deleteUserData = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    await userDataModel.deleteUserData(Number(id));
+    const targetUserId = Number(req.params.id);
+
+    if (!verifyOwnership(req, res, targetUserId)) return;
+
+    await userDataModel.deleteUserData(targetUserId);
     res.status(200).json({ message: 'User data deleted successfully' });
   } catch (error) {
     console.error('Error deleting user data:', error);
@@ -114,8 +117,11 @@ export const fetchUserData = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = Number(req.params.id);
-    const userData = await userDataModel.getUserDataById(userId);
+    const targetUserId = Number(req.params.id);
+
+    if (!verifyOwnership(req, res, targetUserId)) return;
+
+    const userData = await userDataModel.getUserDataById(targetUserId);
     if (!userData) {
       res.status(404).json({ message: 'User data not found' });
     } else {
