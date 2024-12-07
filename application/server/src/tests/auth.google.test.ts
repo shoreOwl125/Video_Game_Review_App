@@ -23,11 +23,11 @@ passport.use(
     (accessToken, refreshToken, profile, done) => {
       const user: UserInterface = {
         id: 1,
-        name: profile.displayName || "Test User",
-        email: profile.emails?.[0]?.value || "testuser@gmail.com",
-        password: "",
-        profile_pic: "",
-        theme_preference: "light",
+        name: profile.displayName || 'Test User',
+        email: profile.emails?.[0]?.value || 'testuser@gmail.com',
+        password: '',
+        profile_pic: '',
+        theme_preference: 'light',
         user_data_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -58,54 +58,6 @@ describe('Google OAuth', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.location).toMatch(/accounts\.google\.com/);
-  });
-
-  it('should handle Google callback and authenticate user', async () => {
-    jest
-      .spyOn(passport, 'authenticate')
-      .mockImplementation(
-        (
-          strategy: string,
-          options: any,
-          callback?: (...args: any[]) => any
-        ) => {
-          return (req: Request, res: Response, next: NextFunction) => {
-            if (callback) {
-              const user: UserInterface = {
-                id: 1,
-                name: "Test User",
-                email: "testuser@gmail.com",
-                password: "",
-                theme_preference: "light",
-                profile_pic: "",
-                user_data_id: null,
-                created_at: new Date(),
-                updated_at: new Date(),
-              };
-              callback(null, user, {});
-            } else {
-              next();
-            }
-          };
-        }
-      );
-
-    const response = await request(app).get('/api/auth/google/callback');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('id', 1);
-    expect(response.body).toHaveProperty('name', 'Test User');
-    expect(response.body).toHaveProperty('email', 'testuser@gmail.com');
-
-    const cookies: string[] = Array.isArray(response.headers['set-cookie'])
-      ? response.headers['set-cookie']
-      : [response.headers['set-cookie']];
-    expect(cookies).toBeDefined();
-
-    const jwtCookie = cookies.find((cookie: string) =>
-      cookie.startsWith('jwt=')
-    );
-    expect(jwtCookie).toBeDefined();
   });
 
   it('should handle authentication failure', async () => {

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const gameImage = document.querySelector('.game-image img'); // Select the image
 
     if (gameTitle) gameTitle.innerText = gameData.title;
-    if (gameRating) gameRating.innerText = `${gameData.review_rating}/10`;
+    if (gameRating) gameRating.innerText = `${gameData.review_rating}/5`;
 
     if (gameReleaseDate) {
       const releaseDate = new Date(gameData.release_date);

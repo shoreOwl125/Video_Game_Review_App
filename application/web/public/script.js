@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!response.ok) throw new Error('Failed to fetch populateGames');
 
     const games = await response.json();
-    console.log('Top 30 games based on highest reviews:', games);
+    console.log('Top games based on highest reviews:', games);
 
     // Optionally render the games on your page
     const gameGrid = document.getElementById('gameGrid');
