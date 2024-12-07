@@ -7,7 +7,7 @@ export const getUser = async (req: Request, res: Response) => {
     const user = req.user as UserInterface;
     const id = user.id;
 
-    if (id) {
+    if (!id) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
