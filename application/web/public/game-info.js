@@ -1,81 +1,97 @@
-// Extract gameId from the URL
-// const urlParams = new URLSearchParams(window.location.search);
-// const gameId = urlParams.get('gameId');
-
-// Now you can use this gameId to fetch game data
 document.addEventListener('DOMContentLoaded', async () => {
   const gameId = new URLSearchParams(window.location.search).get('gameId');
+  if (!gameId) {
+    console.error('No gameId found in the current URL.');
+    return;
+  }
 
-  if (gameId) {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/games/${gameId}`);
-      const gameData = await response.json();
+  // Update the "Post Review" link dynamically
+  const postReviewLink = document.getElementById('post-review-link');
+  if (postReviewLink) {
+    postReviewLink.href = `game-review.html?gameId=${gameId}`;
+    console.log(`Post Review link set to: ${postReviewLink.href}`);
+  } else {
+    console.warn('Post Review link element not found.');
+  }
 
-      // Populate the game info on the page
-      const gameTitle = document.getElementById('game-title');
-      const gameRating = document.getElementById('game-rating');
-      const gameReleaseDate = document.getElementById('game-release-date');
+  // Fetch and display game data
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/games/${gameId}`);
+    if (!response.ok) throw new Error('Failed to fetch game data.');
 
-      if (gameData) {
-        gameTitle.innerText = gameData.title;
-        gameRating.innerText = `Rating: ${gameData.review_rating}`;
-        gameReleaseDate.innerText = `Release Date: ${gameData.release_date}`;
-      }
-    } catch (error) {
-      console.error('Error fetching game data:', error);
+    const gameData = await response.json();
+
+    // Populate game details
+    const gameTitle = document.getElementById('game-title');
+    const gameRating = document.getElementById('game-rating');
+    const gameReleaseDate = document.getElementById('game-release-date');
+
+    if (gameTitle) gameTitle.innerText = gameData.title;
+    if (gameRating) gameRating.innerText = `${gameData.review_rating}/10`;
+
+    if (gameReleaseDate) {
+      const releaseDate = new Date(gameData.release_date);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      gameReleaseDate.innerText = `Released On ${releaseDate.toLocaleDateString(
+        'en-US',
+        options
+      )}`;
     }
+  } catch (error) {
+    console.error('Error fetching game data:', error);
+  }
 
-    const postReviewLink = document.getElementById('post-review-link');
-    if (postReviewLink) {
-      postReviewLink.href = `http://127.0.0.1:8000/game-review.html?gameId=${gameId}`;
-    }
+  // Fetch and display reviews for the game
+  try {
+    const reviewsResponse = await fetch(
+      `http://127.0.0.1:8000/api/reviews/game/${gameId}`
+    );
+    if (!reviewsResponse.ok) throw new Error('Failed to fetch reviews.');
 
-    //Fetching reviews for the specific game
-    try {
-      // Fetch reviews for the specific game
-      const reviewsResponse = await fetch(
-        `http://127.0.0.1:8000/api/reviews/game/${gameId}`
-      );
-      const reviewsData = await reviewsResponse.json();
+    const reviewsData = await reviewsResponse.json();
+    console.log('Fetched reviews:', reviewsData);
 
-      // Check if the reviews data is fetched
-      if (reviewsData) {
-        console.log('I have the data:', reviewsData);
+    const reviewsContainer = document.querySelector('.game-reviews');
+    if (reviewsContainer) {
+      reviewsContainer.innerHTML = ''; // Clear existing reviews
 
-        // Turning the reviewsData object into an array to loop through:
-        const reviewsArray = Array.isArray(reviewsData)
-          ? reviewsData
-          : [reviewsData];
+      const reviewsArray = Array.isArray(reviewsData)
+        ? reviewsData
+        : [reviewsData];
 
-        // Get the reviews container to display reviews
-        const reviewsContainer = document.querySelector('.game-reviews');
-        reviewsContainer.innerHTML = ''; // Clear any existing content
+      reviewsArray.forEach(review => {
+        const box = document.createElement('div');
 
-        // Loop through the reviews and display them
-        reviewsArray.forEach(review => {
-          const reviewElement = document.createElement('div');
+        // Add classes for styling
+        box.classList.add('review-box');
 
-          // Add a class to the review element for styling
-          reviewElement.classList.add('review-box');
+        // Format dates
+        const createdAt = new Date(review.created_at);
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        const formattedCreatedAt = createdAt.toLocaleDateString(
+          'en-US',
+          options
+        );
 
-          // Construct a string to display all the properties of the review
-          reviewElement.innerHTML = `
-              <strong>Review ID:</strong> ${review.review_id} <br>
-              <strong>User ID:</strong> ${review.user_id} <br>
-              <strong>Rating:</strong> ${review.rating} <br>
-              <strong>Review Text:</strong> ${review.review_text} <br>
-              <strong>Created At:</strong> ${review.created_at} <br>
-              <strong>Updated At:</strong> ${review.updated_at} <br>
+        // Populate review content
+        box.innerHTML = `
+            <div class="title-box">
+              <p class="review-title">${formattedCreatedAt}</p>
+              <p class="review-rating-title-box">${review.rating}/5</p>
+            </div>
+            <div class="content-box">
+              <p class="user_id">User: ${review.user_id}</p>
+              <p class="review-text">${review.review_text}</p>
+            </div>
           `;
 
-          // Append the review element to the container
-          reviewsContainer.appendChild(reviewElement);
-        });
-      } else {
-        console.log('No reviews data found.');
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
+        // Append the review box to the container
+        reviewsContainer.appendChild(box);
+      });
+    } else {
+      console.warn('Reviews container not found in the DOM.');
     }
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
   }
 });
