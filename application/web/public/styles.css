@@ -78,38 +78,36 @@ body {
   align-items: center;
   flex-direction: column;
   margin-top: 0;
-  padding-top: 8.3vh;
+  width: 100%;
+  padding-top: 2.5vh;
   background-color: #f4e6e6;
-  min-height: calc(
-    100vh - 16.67vh
-  ); /* Ensure it takes the rest of the viewport height */
 }
 
 /* Search Bar */
 .search-bar {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 90%;
-  max-width: 1200px;
-  margin-bottom: 3vh;
+  justify-content: center;
+  width: 75%;
+  margin-bottom: 2vh;
 }
 
 .search-input-container {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
+  justify-content: center;
 }
 
 .search-input {
-  width: 100%;
-  padding: 10px 20px;
+  width: 80%;
+  padding: 15px 15px;
   padding-left: 50px; /* Adjusted padding for the image */
   border-radius: 50px;
-  border: 1px solid #ddd;
+  border: 1px solid #898989;
   outline: none;
   font-size: 16px; /* Adjust font size */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-icon {
@@ -120,12 +118,14 @@ body {
 }
 
 .search-button {
-  padding: 10px 20px;
+  padding: 15px 30px;
   border-radius: 50px;
-  border: 1px solid #ddd;
+  border: 1px solid #898989;
   background-color: #c0aeae;
   margin-left: 15px;
+  font-weight: 900;
   cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-input::placeholder {
@@ -413,14 +413,7 @@ footer {
   background-color: #b39393;
 }
 
-#game-title {
-  color: #452a2a;
-  font-family: 'Inria Sans', sans-serif;
-  flex-shrink: 0;
-  text-align: left;
-  width: 100%;
-  padding-left: 20px;
-}
+
 
 .profile-picture-container {
   position: absolute;

@@ -16,10 +16,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       const gameRating = document.getElementById('game-rating');
       const gameReleaseDate = document.getElementById('game-release-date');
 
+      const releaseDate = new Date(gameData.release_date);
+
+      // Format the date
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = releaseDate.toLocaleDateString('en-US', options);
+
       if (gameData) {
         gameTitle.innerText = gameData.title;
-        gameRating.innerText = `Rating: ${gameData.review_rating}`;
-        gameReleaseDate.innerText = `Release Date: ${gameData.release_date}`;
+        gameRating.innerText = `${gameData.review_rating}/10`;
+        gameReleaseDate.innerText = `Released On ${formattedDate}`;
       }
     } catch (error) {
       console.error('Error fetching game data:', error);

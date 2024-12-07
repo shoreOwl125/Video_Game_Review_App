@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center; /* Centers content horizontally */
-  height: 100vh; /* Full viewport height for the main section */
+  height: 100vh;
 }
 
 .game-info {
@@ -33,7 +33,7 @@
 }
 
 .game-image {
-  flex: 2; /* Takes up 2 parts */
+  flex: 1.5;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -44,6 +44,7 @@
   width: 100%;
   height: auto;
   object-fit: contain; /* Keeps the image within its box */
+  border-radius: 20px;
 }
 
 /* Ensure the text is vertically centered in info-bottom */
@@ -61,10 +62,43 @@
   box-sizing: border-box; /* Ensure padding is included in the height */
 }
 
+#game-rating {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 4em;
+  font-weight: 800;
+  margin-bottom: 2.5%;
+}
+
+#game-title {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 3.5em;
+  font-weight: 500;
+  margin-bottom: 5%;
+}
+
+#game-release-date {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 1.5em;
+  font-weight: 500;
+}
 .info-bottom span {
   margin: 0 5px; /* Adds spacing between each platform item */
 }
-
 /* Game reviews section */
 .game-reviews {
   max-height: 50vh; /* Ensures reviews take up only the remaining space */
