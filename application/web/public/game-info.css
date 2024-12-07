@@ -33,10 +33,19 @@
 
 .game-image {
   flex: 1.5;
+  width: 500px;
+  height: 500px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.game-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keeps the image within its box */
+  border-radius: 20px;
 }
 
 .game-image img {

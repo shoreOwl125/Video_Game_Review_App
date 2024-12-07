@@ -20,11 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!response.ok) throw new Error('Failed to fetch game data.');
 
     const gameData = await response.json();
+    console.log('Fetched game data:', gameData);
 
     // Populate game details
     const gameTitle = document.getElementById('game-title');
     const gameRating = document.getElementById('game-rating');
     const gameReleaseDate = document.getElementById('game-release-date');
+    const gameImage = document.querySelector('.game-image img'); // Select the image
 
     if (gameTitle) gameTitle.innerText = gameData.title;
     if (gameRating) gameRating.innerText = `${gameData.review_rating}/10`;
@@ -36,6 +38,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         'en-US',
         options
       )}`;
+    }
+
+    // Update the game image src
+    if (gameImage) {
+      if (gameData.cover_image) {
+        gameImage.src = gameData.cover_image;
+      } else {
+        console.warn('No cover image found, using default image.');
+        gameImage.src = 'gameinfo_testimage.png'; // Fallback to the default image
+      }
     }
   } catch (error) {
     console.error('Error fetching game data:', error);
