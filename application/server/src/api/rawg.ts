@@ -44,7 +44,7 @@ const stripHtmlTags = (str: string | null): string => {
 };
 
 const getMostPopularGames = async (
-  limit: number = 100
+  limit: number = 500
 ): Promise<GameData[]> => {
   try {
     const response = await fetch(
@@ -203,7 +203,9 @@ const testAddGames = async () => {
   try {
     console.log('Fetching new games...');
 
-    const gamesData = await fetchNewGames(amountOfGames);
+    // const gamesData = await fetchNewGames(amountOfGames);
+
+    const gamesData = await getMostPopularGames(amountOfGames);
 
     if (gamesData.length > 0) {
       console.log(

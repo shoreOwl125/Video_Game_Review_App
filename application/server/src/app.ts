@@ -18,10 +18,19 @@ import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
 import recommendations from './routes/recommendationRoutes';
+import { testAddGames } from './api/rawg';
 
 dotenv.config();
 
 const app = express();
+
+// testAddGames()
+//   .then(() => {
+//     console.log('success');
+//   })
+//   .catch(error => {
+//     console.log('error:', error);
+//   });
 
 app.use(helmet());
 app.use(
@@ -30,6 +39,15 @@ app.use(
       directives: {
         'default-src': ["'self'"],
         'connect-src': ["'self'", 'http://127.0.0.1:8000'],
+        'img-src': [
+          "'self'",
+          'data:',
+          'https://picsum.photos',
+          'https://fastly.picsum.photos', // Added Fastly CDN for Picsum
+          'https://media.rawg.io', // Your media source for game images
+        ],
+        'script-src': ["'self'", "'unsafe-inline'"],
+        'style-src': ["'self'", "'unsafe-inline'"],
       },
     },
   })

@@ -12,7 +12,7 @@ export const populateGames = async (
   res: Response
 ): Promise<void> => {
   try {
-    const games = await gameModel.getTopRatedGames(30);
+    const games = await gameModel.getTopRatedGames(50);
     if (games.length === 0) {
       res.status(404).json({ message: 'No games found' });
       return;
