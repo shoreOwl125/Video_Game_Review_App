@@ -79,6 +79,7 @@ body {
   flex-direction: column;
   margin-top: 0;
   width: 100%;
+  min-height: 100vh;
   padding-top: 2.5vh;
   background-color: #f4e6e6;
 }
@@ -154,7 +155,7 @@ body {
   text-align: center;
   width: 175px;
   height: 175px;
-  background-color: #e0dada;
+  background-color: #c0aeae;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -413,8 +414,6 @@ footer {
   background-color: #b39393;
 }
 
-
-
 .profile-picture-container {
   position: absolute;
   top: 160px;
@@ -534,4 +533,8 @@ footer {
   font-weight: bold;
   text-align: left;
   border-top: 1px solid #ddd;
+}
+
+.recommendation-section {
+  background-color: #f4e6e6;
 }

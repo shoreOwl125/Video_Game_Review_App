@@ -16,7 +16,9 @@ function parseJSONField(field: string | string[] | null | undefined): string[] {
   return [];
 }
 
-export const getGameRecommendations = async (userId: number): Promise<any> => {
+export const getGameRecommendations = async (
+  userId: number
+): Promise<any[]> => {
   const userData: UserDataInterface | null = await userDataModel.getUserDataById(
     userId
   );
@@ -25,17 +27,16 @@ export const getGameRecommendations = async (userId: number): Promise<any> => {
   const interests = parseJSONField(userData.interests);
   const genres = parseJSONField(userData.genres);
 
-  const games: GameInterface[] = await gameModel.getAllGames(50);
+  const allGames: GameInterface[] = await gameModel.getAllGames(50);
 
   const prompt = `
     Based on the user's interests: "${interests.join(
       ', '
     )}" and preferred genres: "${genres.join(
     ', '
-  )}", recommend up to 3 video games.
+  )}", recommend 5 video games from the provided list.
   `;
 
-  // Define the function schema for function calling
   const functions = [
     {
       name: 'get_recommendations',
@@ -52,6 +53,7 @@ export const getGameRecommendations = async (userId: number): Promise<any> => {
                 title: { type: 'string' },
                 genre: { type: 'string' },
                 review_rating: { type: 'number' },
+                cover_image: { type: 'string' },
               },
               required: ['game_id', 'title', 'genre', 'review_rating'],
             },
@@ -88,17 +90,18 @@ export const getGameRecommendations = async (userId: number): Promise<any> => {
     const data = await response.json();
     console.log('Full API Response:', JSON.stringify(data, null, 2));
 
-    // Extract the function call arguments
     if (data.choices && data.choices[0]?.message?.function_call) {
       const function_call = data.choices[0].message.function_call;
       if (function_call.name === 'get_recommendations') {
-        const recommendations = JSON.parse(function_call.arguments);
-        return recommendations;
+        const recommendations = JSON.parse(function_call.arguments)
+          .recommendations;
+        return recommendations.map((rec: { game_id: number }) =>
+          allGames.find(game => game.game_id === rec.game_id)
+        );
       } else {
         throw new Error(`Unexpected function called: ${function_call.name}`);
       }
     } else {
-      console.error('Failed to get function call response:', data);
       throw new Error('No valid recommendations returned from OpenAI API.');
     }
   } catch (error) {

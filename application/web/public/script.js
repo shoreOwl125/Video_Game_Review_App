@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const searchButton = document.querySelector('.search-button');
   const searchInput = document.querySelector('.search-input');
   const gameGrid = document.getElementById('gameGrid');
-  const recommendationButton = document.getElementById('recommendation-button');
+  const recommendationButton = document.querySelector('.get-recommendations');
   const googleLoginButton = document.getElementById('google-login-button');
 
   try {
@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (signupButton) signupButton.style.display = 'none';
         if (loginButton) loginButton.style.display = 'none';
         if (settingsButton) settingsButton.style.display = 'inline-block';
+        if (recommendationButton)
+          recommendationButton.style.display = 'inline-block';
       } else {
         console.log('User is not logged in');
 
@@ -77,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (settingsButton) settingsButton.style.display = 'none';
         if (signupButton) signupButton.style.display = 'inline-block';
         if (loginButton) loginButton.style.display = 'inline-block';
+        if (recommendationButton) recommendationButton.style.display = 'none';
       }
     } catch (error) {
       console.error('Error checking login status:', error);
@@ -178,15 +181,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Fetch Recommendations
   if (recommendationButton) {
     recommendationButton.addEventListener('click', async () => {
       const recommendationsDiv = document.getElementById('recommendations');
-      recommendationsDiv.innerHTML = '';
+      recommendationsDiv.innerHTML = ''; // Clear previous recommendations
+
+      if (!userId) {
+        console.error(
+          'User ID is not available. Cannot fetch recommendations.'
+        );
+        recommendationsDiv.innerHTML = `<p>Please log in to get recommendations.</p>`;
+        return;
+      }
 
       try {
         const response = await fetch(
-          'http://127.0.0.1:8000/api/userdata/2/recommendations',
+          `http://127.0.0.1:8000/api/userdata/${userId}/recommendations`,
           {
             credentials: 'include',
           }
@@ -194,20 +204,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!response.ok) throw new Error('Network response was not ok');
 
-        const data = await response.json();
-        if (Array.isArray(data.recommendations)) {
-          data.recommendations.forEach(game => {
-            const gameContainer = document.createElement('div');
-            for (const [key, value] of Object.entries(game)) {
-              const pTag = document.createElement('p');
-              pTag.textContent = `${key}: ${value}`;
-              gameContainer.appendChild(pTag);
-            }
-            recommendationsDiv.appendChild(gameContainer);
-            recommendationsDiv.appendChild(document.createElement('hr'));
+        const recommendations = await response.json();
+        console.log('Recommended Games:', recommendations);
+
+        if (Array.isArray(recommendations) && recommendations.length > 0) {
+          recommendations.forEach(game => {
+            const gameTile = document.createElement('div');
+            gameTile.className = 'game-tile';
+
+            // Create game cover image element
+            const gameImage = document.createElement('img');
+            gameImage.src = game.cover_image || 'default-image.png'; // Fallback image if cover is missing
+            gameImage.alt = game.title;
+
+            // Create game title element
+            const gameTitle = document.createElement('p');
+            gameTitle.textContent = game.title;
+
+            // Append elements to the game tile
+            gameTile.appendChild(gameTitle);
+            gameTile.appendChild(gameImage);
+
+            // Add click event to navigate to game details
+            gameTile.addEventListener('click', () => {
+              window.location.href = `game-info.html?gameId=${game.game_id}`;
+            });
+
+            // Append the game tile to the recommendations div
+            recommendationsDiv.appendChild(gameTile);
           });
         } else {
-          throw new Error('Expected an array of games in data.recommendations');
+          recommendationsDiv.innerHTML = `<p>No recommendations available at this time.</p>`;
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
