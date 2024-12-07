@@ -35,7 +35,8 @@ const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, profile_pic, theme_preference } = req.body;
 
   // Use provided profile picture or default to the predefined path
-  const profilePic = profile_pic || 'application/web/public/Default-Profile-Picture.jpg';
+  const profilePic =
+    profile_pic || 'application/web/public/Default-Profile-Picture.jpg';
 
   try {
     const userExistsByEmail = await User.findByEmail(email);
@@ -69,7 +70,7 @@ const registerUser = async (req: Request, res: Response) => {
       email,
       password,
       profile_pic: profilePic, // Assign the processed profile picture
-    theme_preference,
+      theme_preference,
       user_data_id: userDataId,
     });
 
@@ -81,7 +82,7 @@ const registerUser = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       profile_pic: user.profile_pic, // Include profile_pic in the response
-    theme_preference: user.theme_preference,
+      theme_preference: user.theme_preference,
       user_data_id: user.user_data_id,
     });
   } catch (error) {
@@ -89,7 +90,6 @@ const registerUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error registering user', error });
   }
 };
-
 
 const authenticateUser = async (req: Request, res: Response) => {
   const { email, name, password } = req.body;
@@ -124,34 +124,61 @@ const googleLogin = passport.authenticate('google', {
   scope: ['profile', 'email'],
 });
 
-// Google login callback
 const googleCallback = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     'google',
     { session: false },
-    (err: Error | null, user: UserInterface | null) => {
-      if (err || !user) {
-        console.log('Authentication error or no user:', err);
+    async (err: Error | null, profile: any) => {
+      if (err || !profile) {
+        console.error('Google authentication error:', err);
         return res
           .status(400)
           .json({ message: 'Google authentication failed' });
       }
 
-      console.log('Authenticated user:', user);
+      try {
+        console.log('Authenticated user profile:', profile);
 
-      const token = generateToken(res, user.id.toString());
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
-        maxAge: 60 * 60 * 1000, // 1 hour
-      });
+        let user = await User.findByEmail(profile.emails[0].value);
 
-      // Send user details in response
-      res.status(200).json({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      });
+        if (!user) {
+          const userData = {
+            search_history: [],
+            interests: [],
+            view_history: [],
+            review_history: [],
+            genres: [],
+          };
+
+          const userDataId = await userDataModel.createUserData(userData);
+
+          // Create a default password (e.g., a random string)
+          const defaultPassword = Math.random()
+            .toString(36)
+            .substring(2, 12);
+
+          // Create the user
+          user = await User.create({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            password: defaultPassword,
+            profile_pic: profile.photos[0]?.value || 'default-profile-pic.jpg',
+            theme_preference: 'light',
+            user_data_id: userDataId,
+          });
+        }
+
+        // Generate token and set cookie
+        generateToken(res, user.id.toString());
+
+        // Redirect to the home page
+        return res.redirect('/index.html');
+      } catch (error) {
+        console.error('Error handling Google user login:', error);
+        return res
+          .status(500)
+          .json({ message: 'Internal server error during Google login' });
+      }
     }
   )(req, res, next);
 };
