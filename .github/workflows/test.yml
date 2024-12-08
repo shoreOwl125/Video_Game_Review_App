@@ -19,6 +19,8 @@ jobs:
       TEST_USER: root
       TEST_PASSWORD: root
       TEST_DATABASE: ratings_test_db
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
     steps:
       - name: Checkout code
