@@ -39,13 +39,12 @@ jobs:
       - name: Create test database
         run: mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
 
-      - name: Load .env file
+      - name: Copy .env file for testing
         working-directory: ./application/server
         run: |
-          cp .env
-          cat .env
-        env:
-          NODE_ENV: test
+          cp .env .env.test
+          echo "NODE_ENV=test" >> .env.test
+          cat .env.test
 
       - name: Install dependencies
         working-directory: ./application/server
@@ -53,4 +52,6 @@ jobs:
 
       - name: Run tests
         working-directory: ./application/server
+        env:
+          NODE_ENV: test
         run: npm test
