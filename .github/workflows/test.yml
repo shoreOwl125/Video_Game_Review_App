@@ -44,8 +44,7 @@ jobs:
         working-directory: ./application/server/scripts
         run: |
           chmod +x sqlDevConnect.sh
-          echo "DB_PASSWORD=root" >> sqlDevConnect.sh # Ensuring password is passed
-          ./sqlDevConnect.sh
+          DB_PASSWORD=root ./sqlDevConnect.sh # Pass password explicitly
 
       # Step 7: Dynamically create .env file for testing
       - name: Set up environment variables for testing
