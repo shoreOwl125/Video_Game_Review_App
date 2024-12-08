@@ -6,13 +6,6 @@ dotenv.config();
 let pool: Pool | undefined;
 
 function connectUserDB() {
-  console.log('Database Config:', {
-    host: process.env.DEV_HOST,
-    user: process.env.DEV_USER_STRING,
-    password: process.env.DEV_PASSWORD,
-    database: process.env.DEV_DATABASE,
-  });
-
   if (!pool) {
     try {
       if (
