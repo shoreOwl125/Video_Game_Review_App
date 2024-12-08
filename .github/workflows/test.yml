@@ -27,10 +27,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16' # Replace with your project's Node.js version
+
+      - name: Set working directory to backend
+        run: cd ./application/server
 
       - name: Install dependencies
+        working-directory: ./application/server
         run: npm install
 
+      - name: Set NODE_ENV to test
+        working-directory: ./application/server
+        run: echo "NODE_ENV=test" >> $GITHUB_ENV
+
       - name: Run tests
-        run: npm run test
+        working-directory: ./application/server
+        run: npm test
