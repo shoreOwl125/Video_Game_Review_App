@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./application/server
-        run: npm install
+        run: npm install --force
 
       - name: Set NODE_ENV to test
         working-directory: ./application/server
