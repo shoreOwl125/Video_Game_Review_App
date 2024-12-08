@@ -14,38 +14,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      # Step 3: Install MySQL
       - name: Install MySQL
         run: |
           sudo apt-get update
           sudo apt-get install -y mysql-server
 
-      # Step 4: Start MySQL service
       - name: Start MySQL service
         run: sudo service mysql start
 
-      # Step 5: Configure MySQL root access
       - name: Configure MySQL root access
         run: |
           echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';" > init.sql
           sudo mysqld --init-file=init.sql &
           sleep 10
 
-      # Step 6: Create test database
+      - name: Stop existing services
+        run: |
+          sudo lsof -t -i:3306 | xargs kill -9 || true
+
       - name: Create test database
         run: mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
 
-      # Step 7: Dynamically create .env file
       - name: Set up environment variables for testing
         working-directory: ./application/server
         run: |
@@ -54,7 +51,7 @@ jobs:
           echo "DEV_USER_STRING=root" >> .env
           echo "DEV_PASSWORD=root" >> .env
           echo "DEV_DATABASE=ratings_test_db" >> .env
-          echo "PORT=3306" >> .env
+          echo "PORT=8000" >> .env
           echo "JWT_SECRET=abc123" >> .env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
@@ -62,24 +59,20 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
           cat .env
 
-      # Step 8: Fix permissions for index file (if necessary)
       - name: Fix permissions for index file
         working-directory: ./application/server
         run: chmod +x src/index.ts
 
-      # Step 9: Install dependencies
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
 
-      # Step 10: Start the server
       - name: Start server
         working-directory: ./application/server
         run: |
           nohup npm run dev & # Start server in the background
           sleep 5
 
-      # Step 11: Run tests
       - name: Run tests
         working-directory: ./application/server
         env:
