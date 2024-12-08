@@ -41,25 +41,30 @@ jobs:
           sudo mysqld --init-file=init.sql &
           sleep 10
 
-      # Step 6: Dynamically create .env file
+      # Step 6: Create test database and initialize schema
+      - name: Initialize test database
+        working-directory: ./application/server/scripts
+        run: |
+          chmod +x sqlDevConnect.sh
+          echo "DB_PASSWORD=root" >> sqlDevConnect.sh # Ensuring password is passed
+          ./sqlDevConnect.sh
+
+      # Step 7: Dynamically create .env file for testing
       - name: Set up environment variables for testing
         working-directory: ./application/server
         run: |
           echo "NODE_ENV=test" > .env
-          echo "DB_HOST=127.0.0.1" >> .env
-          echo "DB_USER=root" >> .env
-          echo "DB_PASSWORD=root" >> .env
-          echo "DB_NAME=ratings_test_db" >> .env
+          echo "HOST=127.0.0.1" >> .env
+          echo "USER_STRING=root" >> .env
+          echo "PASSWORD=root" >> .env
+          echo "DATABASE=ratings_test_db" >> .env
+          echo "PORT=3306" >> .env
+          echo "JWT_SECRET=abc123" >> .env
+          echo "GOOGLE_CLIENT_ID=dummy-google-client-id" >> .env
+          echo "GOOGLE_CLIENT_SECRET=dummy-google-client-secret" >> .env
+          echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
           cat .env
-
-      # Step 7: Run sqlDevConnect.sh
-      - name: Initialize Test Database
-        working-directory: ./application/server/scripts
-        run: |
-          chmod +x sqlDevConnect.sh
-          ./sqlDevConnect.sh
-        env:
-          DB_PASSWORD: root
 
       # Step 8: Install dependencies
       - name: Install dependencies
