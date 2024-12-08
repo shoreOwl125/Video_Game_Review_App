@@ -39,11 +39,20 @@ jobs:
       - name: Create test database
         run: mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
 
-      - name: Copy .env file for testing
+      - name: Set up environment variables for testing
         working-directory: ./application/server
         run: |
-          cp .env .env.test
-          echo "NODE_ENV=test" >> .env.test
+          echo "NODE_ENV=test" > .env.test
+          echo "HOST=127.0.0.1" >> .env.test
+          echo "USER_STRING=root" >> .env.test
+          echo "PASSWORD=root" >> .env.test
+          echo "DATABASE=ratings_test_db" >> .env.test
+          echo "PORT=3306" >> .env.test
+          echo "JWT_SECRET=abc123" >> .env.test
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env.test
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.test
+          echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env.test
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.test
           cat .env.test
 
       - name: Install dependencies
