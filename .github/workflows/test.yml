@@ -15,10 +15,12 @@ jobs:
 
     env:
       NODE_ENV: test
-      TEST_HOST: localhost
+      TEST_HOST: 127.0.0.1
       TEST_USER: root
-      TEST_PASSWORD: root
+      TEST_PASSWORD: ""
       TEST_DATABASE: ratings_test_db
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
     steps:
       - name: Checkout code
@@ -29,15 +31,35 @@ jobs:
         with:
           node-version: '16' # Replace with your project's Node.js version
 
+      # Start MySQL service
+      - name: Start MySQL service
+        run: sudo service mysql start
+
+      # Create the test database
+      - name: Set up test database
+        run: |
+          mysql -u root -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
+
+      # Verify that MySQL is running and test database exists (optional)
+      - name: Debug MySQL setup
+        run: |
+          mysql -u root -e "SHOW DATABASES;"
+          mysql -u root -e "USE ratings_test_db; SHOW TABLES;"
+
+      - name: Set working directory to backend
+        run: cd ./application/server
+
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
 
-      - name: Set environment variables
-        run: |
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "NODE_ENV=test" >> $GITHUB_ENV
+      - name: Set NODE_ENV to test
+        working-directory: ./application/server
+        run: echo "NODE_ENV=test" >> $GITHUB_ENV
+
+      # Debug environment variables (optional)
+      - name: Print environment variables
+        run: env
 
       - name: Run tests
         working-directory: ./application/server
