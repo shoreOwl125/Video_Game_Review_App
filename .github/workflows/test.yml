@@ -53,20 +53,13 @@ jobs:
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.test
           echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env.test
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.test
-          cat .env.test
-
-      - name: Debug Secrets
-        run: |
-          echo "Checking secrets"
-          echo "GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}"
-          echo "GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}"
-          echo "RAWG_API_KEY: ${{ secrets.RAWG_API_KEY }}"
-          echo "OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}"
+        shell: bash
 
       - name: Debug Loaded Environment Variables
+        working-directory: ./application/server
         run: |
           echo "Loaded environment variables:"
-          cat .env.test
+          cat .env.test || echo "File .env.test does not exist"
           grep 'GOOGLE_CLIENT' .env.test || echo "GOOGLE_CLIENT not found"
 
       - name: Install dependencies
