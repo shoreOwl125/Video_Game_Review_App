@@ -76,7 +76,7 @@ jobs:
       - name: Initialize test database
         run: |
           mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
-          mysql -u root -proot ratings_test_db < ./application/server/script/DB.sql
+          mysql -u root -proot ratings_test_db < ./application/server/scripts/DB.sql
 
       - name: Run tests
         working-directory: ./application/server
