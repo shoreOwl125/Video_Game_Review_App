@@ -55,6 +55,9 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.test
           cat .env.test
 
+      - name: Debug Environment Variables
+        run: printenv | grep 'GOOGLE_CLIENT' || true # Check if the variables are loaded
+
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
