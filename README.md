@@ -70,7 +70,7 @@ Start the server in production mode
 ```
 
 
-## Test data
+## Add sample data
 
 Download SQL and configure
 
