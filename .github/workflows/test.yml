@@ -42,7 +42,7 @@ jobs:
       - name: Load .env file
         working-directory: ./application/server
         run: |
-          cp .env.example .env # Use an example file or ensure .env is in the repo
+          cp .env
           cat .env
         env:
           NODE_ENV: test
