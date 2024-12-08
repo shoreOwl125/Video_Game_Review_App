@@ -53,22 +53,20 @@ jobs:
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.test
           echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env.test
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.test
-
-      - name: Verify .env.test file
-        working-directory: ./application/server
-        run: |
-          echo "Verifying .env.test contents..."
-          cat .env.test || echo "File .env.test does not exist"
+          cat .env.test
 
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
+
+      - name: Start server
+        working-directory: ./application/server
+        run: |
+          nohup npm run dev & # Start server in the background
+          sleep 5             # Wait for the server to start
 
       - name: Run tests
         working-directory: ./application/server
         env:
           NODE_ENV: test
         run: npm test
-
-      - name: Debug Environment Variables
-        run: printenv | grep 'GOOGLE_CLIENT'
