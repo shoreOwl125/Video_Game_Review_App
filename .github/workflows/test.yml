@@ -32,11 +32,12 @@ jobs:
 
       - name: Configure MySQL root access
         run: |
-          sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
-          sudo mysql -e "FLUSH PRIVILEGES;"
+          echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';" > init.sql
+          sudo mysqld --init-file=init.sql &
+          sleep 10
 
       - name: Create test database
-        run: mysql -u root -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
+        run: mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
 
       - name: Load .env file
         working-directory: ./application/server
