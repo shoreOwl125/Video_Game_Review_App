@@ -49,11 +49,11 @@ jobs:
       - name: Set up environment variables for testing
         working-directory: ./application/server
         run: |
-          echo "NODE_ENV=test" > .env
-          echo "HOST=127.0.0.1" >> .env
-          echo "USER_STRING=root" >> .env
-          echo "PASSWORD=root" >> .env
-          echo "DATABASE=ratings_test_db" >> .env
+          echo "NODE_ENV=development" > .env
+          echo "DEV_HOST=127.0.0.1" >> .env
+          echo "DEV_USER_STRING=root" >> .env
+          echo "DEV_PASSWORD=root" >> .env
+          echo "DEV_DATABASE=ratings_test_db" >> .env
           echo "PORT=3306" >> .env
           echo "JWT_SECRET=abc123" >> .env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
@@ -83,5 +83,5 @@ jobs:
       - name: Run tests
         working-directory: ./application/server
         env:
-          NODE_ENV: test
+          NODE_ENV: development
         run: npm test
