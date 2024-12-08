@@ -74,9 +74,10 @@ jobs:
           sleep 5
 
       - name: Initialize test database
+        working-directory: ./application/server/scripts
         run: |
-          mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
-          mysql -u root -proot ratings_test_db < ./application/server/scripts/DB.sql
+          chmod +x sqlDevConnect.sh # Ensure script is executable
+          ./sqlDevConnect.sh # Run the initialization script
 
       - name: Run tests
         working-directory: ./application/server
