@@ -1,9 +1,5 @@
 **URL: <https://csc648-01-fa24-team02.vercel.app/>**
 
-<div style="width: 150px; margin: auto;">
-  <img src="https://files.oaiusercontent.com/file-EsXsChapszV11oG9gJxKVB?se=2024-12-08T06%3A45%3A43Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D080c0593-fd19-47db-b3d6-df761b175a7b.webp&sig=UrJfc%2BYi9E3r9Afo1dTeQxIyZPPQr8SdmvtKdI2QBQ8%3D" alt="Logo" style="width: 100%; height: auto;">
-</div>
-
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 
