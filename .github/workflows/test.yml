@@ -54,7 +54,7 @@ jobs:
           echo "DEV_HOST=127.0.0.1" >> .env
           echo "DEV_USER_STRING=root" >> .env
           echo "DEV_PASSWORD=root" >> .env
-          echo "DEV_DATABASE=ratings_test_db" >> .env
+          echo "DEV_DATABASE=ratings_dev_db" >> .env
           echo "PORT=8000" >> .env
           echo "JWT_SECRET=abc123" >> .env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
