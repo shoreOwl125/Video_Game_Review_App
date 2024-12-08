@@ -13,15 +13,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    env:
-      NODE_ENV: test
-      TEST_HOST: 127.0.0.1
-      TEST_USER: root
-      TEST_PASSWORD: ""
-      TEST_DATABASE: ratings_test_db
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,35 +22,33 @@ jobs:
         with:
           node-version: '16' # Replace with your project's Node.js version
 
-      # Start MySQL service
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+
       - name: Start MySQL service
         run: sudo service mysql start
 
-      # Create the test database
-      - name: Set up test database
+      - name: Configure MySQL root access
         run: |
-          mysql -u root -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
+          sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+          sudo mysql -e "FLUSH PRIVILEGES;"
 
-      # Verify that MySQL is running and test database exists (optional)
-      - name: Debug MySQL setup
+      - name: Create test database
+        run: mysql -u root -e "CREATE DATABASE IF NOT EXISTS ratings_test_db;"
+
+      - name: Load .env file
+        working-directory: ./application/server
         run: |
-          mysql -u root -e "SHOW DATABASES;"
-          mysql -u root -e "USE ratings_test_db; SHOW TABLES;"
-
-      - name: Set working directory to backend
-        run: cd ./application/server
+          cp .env.example .env # Use an example file or ensure .env is in the repo
+          cat .env
+        env:
+          NODE_ENV: test
 
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
-
-      - name: Set NODE_ENV to test
-        working-directory: ./application/server
-        run: echo "NODE_ENV=test" >> $GITHUB_ENV
-
-      # Debug environment variables (optional)
-      - name: Print environment variables
-        run: env
 
       - name: Run tests
         working-directory: ./application/server
