@@ -19,8 +19,6 @@ jobs:
       TEST_USER: root
       TEST_PASSWORD: root
       TEST_DATABASE: ratings_test_db
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
     steps:
       - name: Checkout code
@@ -31,16 +29,15 @@ jobs:
         with:
           node-version: '16' # Replace with your project's Node.js version
 
-      - name: Set working directory to backend
-        run: cd ./application/server
-
       - name: Install dependencies
         working-directory: ./application/server
         run: npm install --force
 
-      - name: Set NODE_ENV to test
-        working-directory: ./application/server
-        run: echo "NODE_ENV=test" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: |
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "NODE_ENV=test" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: ./application/server
