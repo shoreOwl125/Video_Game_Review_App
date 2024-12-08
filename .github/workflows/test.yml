@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Replace with your project's Node.js version
+          node-version: '16'
 
       - name: Install MySQL
         run: |
@@ -53,14 +53,12 @@ jobs:
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.test
           echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env.test
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env.test
-        shell: bash
 
-      - name: Debug Loaded Environment Variables
+      - name: Verify .env.test file
         working-directory: ./application/server
         run: |
-          echo "Loaded environment variables:"
+          echo "Verifying .env.test contents..."
           cat .env.test || echo "File .env.test does not exist"
-          grep 'GOOGLE_CLIENT' .env.test || echo "GOOGLE_CLIENT not found"
 
       - name: Install dependencies
         working-directory: ./application/server
@@ -71,3 +69,6 @@ jobs:
         env:
           NODE_ENV: test
         run: npm test
+
+      - name: Debug Environment Variables
+        run: printenv | grep 'GOOGLE_CLIENT'
