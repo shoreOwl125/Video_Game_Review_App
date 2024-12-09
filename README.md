@@ -10,7 +10,7 @@ Joystick Journal stands out from competitors with its tailored recommendations, 
 
 ## Screenshots
 
-![App Screenshot](https://drive.google.com/file/d/1kMGuwEJKim73G2lPdLenArbRacTWvKro/view?usp=sharing)
+![App Screenshot]([https://drive.google.com/file/d/1kMGuwEJKim73G2lPdLenArbRacTWvKro/view?usp=sharing](https://drive.google.com/file/d/1kMGuwEJKim73G2lPdLenArbRacTWvKro/view))
 
 
 ## Authors
