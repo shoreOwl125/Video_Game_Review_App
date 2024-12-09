@@ -43,8 +43,8 @@ app.use(
           "'self'",
           'data:',
           'https://picsum.photos',
-          'https://fastly.picsum.photos', // Added Fastly CDN for Picsum
-          'https://media.rawg.io', // Your media source for game images
+          'https://fastly.picsum.photos',
+          'https://media.rawg.io',
         ],
         'script-src': ["'self'", "'unsafe-inline'"],
         'style-src': ["'self'", "'unsafe-inline'"],

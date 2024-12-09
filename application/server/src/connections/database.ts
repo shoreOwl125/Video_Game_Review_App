@@ -22,14 +22,22 @@ function connectUserDB() {
           queueLimit: 0,
         });
       } else {
+        console.log('Database configuration:', {
+          host: process.env.HOST,
+          user: process.env.USER_STRING,
+          database: process.env.DATABASE,
+          port: process.env.PORT,
+        });
         pool = createPool({
           host: process.env.HOST,
           user: process.env.USER_STRING,
           password: process.env.PASSWORD || '',
           database: process.env.DATABASE,
+          port: 3306,
           waitForConnections: true,
           connectionLimit: 10,
           queueLimit: 0,
+          connectTimeout: 10000,
         });
       }
       if (pool) {
