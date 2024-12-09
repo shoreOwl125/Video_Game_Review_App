@@ -1,7 +1,6 @@
-**<https://csc648-01-fa24-team02.vercel.app/>**
+**https://gameratings-psi.vercel.app/**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
 
 # Joystick Journal
 
@@ -19,19 +18,17 @@ Joystick Journal stands out from competitors with its tailored recommendations, 
 ![Create](diagrams/create.png)
 ![Profile](diagrams/profile.png)
 
-
-
 ## Authors
 
-| Name | Email | GitHub Username | role |
-| :----------: | :-----------: | :-------------: | :------------: |
-|   Andrew Dahlstrom   | adahlstrom@sfsu.edu |      shoreOwl125       |  Team Leader   |
-|   Joyce Fu   | jfu@sfsu.edu |      fufu911219        |  Scrum Master   |
-|   Jason Avina   | javina2@mail.sfsu.edu |      JasonAvina       |  Scrum Master   |
-|   Nadir Ali   | nali1@sfsu.edu |      NadirAli17       |  Github Master   |
-|   Kayla Maa   | kmaa@sfsu.edu |      kaylamaa       |  Front-end Lead   |
-|   Aidan Bayer-Calvert   | abayercalvert@sfsu.edu |      abccodes       |  Back-end Lead   |
-|   Ryan Flannery   | rflannery@sfsu.edu |      ryanvflannery       |  Back-end Lead   |
+|        Name         |         Email          | GitHub Username |      role      |
+| :-----------------: | :--------------------: | :-------------: | :------------: |
+|  Andrew Dahlstrom   |  adahlstrom@sfsu.edu   |   shoreOwl125   |  Team Leader   |
+|      Joyce Fu       |      jfu@sfsu.edu      |   fufu911219    |  Scrum Master  |
+|     Jason Avina     | javina2@mail.sfsu.edu  |   JasonAvina    |  Scrum Master  |
+|      Nadir Ali      |     nali1@sfsu.edu     |   NadirAli17    | Github Master  |
+|      Kayla Maa      |     kmaa@sfsu.edu      |    kaylamaa     | Front-end Lead |
+| Aidan Bayer-Calvert | abayercalvert@sfsu.edu |    abccodes     | Back-end Lead  |
+|    Ryan Flannery    |   rflannery@sfsu.edu   |  ryanvflannery  | Back-end Lead  |
 
 ## Run Locally
 
@@ -48,7 +45,6 @@ Go to the project directory
 ```bash
   cd my-project
 ```
-
 
 Install dependencies for back end
 
@@ -76,22 +72,22 @@ Start the server in production mode
   npm run start
 ```
 
-
 ## Add sample data
 
 Download SQL and configure
 
 add proper .env keys
+
 ```bash
 DEV_HOST=127.0.0.1
 DEV_USER_STRING=user
 DEV_PASSWORD=password
 DEV_DATABASE=databasename
 ```
+
 ```bash
   npm run db
 ```
-
 
 ## Running Tests
 
@@ -100,5 +96,3 @@ To run tests, run the following command inside of application/server
 ```bash
   npm run test
 ```
-
-
