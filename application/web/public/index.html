@@ -10,19 +10,33 @@
     <header class="banner">
       <div class="banner-picture"></div>
       <div class="banner-content">
-        <h1 class="title">Rate My Video Game</h1>
+        <h1 class="title">
+          <a href="index.html" class="title-link">Rate My Video Game</a>
+        </h1>
         <div class="buttons">
           <a href="signup.html" class="pill-button">Sign Up</a>
           <a href="login.html" class="pill-button">Login</a>
-          <a href="reccomendation.html" class="pill-button"
+          <a class="pill-button get-recommendations">Get Recommendations</a>
+          <!-- <a href="reccomendation.html" class="pill-button"
             >Recommendation Demo</a
+          > -->
+          <a href="#" class="pill-button" id="logout-btn" style="display: none;"
+            >Logout</a
           >
-          <a href="#" class="pill-button" id="logout-btn">Logout</a>
+          <a
+            href="view-profile.html"
+            class="pill-button"
+            id="settings-btn"
+            style="display: none;"
+            >Settings</a
+          >
         </div>
       </div>
     </header>
-
-    <section class="content-section">
+    <div class="recommendation-section">
+      <div id="recommendations" class="grid"></div>
+    </div>
+    <div class="content-section">
       <div class="search-bar">
         <input
           type="text"
@@ -32,10 +46,14 @@
         <button class="search-button">Search</button>
       </div>
       <div id="gameGrid" class="grid"></div>
-    </section>
-
-    <div id="recommendations"></div>
-    <!-- Add this div for recommendations -->
+      <footer>
+        <ul class="footer-links">
+          <li><a href="#">Ad Choices</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </footer>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

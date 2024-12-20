@@ -45,6 +45,7 @@ body {
 }
 
 .title {
+  font-size: x-large;
   align-self: center;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
@@ -77,38 +78,37 @@ body {
   align-items: center;
   flex-direction: column;
   margin-top: 0;
-  padding-top: 8.3vh;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 2.5vh;
   background-color: #f4e6e6;
-  min-height: calc(
-    100vh - 16.67vh
-  ); /* Ensure it takes the rest of the viewport height */
 }
 
 /* Search Bar */
 .search-bar {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 90%;
-  max-width: 1200px;
-  margin-bottom: 3vh;
+  justify-content: center;
+  width: 75%;
+  margin-bottom: 2vh;
 }
 
 .search-input-container {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
+  justify-content: center;
 }
 
 .search-input {
-  width: 100%;
-  padding: 10px 20px;
+  width: 80%;
+  padding: 15px 15px;
   padding-left: 50px; /* Adjusted padding for the image */
   border-radius: 50px;
-  border: 1px solid #ddd;
+  border: 1px solid #898989;
   outline: none;
   font-size: 16px; /* Adjust font size */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-icon {
@@ -119,12 +119,14 @@ body {
 }
 
 .search-button {
-  padding: 10px 20px;
+  padding: 15px 30px;
   border-radius: 50px;
-  border: 1px solid #ddd;
+  border: 1px solid #898989;
   background-color: #c0aeae;
   margin-left: 15px;
+  font-weight: 900;
   cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-input::placeholder {
@@ -150,14 +152,23 @@ body {
 }
 
 .game-tile {
-  width: 150px;
-  height: 200px;
-  background-color: #e0dada;
+  text-align: center;
+  width: 175px;
+  height: 175px;
+  background-color: #c0aeae;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
 }
+.game-tile img {
+  width: 150px; /* Fit the image to the width of the tile */
+  height: 150px; /* Maintain the aspect ratio */
+  object-fit: cover; /* Ensures it covers the tile area without distortion */
+  border-radius: 5px;
+}
+
 .pill-dropdown {
   padding: 10px 20px;
   border-radius: 50px;
@@ -180,8 +191,7 @@ body {
   color: #333; /* Style the dropdown options */
 }
 
-.login-box,
-.signup-form {
+.login-box {
   background-color: white;
   width: 380px;
   margin: 0 auto; /* Center horizontally */
@@ -194,8 +204,7 @@ body {
   margin-bottom: 60px;
 }
 
-.login-box p,
-.signup-form p {
+.login-box p {
   color: #af9f9f;
   margin-top: 10px;
   margin-bottom: 20px;
@@ -228,8 +237,7 @@ body {
 
 /* Button Styling */
 .submit-btn,
-.google-login-btn,
-.signup-btn {
+.google-login-btn {
   max-width: 150px;
   width: 100%;
   padding: 8px;
@@ -406,11 +414,127 @@ footer {
   background-color: #b39393;
 }
 
-#game-title {
-  color: #452a2a;
-  font-family: 'Inria Sans', sans-serif;
-  flex-shrink: 0;
-  text-align: left;
+.profile-picture-container {
+  position: absolute;
+  top: 160px;
+  right: 50px;
+  width: 90px;
+  height: 90px;
+  border-radius: 70%; /* Keeps the bubble style */
+  overflow: hidden;
+  cursor: pointer; /* Indicates it's clickable */
+  border: 2px solid #fff; /* White border around the bubble */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+}
+
+.profile-picture {
   width: 100%;
-  padding-left: 20px;
+  height: 100%;
+  object-fit: cover;
+}
+/* Profile Container */
+.profile-container {
+  background-color: #fff;
+  padding: 20px 40px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Header with Edit Button */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3e2e2f;
+}
+
+.edit-profile-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: #3e2e2f;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between text and icon */
+}
+
+.edit-profile-button::before {
+  content: '\270E'; /* Pencil icon in Unicode */
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid #ddd;
+  margin-top: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  font-weight: bold;
+  color: #3e2e2f;
+  border: none;
+}
+
+.tab.active {
+  border-bottom: 3px solid #3e2e2f;
+}
+
+/* Profile Content Grid */
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  color: #3e2e2f;
+}
+
+.profile-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-section h2 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: normal;
+  color: #3e2e2f;
+}
+
+.profile-section p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Reviews Section */
+.reviews-section {
+  margin-top: 40px;
+  padding: 20px 0;
+  color: #3e2e2f;
+  font-weight: bold;
+  text-align: left;
+  border-top: 1px solid #ddd;
+}
+
+.recommendation-section {
+  background-color: #f4e6e6;
 }

@@ -16,6 +16,15 @@ if [ ! -f "$SQL_FILE" ]; then
   exit 1
 fi
 
+# Create the database if it doesn't exist
+echo "Creating database '$DB_NAME' if it does not exist..."
+mysql -u "$DB_USER" -p"$DB_PASSWORD" -h "$DB_HOST" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+
+if [ $? -ne 0 ]; then
+  echo "Failed to create database '$DB_NAME'."
+  exit 1
+fi
+
 # Run the SQL file
 echo "Running SQL file..."
 mysql -u "$DB_USER" -p"$DB_PASSWORD" -h "$DB_HOST" "$DB_NAME" < "$SQL_FILE"

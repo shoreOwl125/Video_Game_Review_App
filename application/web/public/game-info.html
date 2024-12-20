@@ -1,87 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game Review - Rate My Video Game</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="game-info.css">
-</head>
-<body>
-
-    <!-- Header Section -->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="game-info.css" />
+  </head>
+  <body>
     <header class="banner">
-        <div class="banner-picture"></div>
-        <div class="banner-content">
-            <!-- Make the title clickable -->
-            <h1 class="title">
-                <a href="index.html" class="title-link">Rate My Video Game</a>
-            </h1>
-            <div class="buttons">
-                <button class="pill-button">Sign Up</button>
-                <button class="pill-button">Login</button>
-            </div>
+      <div class="banner-picture"></div>
+      <div class="banner-content">
+        <h1 class="title">
+          <a href="index.html" class="title-link">Rate My Video Game</a>
+        </h1>
+        <div class="buttons">
+          <a href="signup.html" class="pill-button">Sign Up</a>
+          <a href="login.html" class="pill-button">Login</a>
+          <a href="#" class="pill-button" id="logout-btn" style="display: none;"
+            >Logout</a
+          >
+          <a
+            href="view-profile.html"
+            class="pill-button"
+            id="settings-btn"
+            style="display: none;"
+            >Settings</a
+          >
         </div>
+      </div>
     </header>
 
-    <!-- Main Content Section -->
+    <!-- Main Content Section Below Banner-->
     <section class="content-section">
+      <!-- Main Content Section: Game Info(top) and Reviews(bottom)-->
+      <div class="game-info">
+        <div class="info-top">
+          <div class="game-stats">
+            <p id="game-rating">Loading...</p>
+            <p id="game-title">Loading...</p>
+            <p id="game-release-date">Loading...</p>
+          </div>
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <div class="search-input-container">
-                <img src="game.png" class="search-icon" alt="Game Icon">
-                <input type="text" class="search-input" placeholder="Search for a video game">
-                <button class="search-button">Search</button>
-            </div>
+          <div class="game-image">
+            <!-- Use the dummy image -->
+            <img src="gameinfo_testimage.png" alt="Game Image" />
+            <!-- Commenting out the line that would pull the database image -->
+            <!-- <img id="game-cover" src="" alt="Game Image"> -->
+          </div>
         </div>
 
-        <!-- Filter Dropdown -->
-        <div class="filter-container">
-            <label for="rating-filter" class="filter-label">Filter By:</label>
-            <select id="rating-filter" class="pill-dropdown">
-                <option value="">Select Rating</option>
-                <option value="1">1 Star</option>
-                <option value="2">2 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="5">5 Stars</option>
-            </select>
+        <div class="info-bottom">
+          <p>Nintendo</p>
+          <p>|</p>
+          <p>Atari</p>
+          <p>|</p>
+          <p>Sega</p>
+          <p>|</p>
+          <p>Playstation</p>
         </div>
-
-
-
-
-        <div class="game-info">
-
-            <div class="info-top">
-                <div class="game-stats">
-                    <!-- rating stats content here-->
-                    <p>Rating: ★★★★☆</p>
-                    <p>Reviews: 1,234</p>
-                </div>
-
-                <div class="game-image">
-                    <!--image content-->
-                    <img src="gameinfo_testimage.png" alt="Game Image">
-                </div>
-            </div>
-
-            <div class="info-bottom">
-                <p>(info-bottom section) Platforms: Nintendo | Atari | Sega | Playstation</p>
-            </div>
-
+        <div class="review-bottom">
+          <p id="post-review-link-text">
+            Want to leave a review?
+            <a
+              id="post-review-link"
+              href="http://127.0.0.1:8000/game-review.html"
+              >Post A Review</a
+            >
+          </p>
         </div>
-
-
-        <div class="game-reviews">
+        <div class="review-comment-top">
+          <p>Reviews</p>
         </div>
-
-        
-
+      </div>
+      <div class="container">
+        <div class="game-reviews"></div>
+      </div>
+      <footer>
+        <ul class="footer-links">
+          <li><a href="#">Ad Choices</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </footer>
     </section>
 
     <script src="script.js"></script>
     <script src="game-info.js"></script>
-</body>
+  </body>
 </html>

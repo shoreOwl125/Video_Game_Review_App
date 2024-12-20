@@ -1,27 +1,28 @@
-import { Router } from "express";
+// gameRoutes.ts
+
+import { Router } from 'express';
 import {
   createGame,
   searchGames,
   removeGame,
   editGame,
   getGame,
-} from "../controllers/gameController";
+  getAllGames,
+  populateGames,
+} from '../controllers/gameController';
 
 const router = Router();
 
-// Route to add a new game
-router.post("/", createGame);
+// These routes are for internal testing purposes only.
+// Do not uncomment or expose them publicly, as these methods are intended for server-side use only.
 
-// Route to search games with filters
-router.get("/search", searchGames);
+// router.delete('/:gameId', removeGame);
 
-// Route to delete a game by ID
-router.delete("/:gameId", removeGame);
-
-// Route to update a game by ID
-router.put("/:gameId", editGame);
-
-// Route to get a game by ID
-router.get("/:gameId", getGame);
+router.get('/populate', populateGames);
+router.get('/all', getAllGames);
+router.post('/create', createGame);
+router.get('/search', searchGames);
+router.get('/:gameId', getGame);
+router.put('/:gameId', editGame);
 
 export default router;

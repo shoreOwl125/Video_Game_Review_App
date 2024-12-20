@@ -1,51 +1,237 @@
-/* Adds buffer space between game-info and filter button */
+/* Center content in the main container */
+/* Center content in the main container */
+.content-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers content horizontally */
+}
+
 .game-info {
-    margin-top: 20px; /* Adds space below the filter */
-    display: flex;
-    flex-direction: column;
-    height: 50vh; /* Sets it to occupy half the page height */
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Adjust width as necessary */
+  box-sizing: border-box;
+  flex-grow: 1; /* Allows it to expand and take the remaining space */
+  overflow: hidden;
 }
 
-/* Split info-top into 1/3 on the left for game-stats and 2/3 on the right for game-image */
 .info-top {
-    display: flex;
-    flex-direction: row; /* Aligns elements horizontally */
-    height: 100%;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 2; /* Ensures the game info takes more space */
+  width: 100%;
 }
 
-/* Game stats on the left (1/3 of width) */
 .game-stats {
-    flex: 1; /* Takes up 1 part */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 10px;
+  flex: 1; /* Takes up 1 part */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
 }
 
-/* Game image on the right (2/3 of width) */
 .game-image {
-    flex: 2; /* Takes up 2 parts */
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  flex: 1.5;
+  width: 500px;
+  height: 500px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .game-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the entire area */
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keeps the image within its box */
+  border-radius: 20px;
 }
 
+.game-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keeps the image within its box */
+  border-radius: 20px;
+}
 
-/* Bottom section taking up 1/4 of game-info */
+/* Ensure the text is vertically centered in info-bottom */
 .info-bottom {
-    flex: 1;
-    margin-top: 20px; /* Adjust this value as needed for spacing */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 50px;
+  background-color: #ebd9d9;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+  height: 80px; /* Explicitly set the height for more consistent behavior */
+  box-sizing: border-box; /* Ensure padding is included in the height */
+  font-size: 2em;
+  letter-spacing: 0.025em; /* Adds space between characters */
+}
+
+.info-bottom p {
+  margin: 0 10px; /* Adds space between each <p> element */
+}
+
+.info-bottom p:nth-child(odd) {
+  font-weight: normal; /* Ensure other text remains normal weight */
+}
+
+.info-bottom p:nth-child(even) {
+  font-weight: bold; /* Makes the `|` bold */
+}
+
+.review-bottom {
+  display: flex;
+  justify-content: flex-end; /* Center horizontally */
+  align-items: flex-end;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  margin-top: 5px;
+  height: auto; /* Explicitly set the height for more consistent behavior */
+  box-sizing: border-box; /* Ensure padding is included in the height */
+}
+
+.review-comment-top {
+  display: flex;
+  justify-content: flex-start; /* Center horizontally */
+  align-items: flex-start; /* Center vertically */
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  height: auto; /* Explicitly set the height for more consistent behavior */
+}
+
+.review-comment-top p {
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+#post-review-link-text {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  padding-left: 20px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+#post-review-link-button {
+  text-decoration: none;
+  color: #b4acac;
+  font-family: 'Inria Sans', sans-serif;
+}
+
+#game-rating {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 4em;
+  font-weight: 800;
+  margin-bottom: 2.5%;
+}
+
+#game-title {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 3.5em;
+  font-weight: 500;
+  margin-bottom: 5%;
+}
+
+#game-release-date {
+  color: #452a2a;
+  font-family: 'Inria Sans', sans-serif;
+  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.info-bottom span {
+  margin: 0 5px; /* Adds spacing between each platform item */
+}
+
+.review-box {
+  font-size: 25px;
 }
 
 /* Game reviews section */
 .game-reviews {
-    margin-top: 20px; /* Adds spacing below the game-info section */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the reviews horizontally */
+  border-radius: 50px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 2.5%;
+}
+
+.review-box {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border-radius: 25px;
+  background-color: white;
+  width: 80%;
+}
+
+.content-box {
+  display: flex;
+  flex-direction: column;
+  margin: 2.5%;
+}
+
+.review-title {
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.review-rating-title-box {
+  display: flex;
+  flex-direction: column;
+  font-size: 3.75em;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.user_id {
+  font-size: 1em;
+  font-weight: 500;
+  margin-bottom: 2.5%;
+}
+
+.review-text {
+  font-size: 1.25em;
 }

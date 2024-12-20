@@ -3,7 +3,8 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  theme_preference: "light" | "dark";
+  profile_pic: string | null;
+  theme_preference: 'light' | 'dark';
   user_data_id: number | null;
   created_at: Date;
   updated_at: Date;

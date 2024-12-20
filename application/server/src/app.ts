@@ -13,35 +13,66 @@ import { authenticate } from './middleware/authMiddleware';
 import { errorHandler } from './middleware/errorMiddleware';
 import path from 'path';
 import authRouter from './routes/authRoutes';
-import searchRouter from './routes/gameRoutes';
 import userDataRouter from './routes/userDataRoutes';
 import userRouter from './routes/userRoutes';
 import gameRouter from './routes/gameRoutes';
 import reviewRoter from './routes/reviewRoutes';
-// Load environment variables from .env file
+import recommendations from './routes/recommendationRoutes';
+import { testAddGames } from './api/rawg';
+
 dotenv.config();
 
 const app = express();
 
-// Middleware setup
+// testAddGames()
+//   .then(() => {
+//     console.log('success');
+//   })
+//   .catch(error => {
+//     console.log('error:', error);
+//   });
+
 app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': ["'self'"],
+        'connect-src': ["'self'", 'http://127.0.0.1:8000'],
+        'img-src': [
+          "'self'",
+          'data:',
+          'https://picsum.photos',
+          'https://fastly.picsum.photos',
+          'https://media.rawg.io',
+        ],
+        'script-src': ["'self'", "'unsafe-inline'"],
+        'style-src': ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
+
 const allowedOrigins = [
+  'http://localhost:8000',
+  'http://127.0.0.1:8000',
   'http://localhost:3000',
   'http://127.0.0.1:5500',
   'https://gameratings-63hlr9lx0-abccodes-projects.vercel.app/',
 ];
 
-// cors setup with allowed origins
 app.use(
   cors({
     origin: function(origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
@@ -49,10 +80,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// telling server where to serve static files from first
-app.use(express.static(path.join(__dirname, "../../web/public")));
+app.use(express.static(path.join(__dirname, '../../web/public')));
 
-// google oauth setup with passport google strategy
 app.use(passport.initialize());
 passport.use(
   new GoogleStrategy(
@@ -74,24 +103,20 @@ passport.deserializeUser((obj: any, done) => {
   done(null, obj as Express.User);
 });
 
-// Routes
+app.use(errorHandler);
+
 app.use('/api/auth', authRouter);
 app.use('/api/users', authenticate, userRouter);
 app.use('/api/games', gameRouter);
 app.use('/api/userdata', userDataRouter);
 app.use('/api/reviews', reviewRoter);
-
+app.use('/api/recommendations', recommendations);
 
 // Fallback root route if index.html is not found
-app.get("/", (req, res) => {
-  res.send("The server is working, but the index page isn’t loading.");
+app.get('/', (req, res) => {
+  res.send('The server is working, but the index page isn’t loading.');
 });
 
-
-// Error handling middleware
-app.use(errorHandler);
-
-// Database connection
-connectUserDB(); // No need to assign pool here, unless you use it in this file
+connectUserDB();
 
 export default app;

@@ -1,0 +1,83 @@
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Step 3: Install MySQL
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+
+      # Step 4: Start MySQL service
+      - name: Start MySQL service
+        run: sudo service mysql start
+
+      # Step 5: Configure MySQL root access
+      - name: Configure MySQL root access
+        run: |
+          echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';" > init.sql
+          sudo mysqld --init-file=init.sql &
+          sleep 10
+
+      # Step 6: Create test database and initialize schema
+      - name: Initialize test database
+        working-directory: ./application/server/scripts
+        run: |
+          chmod +x sqlDevConnect.sh
+          DB_PASSWORD=root ./sqlDevConnect.sh # Pass password explicitly
+
+      # Step 7: Dynamically create .env file for testing
+      - name: Set up environment variables for testing
+        working-directory: ./application/server
+        run: |
+          echo "NODE_ENV=test" > .env
+          echo "DEV_HOST=127.0.0.1" >> .env
+          echo "DEV_USER_STRING=root" >> .env
+          echo "DEV_PASSWORD=root" >> .env
+          echo "DEV_DATABASE=ratings_dev_db" >> .env
+          echo "PORT=8000" >> .env
+          echo "JWT_SECRET=abc123" >> .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "RAWG_API_KEY=${{ secrets.RAWG_API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          cat .env
+
+      # Step 8: Install dependencies
+      - name: Install dependencies
+        working-directory: ./application/server
+        run: npm install --force
+
+      # Step 9: Start the server
+      - name: Start server
+        working-directory: ./application/server
+        run: |
+          nohup npm run dev & # Start server in the background
+          sleep 5
+
+      # Step 10: Run tests
+      - name: Run tests
+        working-directory: ./application/server
+        env:
+          NODE_ENV: test
+        run: npm test

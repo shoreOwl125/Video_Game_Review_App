@@ -1,12 +1,92 @@
+let userId = null; // Global variable to store the logged-in user's ID
+
 document.addEventListener('DOMContentLoaded', async () => {
   const logoutButton = document.getElementById('logout-btn');
-  const signupButton = document.getElementById('signup-btn');
-  const loginButton = document.getElementById('login-btn');
+  const signupButton = document.querySelector('a[href="signup.html"]');
+  const loginButton = document.querySelector('a[href="login.html"]');
+  const settingsButton = document.getElementById('settings-btn');
   const searchButton = document.querySelector('.search-button');
   const searchInput = document.querySelector('.search-input');
   const gameGrid = document.getElementById('gameGrid');
+  const recommendationButton = document.querySelector('.get-recommendations');
+  const googleLoginButton = document.getElementById('google-login-button');
 
-  // Login logic
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/games/populate', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch populateGames');
+
+    const games = await response.json();
+    console.log('Top games based on highest reviews:', games);
+
+    // Optionally render the games on your page
+    const gameGrid = document.getElementById('gameGrid');
+    if (gameGrid) {
+      gameGrid.innerHTML = ''; // Clear existing grid content
+      games.forEach(game => {
+        const gameTile = document.createElement('div');
+        gameTile.className = 'game-tile';
+        gameTile.textContent = game.title;
+
+        const gameImage = document.createElement('img');
+        gameImage.src = game.cover_image || 'gameinfo_testimage.png';
+        gameImage.alt = game.title;
+
+        gameTile.appendChild(gameImage);
+
+        gameTile.addEventListener('click', () => {
+          window.location.href = `game-info.html?gameId=${game.game_id}`;
+        });
+
+        gameGrid.appendChild(gameTile);
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching populateGames:', error);
+  }
+
+  // Check Authentication Status
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/auth/status', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (data.loggedIn) {
+        if (data.userId) {
+          userId = data.userId;
+        }
+        console.log(`User is logged in. User ID: ${userId}`);
+
+        // Show/Hide elements based on their existence
+        if (logoutButton) logoutButton.style.display = 'inline-block';
+        if (signupButton) signupButton.style.display = 'none';
+        if (loginButton) loginButton.style.display = 'none';
+        if (settingsButton) settingsButton.style.display = 'inline-block';
+        if (recommendationButton)
+          recommendationButton.style.display = 'inline-block';
+      } else {
+        console.log('User is not logged in');
+
+        // Show/Hide elements based on their existence
+        if (logoutButton) logoutButton.style.display = 'none';
+        if (settingsButton) settingsButton.style.display = 'none';
+        if (signupButton) signupButton.style.display = 'inline-block';
+        if (loginButton) loginButton.style.display = 'inline-block';
+        if (recommendationButton) recommendationButton.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
+    }
+  };
+
+  // Login Logic
   const loginForm = document.querySelector('.login-form');
   if (loginForm && loginForm.id !== 'signup-form') {
     loginForm.addEventListener('submit', async event => {
@@ -22,15 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           body: JSON.stringify({ email, password }),
         });
 
-        console.log('Login response:', response);
-
         if (response.ok) {
           const data = await response.json();
-          console.log('Login successful, user:', data);
+          userId = data.id; // Store user ID from login response
+          console.log('User ID stored after login:', userId);
           alert(`Welcome, ${data.name}!`);
           window.location.href = 'index.html';
         } else {
-          console.warn('Login failed. Check credentials or server response.');
           alert('Login failed. Please check your credentials.');
         }
       } catch (error) {
@@ -40,16 +118,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Signup logic
+  // Signup Logic
   const signupForm = document.getElementById('signup-form');
   if (signupForm) {
     signupForm.addEventListener('submit', async event => {
       event.preventDefault();
-
       const name = signupForm.username.value;
       const email = signupForm.email.value;
       const password = signupForm.password.value;
       const confirmPassword = signupForm.confirm_password.value;
+      const profile_pic = 'application/web/public/Default-Profile-Picture.jpg';
 
       if (password !== confirmPassword) {
         alert('Passwords do not match.');
@@ -62,13 +140,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ name, email, profile_pic, password }),
           }
         );
 
         if (response.ok) {
           alert('Account created successfully! You can now log in.');
-          window.location.href = 'login.html';
+          window.location.href = 'login.html'; // Redirect to login page
         } else {
           const errorData = await response.json();
           alert(`Registration failed: ${errorData.message}`);
@@ -80,38 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Check authentication status and update UI
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/status', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      console.log('Status check response:', response);
-      const data = await response.json();
-      console.log('Auth status data:', data);
-
-      if (data.loggedIn) {
-        console.log('User is logged in');
-        logoutButton.style.display = 'inline-block';
-        signupButton.style.display = 'none';
-        loginButton.style.display = 'none';
-      } else {
-        console.log('User is not logged in');
-        logoutButton.style.display = 'none';
-        signupButton.style.display = 'inline-block';
-        loginButton.style.display = 'inline-block';
-      }
-    } catch (error) {
-      console.error('Error checking login status:', error);
-    }
-  };
-
-  // Call checkAuthStatus on page load
-  await checkAuthStatus();
-
-  // Logout functionality
+  // Logout Functionality
   if (logoutButton) {
     logoutButton.addEventListener('click', async event => {
       event.preventDefault();
@@ -122,11 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (response.ok) {
-          console.log('Logout successful');
           alert('Successfully logged out');
-          window.location.reload();
+          window.location.href = 'index.html'; // Reload to the home page
         } else {
-          console.warn('Logout failed');
           alert('Logout failed. Please try again.');
         }
       } catch (error) {
@@ -136,17 +181,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Fetch recommendations
-  const recommendationButton = document.getElementById('recommendation-button');
   if (recommendationButton) {
     recommendationButton.addEventListener('click', async () => {
-      console.log('Fetching recommendations...');
       const recommendationsDiv = document.getElementById('recommendations');
-      recommendationsDiv.innerHTML = '';
+      recommendationsDiv.innerHTML = ''; // Clear previous recommendations
+
+      if (!userId) {
+        console.error(
+          'User ID is not available. Cannot fetch recommendations.'
+        );
+        recommendationsDiv.innerHTML = `<p>Please log in to get recommendations.</p>`;
+        return;
+      }
 
       try {
         const response = await fetch(
-          'http://127.0.0.1:8000/api/userdata/2/recommendations',
+          `http://127.0.0.1:8000/api/userdata/${userId}/recommendations`,
           {
             credentials: 'include',
           }
@@ -154,20 +204,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!response.ok) throw new Error('Network response was not ok');
 
-        const data = await response.json();
-        if (Array.isArray(data.recommendations)) {
-          data.recommendations.forEach(game => {
-            const gameContainer = document.createElement('div');
-            for (const [key, value] of Object.entries(game)) {
-              const pTag = document.createElement('p');
-              pTag.textContent = `${key}: ${value}`;
-              gameContainer.appendChild(pTag);
-            }
-            recommendationsDiv.appendChild(gameContainer);
-            recommendationsDiv.appendChild(document.createElement('hr'));
+        const recommendations = await response.json();
+        console.log('Recommended Games:', recommendations);
+
+        if (Array.isArray(recommendations) && recommendations.length > 0) {
+          recommendations.forEach(game => {
+            const gameTile = document.createElement('div');
+            gameTile.className = 'game-tile';
+
+            // Create game cover image element
+            const gameImage = document.createElement('img');
+            gameImage.src = game.cover_image || 'default-image.png'; // Fallback image if cover is missing
+            gameImage.alt = game.title;
+
+            // Create game title element
+            const gameTitle = document.createElement('p');
+            gameTitle.textContent = game.title;
+
+            // Append elements to the game tile
+            gameTile.appendChild(gameTitle);
+            gameTile.appendChild(gameImage);
+
+            // Add click event to navigate to game details
+            gameTile.addEventListener('click', () => {
+              window.location.href = `game-info.html?gameId=${game.game_id}`;
+            });
+
+            // Append the game tile to the recommendations div
+            recommendationsDiv.appendChild(gameTile);
           });
         } else {
-          throw new Error('Expected an array of games in data.recommendations');
+          recommendationsDiv.innerHTML = `<p>No recommendations available at this time.</p>`;
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
@@ -176,7 +243,107 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Search functionality
+  // Google Login
+  if (googleLoginButton) {
+    googleLoginButton.addEventListener('click', () => {
+      window.location.href = 'http://127.0.0.1:8000/api/auth/google';
+    });
+  }
+  // Update Profile Information/Settings
+  const updateProfileInformation = async () => {
+    const currentPath = window.location.pathname.split('/').pop();
+    if (currentPath !== 'view-profile.html') return;
+
+    if (!userId) {
+      console.error(
+        'User ID is not available. Cannot fetch profile information.'
+      );
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/users/${userId}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      );
+
+      if (response.ok) {
+        const user = await response.json();
+        console.log(user.profile_pic);
+        console.log('user created at ' + user);
+        document.getElementById('username').textContent = user.name;
+        document.getElementById('user-username').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-member-since').textContent = new Date(
+          user.created_at
+        ).toLocaleDateString();
+      } else {
+        console.error('Failed to fetch user profile information');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile information:', error);
+    }
+  };
+
+  // Initialize on Page Load
+  await checkAuthStatus();
+  await updateProfileInformation();
+  // Select the profile picture elements
+  const profilePicUpload = document.getElementById('profilePicUpload');
+  const profilePic = document.getElementById('profilePic');
+
+  // Only add the event listener if the elements exist
+  if (profilePicUpload && profilePic) {
+    profilePicUpload.addEventListener('change', async function (event) {
+      console.log('File selected'); // Log to verify event trigger
+      const file = event.target.files[0];
+
+      if (file) {
+        // Display the preview
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          console.log('Image loaded'); // Log to verify loading
+          profilePic.src = e.target.result; // Set the profile picture src to the uploaded image's data URL
+        };
+        reader.readAsDataURL(file);
+
+        // Create FormData object to send the file to the server
+        const formData = new FormData();
+        formData.append('profilePicture', file);
+        formData.append('userId', userId); // Assuming you have `userId` from the auth status
+
+        try {
+          // Send the image to your server
+          const response = await fetch(
+            'http://127.0.0.1:8000/api/users/upload-profile-picture',
+            {
+              method: 'POST',
+              body: formData,
+              credentials: 'include', // Include credentials if needed
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Profile picture uploaded successfully', data);
+            alert('Profile picture uploaded successfully!');
+          } else {
+            console.error(
+              'Error uploading profile picture:',
+              response.statusText
+            );
+            alert('Failed to upload profile picture. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error uploading profile picture:', error);
+          alert('An error occurred while uploading. Please try again.');
+        }
+      }
+    });
+  }
+
   if (searchButton && searchInput && gameGrid) {
     searchButton.addEventListener('click', async () => {
       const searchTerm = searchInput.value;
@@ -191,14 +358,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           );
 
+          const games = await response.json();
           if (!response.ok) throw new Error('Network response was not ok');
 
-          const games = await response.json();
+          console.log(games);
+
           gameGrid.innerHTML = '';
+
           games.forEach(game => {
             const gameTile = document.createElement('div');
             gameTile.className = 'game-tile';
             gameTile.textContent = game.title;
+
+            const gameImage = document.createElement('img');
+            gameImage.src = game.cover_image
+              ? game.cover_image
+              : 'gameinfo_testimage.png';
+            gameImage.alt = game.title;
+            gameTile.appendChild(gameImage);
+            gameImage.src = game.cover_image
+              ? game.cover_image
+              : 'gameinfo_testimage.png';
+            gameImage.alt = game.title;
+            gameTile.appendChild(gameImage);
+
+            gameTile.addEventListener('click', () => {
+              window.location.href = `game-info.html?gameId=${game.game_id}`;
+            });
             gameGrid.appendChild(gameTile);
           });
         } catch (error) {
@@ -210,11 +396,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 });
-
-// Google login button functionality
-const googleLoginButton = document.getElementById('google-login-button');
-if (googleLoginButton) {
-  googleLoginButton.addEventListener('click', () => {
-    window.location.href = 'http://127.0.0.1:8000/api/auth/google';
-  });
-}
